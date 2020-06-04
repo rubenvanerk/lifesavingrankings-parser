@@ -1,0 +1,223 @@
+info:
+  name:
+  location:
+  date:
+    type: date
+  timekeeping:
+    type: select
+    custom: false
+    options:
+      0: Unknown
+      1: Electronic
+      2: By hand
+  credit:
+athlete:
+  name:
+    type: select
+    options:
+      '/(?<= )[^0-9]*(?= [0-9]{2})/': '[Splash] ( )[NaN]( 96)'
+      '/(?<=[0-9]{4}\t)[^\t]*(?=\t)/': '[RescueSoft] (1996\t)[^\t](\t)'
+  yob:
+    type: select
+    options:
+      '/(?<=\s)[0-9]{2}(?=\s)/': '96'
+      '/(?<=\s)[0-9]{4}(?=\s)/': '1996'
+      '': Not available
+  nationality:
+    type: select
+    options:
+      '/[A-Z]{3}/': 'NED'
+      '': Not available
+  club:
+    type: select
+    options:
+      '': Not available
+events:
+  event_signifier: # it's an event
+    type: select
+    options:
+      '/event/i': Event|event
+  event_designifier: # it is NOT an event
+    type: select
+    options:
+      /rules/i: Common designifier
+  event_rejector: # it's an event we're not interested in
+    type: select
+    options:
+      /line ?throw|relay|brick|patient/i: Common rejectors
+  event_stopper: # the current event is completed and following results are not added
+  event_names:
+    1:
+      label: 100m manikin carry with fins
+      type: select
+      options:
+        '/(100[m ](.*)carry)|(carry(.*)100[m ])/i': 100<->carry
+    2:
+      label: 50m manikin carry
+      type: select
+      options:
+        '/(50[m ](.*)carry)|(carry(.*)50[m ])/i': 50<->carry
+    3:
+      label: 200m obstacle swim
+      type: select
+      options:
+        '/(200[m ](.*)obs)|(obs(.*)200[m ])/i': 200<->obs
+    4:
+      label: 100m manikin tow
+      type: select
+      options:
+        '/(100[m ](.*)tow)|(tow(.*)100[m ])/i': 200<->obs
+    5:
+      label: 100m rescue medley
+      type: select
+      options:
+        '/(100[m ](.*)medley)|(medley(.*)100[m ])/i': 100<->medley
+    6:
+      label: 200m super lifesaver
+      type: select
+      options:
+        '/(200[m ](.*)super)|(super(.*)200[m ])/i': 200<->super
+    7:
+      label: 50m obstacle swim
+      type: select
+      options:
+        '/(50[m ](.*)obs)|(obs(.*)50[m ])/i': 50<->obs
+    8:
+      label: 50m free style
+      type: select
+      options:
+        '/(50[m ](.*)free)|(free(.*)50[m ])/i': 50<->free
+    9:
+      label: 50m free style with fins
+      type: select
+      options:
+        '/(50[m ](.*)(free|swim)(.*)fins)/i': 50 (free|swim) fins
+    12:
+      label: 25m manikin carry
+      type: select
+      options:
+        '/25[m ](.*)carry/i': 25 carry
+    13:
+      label: 50m free style with tube
+      type: select
+      options:
+        '/50[m ](.*)(tube|torpedo)/i': 50 (tube|torpedo)
+    18:
+      label: 100m obstacle swim
+      type: select
+      options:
+        '/(100[m ](.*)obs)|(obs(.*)100[m ])/i': 100<->obs
+genders:
+  women:
+    type: select
+    options:
+      '/women|girls/i': 'Women|Girls'
+      '/dames|meisjes|vrouwen/i': 'Dames|Meisjes|Vrouwen'
+  men:
+    type: select
+    options:
+      '/men|boys/i': 'Men|Boys'
+      '/heren|jongens|mannen/i': 'Heren|Jongens|Mannen'
+  separate_gender_signifier:
+results:
+  time:
+    type: select
+    options:
+      '/[0-9]{0,2}:?[0-9]{2}\.[0-9]{2}/': '1:35.22'
+      '/[0-9]{0,2}:?[0-9]{2},[0-9]{2}/': '1:35,22'
+  time_index:
+    type: select
+    options:
+      all: All
+      first: First
+      last: Last
+  result_rejector:
+    type: select
+    options:
+      /splash meet manager/i: Common rejector
+  dsq:
+  dns:
+  round:
+    type: select
+    options:
+      '': None
+      /^[AB]/: Letter, start of line
+  round_mappings:
+    type: textarea
+  heat:
+    type: select
+    options:
+      '': None
+      /^[0-9]+/: Number, start of line
+as_csv:
+  as_csv:
+    type: boolean
+  delimiter:
+  indexes:
+    name:
+      type: number
+    club:
+      type: number
+    yob:
+      type: number
+    events:
+      1:
+        label: 100m manikin carry with fins
+        type: number
+      2:
+        label: 50m manikin carry
+        type: number
+      3:
+        label: 200m obstacle swim
+        type: number
+      4:
+        label: 100m manikin tow
+        type: number
+      5:
+        label: 100m rescue medley
+        type: number
+      6:
+        label: 200m super lifesaver
+        type: number
+      7:
+        label: 50m obstacle swim
+        type: number
+      8:
+        label: 50m free style
+        type: number
+      9:
+        label: 50m free style with fins
+        type: number
+      12:
+        label: 25m manikin carry
+        type: number
+      13:
+        label: 50m free style with tube
+        type: number
+      18:
+        label: 100m obstacle swim
+        type: number
+pdfparser_options:
+  horizontal_offset:
+cleaning_options:
+  custom_replace:
+    type: textarea
+  class_cleaners:
+    HytekCleaner:
+      type: select-multiple
+      custom: false
+      options:
+        three_lines_up: Three lines up
+  line_combiner:
+    pattern:
+    direction:
+      type: select
+      custom: false
+      options:
+        up: Up
+        down: Down
+    amount:
+      type: number
+    delimiter:
+  line_movers:
+    type: textarea

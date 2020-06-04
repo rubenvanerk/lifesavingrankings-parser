@@ -1,0 +1,74 @@
+info:
+  name:
+  location:
+  date:
+  timekeeping:
+  credit:
+athlete:
+  name:
+  yob:
+  nationality:
+  club:
+events:
+  event_signifier:
+  event_designifier:
+  event_rejector:
+  event_stopper:
+  event_names:
+    1:
+    2:
+    3:
+    4:
+    5:
+    6:
+    7:
+    8:
+    9:
+    12:
+    13:
+    18:
+genders:
+  women:
+  men:
+  separate_gender_signifier:
+results:
+  time:
+  time_index:
+  result_rejector:
+  dsq:
+  dns:
+  round:
+  round_mappings:
+  heat:
+as_csv:
+  as_csv:
+  delimiter:
+  indexes:
+    name:
+    club:
+    yob:
+    events:
+      1:
+      2:
+      3:
+      4:
+      5:
+      6:
+      7:
+      8:
+      9:
+      12:
+      13:
+      18:
+pdfparser_options:
+  horizontal_offset: \t
+cleaning_options:
+  custom_replace:
+  class_cleaners:
+    HytekCleaner:
+  line_combiner:
+    pattern:
+    direction:
+    amount:
+    delimiter:
+  line_movers:
