@@ -17,6 +17,7 @@ class TextParser extends Parser
     private static $_instance;
     protected $fileName;
     public $config;
+    private $currentEventId;
     private $currentGender;
     private $currentRound;
     private $currentEventRejected;
@@ -83,9 +84,8 @@ class TextParser extends Parser
                     $this->currentEventRejected = true;
                     break;
                 case self::EVENT_LINE_TYPE:
-                    $event = $this->getEventFromLine($line);
+                    $this->currentEventId = $this->getEventIdFromLine($line);
                     $this->currentGender = $this->getGenderFromLine($line);
-                    $this->parsedCompetition->addEvent($event);
                     $this->currentEventRejected = false;
                     break;
                 case self::RESULT_LINE_TYPE:
@@ -94,12 +94,7 @@ class TextParser extends Parser
                     }
                     $results = $this->getResultsFromLine($line);
                     foreach ($results as $result) {
-                        if ($this->config->{'as_csv.as_csv'}) {
-                            $this->parsedCompetition->addResultToEvent($result, $result->eventId);
-                        } else {
-                            $this->parsedCompetition->addResultToLastEvent($result);
-                        }
-                        $this->parsedCompetition->resultCount++;
+                        $this->parsedCompetition->results[] = $result;
                     }
                     break;
                 case self::SEPARATE_GENDER_LINE_TYPE:
@@ -110,8 +105,7 @@ class TextParser extends Parser
                     if ($this->currentEventRejected) {
                         break;
                     }
-                    $result = $this->getInvalidatedResultFromLine($line, $lineType);
-                    $this->parsedCompetition->addResultToLastEvent($result);
+                    $this->parsedCompetition->results[] = $this->getInvalidatedResultFromLine($line, $lineType);
                     break;
             }
         }
@@ -159,11 +153,11 @@ class TextParser extends Parser
         return null;
     }
 
-    private function getEventFromLine(string $line): ?ParsedEvent
+    private function getEventIdFromLine(string $line): ?int
     {
         foreach ($this->config->{'events.event_names'} as $eventId => $eventRegex) {
             if (preg_match($eventRegex, $line) === 1) {
-                return new ParsedEvent($eventId);
+                return $eventId;
             }
         }
         throw new \ParseError(sprintf('Could not find event in line \'%s\'', $line));
@@ -203,14 +197,14 @@ class TextParser extends Parser
         $yearOfBirth = (int)$csv[$this->config->{'as_csv.indexes.yob'}];
         $competitionYear = (int)Carbon::create($this->config->{'info.date'})->year;
         $yearOfBirth = Cleaner::cleanYearOfBirth($yearOfBirth, $competitionYear);
-        $club = $this->config->{'as_csv.indexes.club'} ? $csv[$this->config->{'as_csv.indexes.club'}] : null;
+        $team = $this->config->{'as_csv.indexes.team'} ? $csv[$this->config->{'as_csv.indexes.team'}] : null;
 
         $parsedAthlete = new ParsedAthlete(
             $name,
             $yearOfBirth,
             $this->currentGender,
             null,
-            $club
+            $team
         );
 
         $parsedResults = [];
@@ -251,7 +245,7 @@ class TextParser extends Parser
         $parsedResults = [];
         $loopIndex = 0;
         foreach ($times as $time) {
-            $parsedResults[] = new ParsedResult(
+            $parsedResult = new ParsedResult(
                 Cleaner::cleanTime($time),
                 $athlete,
                 $roundFromLine ?? $this->currentRound ?? $loopIndex,
@@ -264,6 +258,8 @@ class TextParser extends Parser
                 null,
                 null
             );
+            $parsedResult->eventId = $this->currentEventId;
+            $parsedResults[] = $parsedResult;
             $loopIndex++;
         }
 
@@ -284,7 +280,7 @@ class TextParser extends Parser
         $withdrawn = false;
         $originalLine = $line;
 
-        return new ParsedResult(
+        $parsedResult = new ParsedResult(
             null,
             $athlete,
             $roundFromLine ?? $this->currentRound ?? 0,
@@ -297,6 +293,8 @@ class TextParser extends Parser
             null,
             null
         );
+        $parsedResult->eventId = $this->currentEventId;
+        return $parsedResult;
     }
 
     private function getAthleteFromLine(string $line): ParsedAthlete
@@ -308,9 +306,9 @@ class TextParser extends Parser
         $name = $this->getNameFromLine($line);
         $yearOfBirth = $this->getYearOfBirthFromLine($line);
         $nationality = $this->getNationalityFromLine($line);
-        $club = $this->getClubFromLine($line);
+        $team = $this->getTeamFromLine($line);
 
-        return new ParsedAthlete($name, $yearOfBirth, $this->currentGender, $nationality, $club);
+        return new ParsedAthlete($name, $yearOfBirth, $this->currentGender, $nationality, $team);
     }
 
     private function getNameFromLine(string $line): string
@@ -340,9 +338,9 @@ class TextParser extends Parser
         return Arr::first($matches);
     }
 
-    public function getClubFromLine(string $line): ?string
+    public function getTeamFromLine(string $line): ?string
     {
-        $pattern = $this->config->{'athlete.club'};
+        $pattern = $this->config->{'athlete.team'};
         if (!$pattern) {
             return null;
         }

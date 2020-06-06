@@ -9,7 +9,7 @@ class Nationality extends Model
     protected $table = 'rankings_nationality';
     public $timestamps = false;
 
-    public function athletes()
+    public function athletes(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
     {
         return $this->belongsToMany(Athlete::class);
     }

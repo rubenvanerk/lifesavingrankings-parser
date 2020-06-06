@@ -10,11 +10,9 @@
     Timekeeping: {{$competition->timekeeping}}<br>
     Credit: {{$competition->credit}}<br><br>
 
-    Result count: {{$competition->resultCount}}<br>
+    Result count: {{count($competition->results)}}<br>
 
-    @foreach($competition->events as $event)
         <details>
-            <summary>{{$event->getName()}}</summary>
             <table>
                 <thead>
                 <tr>
@@ -22,24 +20,25 @@
                     <th>YoB</th>
                     <th>Gender</th>
                     <th>Nationality</th>
-                    <th>Club</th>
+                    <th>Team</th>
                     <th>Time / code</th>
                     <th>Splits</th>
                     <th>Round</th>
                     <th>Heat</th>
                     <th>Lane</th>
                     <th>Reactiontime</th>
+                    <th>Points</th>
                 </tr>
                 </thead>
                 <tbody>
-                @foreach($event->results as $result)
+                @foreach($competition->results as $result)
                     @php($athlete = $result->athlete)
                     <tr>
                         <td>{{$athlete->name}}</td>
                         <td>{{$athlete->yearOfBirth}}</td>
                         <td>{{$athlete->gender === 1 ? 'Male' : 'Female'}}</td>
                         <td>{{$athlete->nationality}}</td>
-                        <td>{{$athlete->club}}</td>
+                        <td>{{$athlete->team}}</td>
                         <td>{{$result->getTimeStringForDisplay()}}</td>
                         <td>
                             @if($result->splits)
@@ -54,11 +53,11 @@
                         <td>{{$result->heat}}</td>
                         <td>{{$result->lane}}</td>
                         <td>{{$result->getReactionTimeStringForDisplay()}}</td>
+                        <td>{{$result->calculatePoints()}}</td>
                     </tr>
                 @endforeach
                 </tbody>
             </table>
         </details>
 
-    @endforeach
 @endsection

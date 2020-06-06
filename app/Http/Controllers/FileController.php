@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Services\Parsers\Parser;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
@@ -58,13 +59,15 @@ class FileController extends Controller
     {
         $competitionParser = Parser::getInstance($file);
 
+
         // s3 url
         // Storage::temporaryUrl($file, Carbon::now()->addMinutes(5));
         $data = [
             'file' => $file,
             'temporaryUrl' => Storage::url($file),
             'rawData' => $competitionParser->getRawData(),
-            'config' => $competitionParser->config
+            'config' => $competitionParser->config,
+            'databases' => config('database.connections')
         ];
 
         return view('config', $data);
@@ -73,13 +76,17 @@ class FileController extends Controller
     public function saveConfig(Request $request, $file)
     {
         $this->saveConfigFromRequest($request, $file);
-        switch ($request->input('action')) {
+        $action = $request->input('action');
+        switch ($action) {
             case 'dry_run':
                 return redirect()->route('dry_run', ['file' => $file]);
-            case 'save_database':
-                return redirect()->route('save_database', ['file' => $file]);
-            default:
+            case 'save_config':
                 return redirect()->route('config', ['file' => $file]);
+            default:
+                if (!array_key_exists($action, config('database.connections'))) {
+                    return redirect()->route('config', ['file' => $file]);
+                }
+                return redirect()->route('save_database', ['file' => $file, 'connection' => $action]);
         }
     }
 
@@ -90,11 +97,14 @@ class FileController extends Controller
         return view('dry_run', ['competition' => $parsedCompetition, 'file' => $file]);
     }
 
-    public function saveToDatabase($file)
+    public function saveToDatabase($file, $connection)
     {
+        Config::set('database.default', $connection);
         $competitionParser = Parser::getInstance($file);
         $parsedCompetition = $competitionParser->getParsedCompetition();
-        $parsedCompetition->saveToDatabase();
+        \DB::transaction(function () use ($parsedCompetition) {
+            $parsedCompetition->saveToDatabase();
+        });
         return view('save_to_database', ['competition' => $parsedCompetition, 'file' => $file]);
     }
 

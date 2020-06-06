@@ -8,7 +8,7 @@ athlete:
   name:
   yob:
   nationality:
-  club:
+  team:
 events:
   event_signifier:
   event_designifier:
@@ -45,7 +45,7 @@ as_csv:
   delimiter:
   indexes:
     name:
-    club:
+    team:
     yob:
     events:
       1:

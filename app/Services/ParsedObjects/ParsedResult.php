@@ -2,6 +2,10 @@
 
 namespace App\Services\ParsedObjects;
 
+use App\Event;
+use App\EventRecord;
+use App\IndividualResult;
+use App\Services\Cleaners\Cleaner;
 use Carbon\CarbonInterval;
 
 class ParsedResult implements ParsedObject
@@ -74,8 +78,62 @@ class ParsedResult implements ParsedObject
         return str_replace('0000', '', $this->reactionTime->format('%S.%F'));
     }
 
-    public function saveToDatabase()
+    public function calculatePoints(): ?float
     {
-        // TODO: Implement saveToDatabase() method.
+        if ($this->disqualified || $this->didNotStart || $this->withdrawn) {
+            return 0;
+        }
+
+        $eventId = $this->eventId;
+        $record = EventRecord::whereHas('event', function ($query) use ($eventId) {
+            return $query->where('id', $eventId)->where('gender', $this->athlete->gender);
+        })->first();
+
+        if (!$record) {
+            return 0;
+        }
+
+        $recordTime = Cleaner::cleanTime($record->time);
+
+        $points = 0;
+        $quotient = $this->time->totalSeconds / $recordTime->totalSeconds;
+
+        if ($quotient <= 2) {
+            $r1 = 467 * $quotient * $quotient;
+            $r2 = 2001 * $quotient;
+            $points = round(($r1 - $r2 + 2534.0) * 100.0) / 100;
+        } elseif ($quotient <= 5) {
+            $r1 = 2000.0 / 3.0;
+            $r2 = (400.0 / 3.0) * $quotient;
+            $points = $r1 - $r2;
+            $points = round(100.0 * $points) / 100.0;
+        }
+
+        return $points;
+    }
+
+    public function saveToDatabase(): void
+    {
+        $athlete = $this->athlete->saveToDatabase();
+
+        try {
+            $event = Event::findOrFail($this->eventId);
+        } catch (\Exception $exception) {
+            dd($this);
+        }
+
+        $individualResult = new IndividualResult();
+        $individualResult->athlete()->associate($athlete);
+        $individualResult->event()->associate($event);
+        $individualResult->competition()->associate(ParsedCompetition::$model);
+        $individualResult->time = $this->time;
+        $individualResult->points = $this->calculatePoints();
+        $individualResult->original_line = $this->originalLine;
+        $individualResult->round = $this->round;
+        $individualResult->disqualified = $this->disqualified;
+        $individualResult->did_not_start = $this->didNotStart;
+        $individualResult->save();
+
+        // TODO: team, heat, lane, reaction time
     }
 }

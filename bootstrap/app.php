@@ -69,6 +69,7 @@ $app->singleton('filesystem', function ($app) {
 
 $app->configure('app');
 $app->configure('filesystems');
+$app->configure('sluggable');
 
 /*
 |--------------------------------------------------------------------------
@@ -100,7 +101,7 @@ $app->configure('filesystems');
 |
 */
 
-// $app->register(App\Providers\AppServiceProvider::class);
+$app->register(App\Providers\AppServiceProvider::class);
 // $app->register(App\Providers\AuthServiceProvider::class);
 // $app->register(App\Providers\EventServiceProvider::class);
 

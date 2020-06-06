@@ -4,7 +4,6 @@ namespace App\Services\ParsedObjects;
 
 class ParsedEvent implements ParsedObject {
     public $id;
-    public $results = [];
 
     public const EVENT_NAMES = [
         1 => '100m manikin carry with fins',
@@ -33,10 +32,5 @@ class ParsedEvent implements ParsedObject {
     public function getName(): string
     {
         return self::EVENT_NAMES[$this->id] ?? (string) $this->id;
-    }
-
-    public function saveToDatabase(): void
-    {
-        // TODO: Implement saveToDatabase() method.
     }
 }

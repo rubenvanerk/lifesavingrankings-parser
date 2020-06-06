@@ -22,8 +22,10 @@
         <input type="radio" name="action" id="dry_run" value="dry_run">
         <label for="dry_run">Dry run</label><br>
 
-        <input type="radio" name="action" id="save_database" value="save_database">
-        <label for="save_database">Save to database</label><br>
+        @foreach($databases as $name => $config)
+            <input type="radio" name="action" id="save_{{$name}}_database" value="{{$name}}">
+            <label for="save_{{$name}}_database">Save to {{$name}} database</label><br>
+        @endforeach
 
         <button type="submit">Save</button>
 

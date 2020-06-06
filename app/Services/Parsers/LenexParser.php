@@ -81,9 +81,8 @@ class LenexParser extends Parser
                             $lenexResult->getReactionTime() ? Cleaner::cleanTime($lenexResult->getReactionTime()) : null,
                             $parsedSplits
                         );
-
-                        $this->parsedCompetition->addResultToEvent($parsedResult, $eventMappings[$lenexResult->getEventId()]);
-                        $this->parsedCompetition->resultCount++;
+                        $parsedResult->eventId = $eventMappings[$lenexResult->getEventId()];
+                        $this->parsedCompetition->results[] = $parsedResult;
                     }
                 }
             }

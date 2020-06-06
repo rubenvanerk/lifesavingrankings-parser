@@ -28,7 +28,7 @@ athlete:
     options:
       '/[A-Z]{3}/': 'NED'
       '': Not available
-  club:
+  team:
     type: select
     options:
       '': Not available
@@ -156,7 +156,7 @@ as_csv:
   indexes:
     name:
       type: number
-    club:
+    team:
       type: number
     yob:
       type: number
