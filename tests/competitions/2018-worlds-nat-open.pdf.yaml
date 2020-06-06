@@ -1,0 +1,42 @@
+info:
+    name: 'World Championships National Teams Open 2018'
+    location: 'Adelaide, Australia'
+    date: '2018-09-01'
+    timekeeping: '1'
+    credit: ''
+athlete:
+    name: '/(?<=[0-9]{4}\t)[^\t]*(?=\t)/'
+    yob: '/(?<=\s)[0-9]{4}(?=\s)/'
+    nationality: '/[A-Z]{3}/'
+    club: ''
+events:
+    event_signifier: '/over all heats/'
+    event_designifier: /rules/i
+    event_rejector: '/line throw|relay/i'
+    event_stopper: ''
+    event_names: { 1: '/(100[m ](.*)carry)|(carry(.*)100[m ])/i', 2: '/(50[m ](.*)carry)|(carry(.*)50[m ])/i', 3: '/(200[m ](.*)obs)|(obs(.*)200[m ])/i', 4: '/(100[m ](.*)tow)|(tow(.*)100[m ])/i', 5: '/(100[m ](.*)medley)|(medley(.*)100[m ])/i', 6: '/(200[m ](.*)super)|(super(.*)200[m ])/i', 7: '/(50[m ](.*)obs)|(obs(.*)50[m ])/i', 8: '/(50[m ](.*)free)|(free(.*)50[m ])/i', 9: '/(50[m ](.*)(free|swim)(.*)fins)/i', 12: '/25[m ](.*)carry/i', 13: '/50[m ](.*)(tube|torpedo)/i', 18: '/(100[m ](.*)obs)|(obs(.*)100[m ])/i' }
+genders:
+    women: /women|girls/i
+    men: /men|boys/i
+    separate_gender_signifier: ''
+results:
+    time: '/[0-9]{0,2}:?[0-9]{2},[0-9]{2}/'
+    time_index: all
+    result_rejector: '/resultlist|ER:|WR:/i'
+    dsq: /DC/
+    dns: /d\.n\.s\./
+    round: '/^[AB]/'
+    round_mappings: "A>>2\r\nB>>1"
+    heat: '/^[0-9]+/'
+as_csv:
+    as_csv: null
+    delimiter: ''
+    indexes: { name: '', club: '', yob: '', events: { 1: '', 2: '', 3: '', 4: '', 5: '', 6: '', 7: '', 8: '', 9: '', 12: '', 13: '', 18: '' } }
+pdfparser_options:
+    horizontal_offset: \t
+    horizontalOffset: ''
+cleaning_options:
+    custom_replace: "/Yong, Hock Lin, Eddie/>>Yong Hock Lin, Eddie\r\n/WAIYAKI\t   , OBA KABUTHIA/>>WAIYAKI, OBA KABUTHIA\r\n/Tan, Wei Ling, Josephine/>>Tan Wei Ling, Josephine\r\n/Mek, Ren Fong, Austin/>>Mek Ren Fong, Austin\r\n/Geh, Pei Jun, Kymberley/>>Geh Pei Jun, Kymberley\r\n/Seow, Chen Jiat, Denis/>>Seow Chen Jiat, Denis"
+    class_cleaners: { HytekCleaner: null }
+    line_combiner: { pattern: '', direction: up, amount: '', delimiter: '' }
+    line_movers: ''

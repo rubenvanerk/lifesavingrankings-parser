@@ -58,8 +58,6 @@ class FileController extends Controller
     {
         $competitionParser = Parser::getInstance($file);
 
-        Storage::url($file);
-
         // s3 url
         // Storage::temporaryUrl($file, Carbon::now()->addMinutes(5));
         $data = [

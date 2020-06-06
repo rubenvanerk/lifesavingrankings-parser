@@ -29,12 +29,12 @@ class ParserConfig
 
     private function loadConfig(): void
     {
-        $fileExtension = pathinfo(storage_path('app/' . $this->resultsFile), PATHINFO_EXTENSION);
+        $fileExtension = pathinfo($this->resultsFile, PATHINFO_EXTENSION);
         $empty = file_get_contents(__DIR__ . DIRECTORY_SEPARATOR . self::FILE_EXTENSION_TEMPLATE_MAPPINGS[$fileExtension]);
-        if (!Storage::exists($this->fileName)) {
-            Storage::put($this->fileName, $empty);
+        if (!file_exists($this->fileName)) {
+            file_put_contents($this->fileName, $empty);
         }
-        $this->config = array_replace_recursive(Yaml::parse($empty), Yaml::parse(Storage::get($this->fileName)));
+        $this->config = array_replace_recursive(Yaml::parse($empty), Yaml::parse(file_get_contents($this->fileName)));
     }
 
     public function __get($name)
@@ -60,7 +60,7 @@ class ParserConfig
 
     public function save(): void
     {
-        Storage::put($this->fileName, Yaml::dump($this->config));
+        file_put_contents($this->fileName, Yaml::dump($this->config));
     }
 
     public function remove($name): void

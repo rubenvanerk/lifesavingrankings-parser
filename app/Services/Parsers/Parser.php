@@ -24,10 +24,16 @@ abstract class Parser {
     public static function getInstance($file): Parser
     {
         if (!(self::$instance instanceof self)) {
-            $fileExtension = pathinfo(storage_path('app/' . $file), PATHINFO_EXTENSION);
+            if (!file_exists($file)) {
+                $file = storage_path('app/' . $file);
+            }
+
+            $fileExtension = pathinfo($file, PATHINFO_EXTENSION);
+
             if (!isset(self::FILE_EXTENSION_PARSER_MAPPINGS[$fileExtension])) {
                 throw new \ParseError($fileExtension . ' is not supported');
             }
+
             $parserType = self::FILE_EXTENSION_PARSER_MAPPINGS[$fileExtension];
             self::$instance = $parserType::getInstance($file);
         }

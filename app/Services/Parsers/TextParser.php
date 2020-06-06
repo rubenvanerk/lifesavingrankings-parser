@@ -10,7 +10,6 @@ use App\Services\ParsedObjects\ParsedEvent;
 use App\Services\ParsedObjects\ParsedResult;
 use Carbon\Carbon;
 use Illuminate\Support\Arr;
-use Illuminate\Support\Str;
 use Smalot\PdfParser\PDFObject;
 
 class TextParser extends Parser
@@ -51,7 +50,7 @@ class TextParser extends Parser
     {
         $parser = new \Smalot\PdfParser\Parser();
         /** @var PDFObject $pdf */
-        $pdf = $parser->parseFile(storage_path('app/' . $this->fileName));
+        $pdf = $parser->parseFile($this->fileName);
         if ($this->config->{'pdfparser_options'}) {
             \Smalot\PdfParser\Parser::$horizontalOffset =
                 $this->translateQuoted($this->config->{'pdfparser_options.horizontal_offset'}) ?: ' ';

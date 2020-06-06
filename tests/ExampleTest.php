@@ -1,8 +1,5 @@
 <?php
 
-use Laravel\Lumen\Testing\DatabaseMigrations;
-use Laravel\Lumen\Testing\DatabaseTransactions;
-
 class ExampleTest extends TestCase
 {
     /**
@@ -10,12 +7,14 @@ class ExampleTest extends TestCase
      *
      * @return void
      */
-    public function testExample()
+    public function testRescueSoft()
     {
-        $this->get('/');
+        $parser = App\Services\Parsers\Parser::getInstance(__DIR__ . DIRECTORY_SEPARATOR . 'competitions/2018-worlds-nat-open.pdf');
+
+        $parsedCompetition = $parser->getParsedCompetition();
 
         $this->assertEquals(
-            $this->app->version(), $this->response->getContent()
+            791, $parsedCompetition->resultCount
         );
     }
 }
