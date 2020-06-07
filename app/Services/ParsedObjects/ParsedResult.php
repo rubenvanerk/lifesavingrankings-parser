@@ -116,11 +116,7 @@ class ParsedResult implements ParsedObject
     {
         $athlete = $this->athlete->saveToDatabase();
 
-        try {
-            $event = Event::findOrFail($this->eventId);
-        } catch (\Exception $exception) {
-            dd($this);
-        }
+        $event = Event::findOrFail($this->eventId);
 
         $individualResult = new IndividualResult();
         $individualResult->athlete()->associate($athlete);
