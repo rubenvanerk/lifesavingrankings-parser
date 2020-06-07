@@ -4,6 +4,8 @@ namespace App\Services\ParsedObjects;
 
 use App\Athlete;
 use App\Nationality;
+use App\Participation;
+use App\Team;
 use Carbon\Carbon;
 
 class ParsedAthlete implements ParsedObject {
@@ -39,12 +41,36 @@ class ParsedAthlete implements ParsedObject {
             $athlete = Athlete::create([
                 'name' => $this->name,
                 'gender' => $this->gender,
-                'year_of_birth' => $this->gender
+                'year_of_birth' => $this->yearOfBirth
             ]);
         }
 
         if ($athlete->alias_of) {
             $athlete = $athlete->alias_of;
+        }
+
+        if ($this->team) {
+            $team = Team::firstOrCreate([
+                'name' => $this->team
+            ]);
+
+            $competition = ParsedCompetition::$model;
+
+            $participation = Participation::whereHas('team', function ($query) use ($team) {
+                $query->where('id', $team->id);
+            })->whereHas('athlete', function ($query) use ($athlete) {
+                $query->where('id', $athlete->id);
+            })->whereHas('competition', function ($query) use ($competition) {
+                $query->where('id', $competition->id);
+            })->first();
+
+            if (!$participation) {
+                $participation = new Participation();
+                $participation->athlete()->associate($athlete);
+                $participation->competition()->associate($competition);
+                $participation->team()->associate($team);
+                $participation->save();
+            }
         }
 
         if (!$this->nationality) {
