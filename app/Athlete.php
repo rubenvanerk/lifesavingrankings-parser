@@ -17,6 +17,11 @@ class Athlete extends Model
         return $this->belongsToMany(Nationality::class, 'rankings_athlete_nationalities');
     }
 
+    public function alias_of(): \Illuminate\Database\Eloquent\Relations\BelongsTo
+    {
+        return $this->belongsTo(self::class, 'alias_of_id');
+    }
+
     protected $fillable = ['name', 'gender', 'year_of_birth'];
 
     public function sluggable(): array

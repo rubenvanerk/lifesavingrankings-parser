@@ -32,20 +32,20 @@ class ParsedAthlete implements ParsedObject {
     {
         $athlete = Athlete::where('name', 'ilike', $this->name)
             ->where('gender', $this->gender)
-            ->where('year_of_birth', $this->yearOfBirth)
+            ->where('year_of_birth', $this->gender)
             ->first();
 
         if (!$athlete) {
             $athlete = Athlete::create([
                 'name' => $this->name,
                 'gender' => $this->gender,
-                'year_of_birth' => $this->yearOfBirth
+                'year_of_birth' => $this->gender
             ]);
         }
 
-        // TODO: check if athlete is alias of another athlete
-
-        $athlete->save();
+        if ($athlete->alias_of) {
+            $athlete = $athlete->alias_of;
+        }
 
         if (!$this->nationality) {
             return $athlete;
