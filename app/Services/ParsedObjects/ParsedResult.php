@@ -122,7 +122,7 @@ class ParsedResult implements ParsedObject
         $individualResult->athlete()->associate($athlete);
         $individualResult->event()->associate($event);
         $individualResult->competition()->associate(ParsedCompetition::$model);
-        $individualResult->time = $this->time;
+        $individualResult->time = $this->time ? sprintf('%s:%s.%s', $this->time->minutes, $this->time->seconds, $this->time->microseconds) : null;
         $individualResult->points = $this->calculatePoints();
         $individualResult->original_line = $this->originalLine;
         $individualResult->round = $this->round;
