@@ -34,7 +34,7 @@ class ParsedAthlete implements ParsedObject {
     {
         $athlete = Athlete::where('name', 'ilike', $this->name)
             ->where('gender', $this->gender)
-            ->where('year_of_birth', $this->gender)
+            ->where('year_of_birth', $this->yearOfBirth)
             ->first();
 
         if (!$athlete) {
