@@ -132,6 +132,7 @@ class ParsedResult implements ParsedObject
         $individualResult->round = $this->round;
         $individualResult->disqualified = $this->disqualified;
         $individualResult->did_not_start = $this->didNotStart;
+        $individualResult->withdrawn = $this->withdrawn;
         $individualResult->save();
 
         // TODO: team, heat, lane, reaction time
