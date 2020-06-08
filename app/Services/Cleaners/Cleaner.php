@@ -46,7 +46,7 @@ abstract class Cleaner
             $newLine = $line;
 
             if ($direction === 'up') {
-                for ($j = 0; $j < $amount; $j++) {
+                for ($j = 1; $j <= $amount; $j++) {
                     $index = $i - $j;
                     $newLine .= self::translateQuoted($delimiter) . Arr::pull($newLines, $index);
                 }
