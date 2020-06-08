@@ -9,6 +9,8 @@ athlete:
   yob:
   nationality:
   team:
+  names:
+  names_explode:
 events:
   event_signifier:
   event_designifier:
@@ -26,6 +28,9 @@ events:
     9:
     12:
     13:
+    15:
+    16:
+    17:
     18:
 genders:
   women:

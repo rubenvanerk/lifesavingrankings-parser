@@ -32,13 +32,21 @@
                 </thead>
                 <tbody>
                 @foreach($competition->results as $result)
-                    @php($athlete = $result->athlete)
+                    @php($athlete = $result->athlete ?? $result->athletes)
                     <tr>
-                        <td>{{$athlete->name}}</td>
-                        <td>{{$athlete->yearOfBirth}}</td>
-                        <td>{{$athlete->gender === 1 ? 'Male' : 'Female'}}</td>
-                        <td>{{$athlete->nationality}}</td>
-                        <td>{{$athlete->team}}</td>
+                        @if(is_array($athlete))
+                            <td>@foreach($athlete as $athl) {{$athl->name}}, @endforeach</td>
+                            <td></td>
+                            <td>{{$athl->gender === 1 ? 'Male' : 'Female'}}</td>
+                            <td>{{$athl->nationality}}</td>
+                            <td>{{$athl->team}}</td>
+                        @else
+                            <td>{{$athlete->name}}</td>
+                            <td>{{$athlete->yearOfBirth}}</td>
+                            <td>{{$athlete->gender === 1 ? 'Male' : 'Female'}}</td>
+                            <td>{{$athlete->nationality}}</td>
+                            <td>{{$athlete->team}}</td>
+                        @endif
                         <td>{{$result->getTimeStringForDisplay()}}</td>
                         <td>
                             @if($result->splits)

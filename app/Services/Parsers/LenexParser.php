@@ -5,7 +5,7 @@ namespace App\Services\Parsers;
 use App\Services\Cleaners\Cleaner;
 use App\Services\ParsedObjects\ParsedAthlete;
 use App\Services\ParsedObjects\ParsedEvent;
-use App\Services\ParsedObjects\ParsedResult;
+use App\Services\ParsedObjects\ParsedIndividualResult;
 use App\Services\ParsedObjects\ParsedSplit;
 use leonverschuren\Lenex\Model\Lenex;
 
@@ -68,7 +68,7 @@ class LenexParser extends Parser
                             );
                         }
 
-                        $parsedResult = new ParsedResult(
+                        $parsedResult = new ParsedIndividualResult(
                             $lenexResult->getStatus() ? null : Cleaner::cleanTime($lenexResult->getSwimTime()),
                             $parsedAthlete,
                             0,

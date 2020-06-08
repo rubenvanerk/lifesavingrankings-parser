@@ -15,7 +15,7 @@ class ParsedCompetition implements ParsedObject {
     public $credit;
     public $resultCount = 0;
     /**
-     * @var ParsedResult[]
+     * @var ParsedIndividualResult[]
      */
     public $results = [];
 

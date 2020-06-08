@@ -24,7 +24,7 @@ class ParsedEvent implements ParsedObject {
         $this->id = $id;
     }
 
-    public function addResult(ParsedResult $result): void
+    public function addResult(ParsedIndividualResult $result): void
     {
         $this->results[] = $result;
     }
