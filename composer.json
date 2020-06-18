@@ -7,6 +7,7 @@
     "require": {
         "php": "^7.3",
         "ext-fileinfo": "*",
+        "bref/bref": "^0.5.27",
         "cviebrock/eloquent-sluggable": "^7.0",
         "laravel/lumen-framework": "^7.0",
         "league/flysystem-aws-s3-v3": "^1.0",

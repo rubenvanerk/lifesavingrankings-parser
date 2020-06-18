@@ -24,10 +24,6 @@ abstract class Parser {
     public static function getInstance($file): Parser
     {
         if (!(self::$instance instanceof self)) {
-            if (!file_exists($file)) {
-                $file = storage_path('app/' . $file);
-            }
-
             $fileExtension = pathinfo($file, PATHINFO_EXTENSION);
 
             if (!isset(self::FILE_EXTENSION_PARSER_MAPPINGS[$fileExtension])) {

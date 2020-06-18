@@ -6,10 +6,10 @@ use App\Services\Cleaners;
 use App\Services\Cleaners\Cleaner;
 use App\Services\ParsedObjects\ParsedAthlete;
 use App\Services\ParsedObjects\ParsedCompetition;
-use App\Services\ParsedObjects\ParsedEvent;
 use App\Services\ParsedObjects\ParsedResult;
 use Carbon\Carbon;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\Storage;
 use Smalot\PdfParser\PDFObject;
 
 class TextParser extends Parser
@@ -51,7 +51,7 @@ class TextParser extends Parser
     {
         $parser = new \Smalot\PdfParser\Parser();
         /** @var PDFObject $pdf */
-        $pdf = $parser->parseFile($this->fileName);
+        $pdf = $parser->parseFile(Storage::temporaryUrl($this->fileName, Carbon::now()->addMinutes(5)));
         if ($this->config->{'pdfparser_options'}) {
             \Smalot\PdfParser\Parser::$horizontalOffset =
                 $this->translateQuoted($this->config->{'pdfparser_options.horizontal_offset'}) ?: ' ';

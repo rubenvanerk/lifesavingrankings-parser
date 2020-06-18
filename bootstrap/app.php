@@ -56,6 +56,17 @@ $app->singleton('filesystem', function ($app) {
     );
 });
 
+$storagePath = env('STORAGE_PATH', base_path() . DIRECTORY_SEPARATOR . 'storage');
+
+$app->useStoragePath($storagePath);
+
+$viewsCachePath = $storagePath . '/framework/views';
+if (!file_exists($viewsCachePath)) {
+    if (!mkdir($viewsCachePath, 0777, true) && !is_dir($viewsCachePath)) {
+        throw new \RuntimeException(sprintf('Directory "%s" was not created', $viewsCachePath));
+    }
+}
+
 /*
 |--------------------------------------------------------------------------
 | Register Config Files
