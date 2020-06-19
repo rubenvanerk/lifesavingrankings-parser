@@ -2,7 +2,8 @@
 
 namespace App\Services\ParsedObjects;
 
-class ParsedEvent implements ParsedObject {
+class ParsedEvent implements ParsedObject
+{
     public $id;
 
     public const EVENT_NAMES = [
@@ -22,11 +23,6 @@ class ParsedEvent implements ParsedObject {
     public function __construct(int $id)
     {
         $this->id = $id;
-    }
-
-    public function addResult(ParsedResult $result): void
-    {
-        $this->results[] = $result;
     }
 
     public function getName(): string

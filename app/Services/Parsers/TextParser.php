@@ -115,7 +115,8 @@ class TextParser extends Parser
     {
         if ($this->config->{'events.event_rejector'}
             && preg_match($this->config->{'events.event_rejector'}, $line) === 1
-            && (!$this->config->{'events.event_designifier'}
+            && (
+                !$this->config->{'events.event_designifier'}
                 || preg_match($this->config->{'events.event_designifier'}, $line) === 0
             )
         ) {
@@ -123,7 +124,8 @@ class TextParser extends Parser
         }
 
         if (preg_match($this->config->{'events.event_signifier'}, $line) === 1
-            && (!$this->config->{'events.event_designifier'}
+            && (
+                !$this->config->{'events.event_designifier'}
                 || preg_match($this->config->{'events.event_designifier'}, $line) === 0
             )
         ) {
@@ -131,7 +133,8 @@ class TextParser extends Parser
         }
 
         if (preg_match($this->config->{'results.time'}, $line) === 1
-            && (!$this->config->{'results.result_rejector'}
+            && (
+                !$this->config->{'results.result_rejector'}
                 || preg_match($this->config->{'results.result_rejector'}, $line) === 0
             )
         ) {

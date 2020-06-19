@@ -10,7 +10,8 @@ use Carbon\CarbonInterval;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
 
-abstract class Parser {
+abstract class Parser
+{
     private static $instance;
     protected $fileName;
     public $config;

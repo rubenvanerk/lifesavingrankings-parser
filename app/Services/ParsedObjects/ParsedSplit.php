@@ -21,7 +21,7 @@ class ParsedSplit implements ParsedObject
     public function getTimeStringForDisplay()
     {
         if (!$this->time) {
-            return $this->getStatus();
+            return null;
         }
         return str_replace('0000', '', $this->time->format('%I:%S.%F'));
     }

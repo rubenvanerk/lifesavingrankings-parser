@@ -23,16 +23,31 @@ class ParsedResult implements ParsedObject
     public $reactionTime;
     public $eventId;
 
-    public function __construct(?CarbonInterval $time, ParsedAthlete $athlete, int $round, bool $disqualified,
-                                bool $didNotStart, bool $withdrawn, ?string $originalLine, ?int $heat, ?int $lane, ?CarbonInterval $reactionTime, ?array $splits)
+    public function __construct(
+        ?CarbonInterval $time,
+        ParsedAthlete $athlete,
+        int $round,
+        bool $disqualified,
+        bool $didNotStart,
+        bool $withdrawn,
+        ?string $originalLine,
+        ?int $heat,
+        ?int $lane,
+        ?CarbonInterval $reactionTime,
+        ?array $splits
+    )
     {
         if (!$disqualified && !$didNotStart && !$withdrawn && is_null($time)) {
             throw new \ParseError('Time can not be null if DSQ, DNS and WDR are false');
         }
         if ($disqualified + $didNotStart + $withdrawn > 1) {
             throw new \ParseError(
-                sprintf('Only one of DSQ, DNS or WDR can be true. Given values: DSQ: %b, DNS: %b, WDR: %b',
-                    $disqualified, $didNotStart, $withdrawn)
+                sprintf(
+                    'Only one of DSQ, DNS or WDR can be true. Given values: DSQ: %b, DNS: %b, WDR: %b',
+                    $disqualified,
+                    $didNotStart,
+                    $withdrawn
+                )
             );
         }
         $this->time = $time;

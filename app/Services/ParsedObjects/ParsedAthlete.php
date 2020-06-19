@@ -8,7 +8,8 @@ use App\Participation;
 use App\Team;
 use Carbon\Carbon;
 
-class ParsedAthlete implements ParsedObject {
+class ParsedAthlete implements ParsedObject
+{
     public $name;
     public $yearOfBirth;
     public $gender;

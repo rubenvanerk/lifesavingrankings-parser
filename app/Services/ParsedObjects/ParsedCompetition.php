@@ -3,10 +3,10 @@
 namespace App\Services\ParsedObjects;
 
 use App\Competition;
-use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
 
-class ParsedCompetition implements ParsedObject {
+class ParsedCompetition implements ParsedObject
+{
     public static $model;
     public $name;
     public $location;
@@ -19,7 +19,7 @@ class ParsedCompetition implements ParsedObject {
      */
     public $results = [];
 
-    private CONST STATUS_IMPORTED = 2;
+    private const STATUS_IMPORTED = 2;
 
     public function __construct(string $name, string $location, string $date, int $timekeeping, string $credit)
     {

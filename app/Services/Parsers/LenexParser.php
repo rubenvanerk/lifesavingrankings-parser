@@ -30,7 +30,7 @@ class LenexParser extends Parser
     {
         $reader = new \leonverschuren\Lenex\Reader();
         $parser = new \leonverschuren\Lenex\Parser();
-        $parsedLenex = $parser->parseResult( $reader->read(storage_path('app' . DIRECTORY_SEPARATOR .$this->fileName)));
+        $parsedLenex = $parser->parseResult($reader->read(storage_path('app' . DIRECTORY_SEPARATOR .$this->fileName)));
         $eventMappings = $this->parseEvents($parsedLenex);
 
         foreach ($parsedLenex->getMeets() as $meet) {
@@ -100,7 +100,7 @@ class LenexParser extends Parser
             foreach ($meet->getSessions() as $session) {
                 foreach ($session->getEvents() as $event) {
                     $swimStyle = $event->getSwimStyle();
-                    if(!($eventName = $swimStyle->getName())) {
+                    if (!($eventName = $swimStyle->getName())) {
                         $eventName = $swimStyle->getDistance() . 'm ' . $swimStyle->getStroke();
                     }
                     if ($this->config->{'events.event_rejector'}

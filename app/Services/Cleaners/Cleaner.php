@@ -150,7 +150,6 @@ abstract class Cleaner
                 }
 
                 $lines[$i] = '';
-
             }
         }
 
