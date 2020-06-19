@@ -10,10 +10,15 @@ use Carbon\Carbon;
 
 class ParsedAthlete implements ParsedObject
 {
+    /** @var string  */
     public $name;
+    /** @var int|null  */
     public $yearOfBirth;
+    /** @var int  */
     public $gender;
+    /** @var string|null  */
     public $nationality;
+    /** @var string|null  */
     public $team;
 
     public const MALE = 1;

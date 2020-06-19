@@ -7,16 +7,19 @@ use Illuminate\Support\Str;
 
 class ParsedCompetition implements ParsedObject
 {
+    /** @var Competition */
     public static $model;
+    /** @var string  */
     public $name;
+    /** @var string  */
     public $location;
+    /** @var string  */
     public $date;
+    /** @var int  */
     public $timekeeping;
+    /** @var string  */
     public $credit;
-    public $resultCount = 0;
-    /**
-     * @var ParsedResult[]
-     */
+    /** @var ParsedResult[] */
     public $results = [];
 
     private const STATUS_IMPORTED = 2;
@@ -30,7 +33,7 @@ class ParsedCompetition implements ParsedObject
         $this->credit = $credit;
     }
 
-    public function saveToDatabase()
+    public function saveToDatabase(): void
     {
         $competitionSlug = Str::slug($this->name);
         $competition = Competition::firstOrCreate(

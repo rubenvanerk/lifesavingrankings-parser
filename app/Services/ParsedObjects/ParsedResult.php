@@ -10,17 +10,29 @@ use Carbon\CarbonInterval;
 
 class ParsedResult implements ParsedObject
 {
+    /** @var CarbonInterval|null  */
     public $time;
+    /** @var ParsedAthlete  */
     public $athlete;
+    /** @var int  */
     public $round;
+    /** @var bool  */
     public $disqualified;
+    /** @var bool  */
     public $didNotStart;
+    /** @var bool  */
     public $withdrawn;
+    /** @var string|null  */
     public $originalLine;
+    /** @var int|null  */
     public $heat;
+    /** @var array|null  */
     public $splits;
+    /** @var int|null  */
     public $lane;
+    /** @var CarbonInterval|null  */
     public $reactionTime;
+    /** @var int */
     public $eventId;
 
     public function __construct(
@@ -40,7 +52,7 @@ class ParsedResult implements ParsedObject
         if (!$disqualified && !$didNotStart && !$withdrawn && is_null($time)) {
             throw new \ParseError('Time can not be null if DSQ, DNS and WDR are false');
         }
-        if ($disqualified + $didNotStart + $withdrawn > 1) {
+        if ((int)$disqualified + (int)$didNotStart + (int)$withdrawn > 1) {
             throw new \ParseError(
                 sprintf(
                     'Only one of DSQ, DNS or WDR can be true. Given values: DSQ: %b, DNS: %b, WDR: %b',
@@ -77,7 +89,7 @@ class ParsedResult implements ParsedObject
         return null;
     }
 
-    public function getTimeStringForDisplay()
+    public function getTimeStringForDisplay(): string
     {
         if (!$this->time) {
             return $this->getStatus();
@@ -85,7 +97,7 @@ class ParsedResult implements ParsedObject
         return str_replace('0000', '', $this->time->format('%I:%S.%F'));
     }
 
-    public function getReactionTimeStringForDisplay()
+    public function getReactionTimeStringForDisplay(): string
     {
         if (is_null($this->reactionTime)) {
             return '';
@@ -93,7 +105,7 @@ class ParsedResult implements ParsedObject
         return str_replace('0000', '', $this->reactionTime->format('%S.%F'));
     }
 
-    public function calculatePoints(): ?float
+    public function calculatePoints(): ?int
     {
         if ($this->disqualified || $this->didNotStart || $this->withdrawn) {
             return 0;
@@ -110,21 +122,7 @@ class ParsedResult implements ParsedObject
 
         $recordTime = Cleaner::cleanTime($record->time);
 
-        $points = 0;
-        $quotient = $this->time->totalSeconds / $recordTime->totalSeconds;
-
-        if ($quotient <= 2) {
-            $r1 = 467 * $quotient * $quotient;
-            $r2 = 2001 * $quotient;
-            $points = round(($r1 - $r2 + 2534.0) * 100.0) / 100;
-        } elseif ($quotient <= 5) {
-            $r1 = 2000.0 / 3.0;
-            $r2 = (400.0 / 3.0) * $quotient;
-            $points = $r1 - $r2;
-            $points = round(100.0 * $points) / 100.0;
-        }
-
-        return $points;
+        return (int)(1000 * (($recordTime->totalSeconds / $this->time->totalSeconds) ** 3));
     }
 
     public function saveToDatabase(): void

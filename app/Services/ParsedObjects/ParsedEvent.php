@@ -4,8 +4,6 @@ namespace App\Services\ParsedObjects;
 
 class ParsedEvent implements ParsedObject
 {
-    public $id;
-
     public const EVENT_NAMES = [
         1 => '100m manikin carry with fins',
         2 => '50m manikin carry',
@@ -19,14 +17,4 @@ class ParsedEvent implements ParsedObject
         13 => '50m free style with tube',
         18 => '100m obstacle swim'
     ];
-
-    public function __construct(int $id)
-    {
-        $this->id = $id;
-    }
-
-    public function getName(): string
-    {
-        return self::EVENT_NAMES[$this->id] ?? (string) $this->id;
-    }
 }

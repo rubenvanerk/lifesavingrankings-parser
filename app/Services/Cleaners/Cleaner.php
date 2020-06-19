@@ -48,7 +48,7 @@ abstract class Cleaner
             if ($direction === 'up') {
                 for ($j = 1; $j <= $amount; $j++) {
                     $index = $i - $j;
-                    $newLine .= self::translateQuoted($delimiter) . Arr::pull($newLines, $index);
+                    $newLine .= self::translateQuoted($delimiter) . Arr::pull($newLines, (string)$index);
                 }
             }
 
@@ -95,9 +95,9 @@ abstract class Cleaner
      */
     public static function applyClassCleaners(string $text, array $classCleaners): string
     {
-        /** @var Cleaner $class */
         foreach ($classCleaners as $class => $type) {
             $class = 'App\\Services\\Cleaners\\' . $class;
+            /** @var Cleaner $class */
             $text = $class::cleanText($text, $type);
         }
 
@@ -204,7 +204,7 @@ abstract class Cleaner
         return CarbonInterval::minutes($minutes)->seconds($seconds)->microseconds($microseconds);
     }
 
-    public static function translateQuoted($string)
+    public static function translateQuoted(string $string): string
     {
         $search  = array("\\t", "\\n", "\\r");
         $replace = array( "\t",  "\n",  "\r");

@@ -6,7 +6,9 @@ use Carbon\CarbonInterval;
 
 class ParsedSplit implements ParsedObject
 {
+    /** @var CarbonInterval  */
     public $time;
+    /** @var int  */
     public $distance;
 
     public function __construct(CarbonInterval $time, int $distance)
@@ -18,15 +20,12 @@ class ParsedSplit implements ParsedObject
         $this->distance = $distance;
     }
 
-    public function getTimeStringForDisplay()
+    public function getTimeStringForDisplay(): string
     {
-        if (!$this->time) {
-            return null;
-        }
         return str_replace('0000', '', $this->time->format('%I:%S.%F'));
     }
 
-    public function saveToDatabase()
+    public function saveToDatabase(): void
     {
         // TODO: Implement saveToDatabase() method.
     }

@@ -4,15 +4,15 @@ namespace App\Services\Parsers;
 
 use App\Services\Cleaners\Cleaner;
 use App\Services\ParsedObjects\ParsedAthlete;
-use App\Services\ParsedObjects\ParsedEvent;
 use App\Services\ParsedObjects\ParsedResult;
 use App\Services\ParsedObjects\ParsedSplit;
 use leonverschuren\Lenex\Model\Lenex;
 
 class LenexParser extends Parser
 {
+    /** @var Parser */
     private static $_instance;
-    public static function getInstance($file): Parser
+    public static function getInstance(string $file): Parser
     {
         if (!(self::$_instance instanceof self)) {
             self::$_instance = new self($file);
@@ -21,9 +21,10 @@ class LenexParser extends Parser
         return self::$_instance;
     }
 
-    public function getRawData()
+    public function getRawData(): string
     {
         // TODO: Implement getRawData() method.
+        return '';
     }
 
     protected function parse(): void
@@ -41,11 +42,7 @@ class LenexParser extends Parser
                     }
                     $athleteName = $lenexAthlete->getFirstName() . ($lenexAthlete->getNamePrefix() ? ' ' . $lenexAthlete->getNamePrefix() : '') . ' ' . $lenexAthlete->getLastName();
                     $gender = $lenexAthlete->getGender() === 'F' ? ParsedAthlete::FEMALE : ParsedAthlete::MALE;
-                    if ($lenexAthlete->getBirthDate()) {
-                        $yearOfBirth = $lenexAthlete->getBirthDate()->format('Y');
-                    } else {
-                        $yearOfBirth = null;
-                    }
+                    $yearOfBirth = (int)$lenexAthlete->getBirthDate()->format('Y');
 
                     $parsedAthlete = new ParsedAthlete(
                         $athleteName,
@@ -111,9 +108,6 @@ class LenexParser extends Parser
                     $eventId = $this->getEventIdFromLine($eventName);
 
                     $eventMappings[$event->getEventId()] = $eventId;
-
-                    $parsedEvent = new ParsedEvent($eventId);
-                    $this->parsedCompetition->addEvent($parsedEvent);
                 }
             }
         }

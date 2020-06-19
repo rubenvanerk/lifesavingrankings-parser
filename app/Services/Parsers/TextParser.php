@@ -10,16 +10,22 @@ use App\Services\ParsedObjects\ParsedResult;
 use Carbon\Carbon;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Storage;
-use Smalot\PdfParser\PDFObject;
 
 class TextParser extends Parser
 {
+    /** @var Parser */
     private static $_instance;
+    /** @var string */
     protected $fileName;
+    /** @var ParserConfig */
     public $config;
+    /** @var int */
     private $currentEventId;
+    /** @var int  */
     private $currentGender;
+    /** @var int */
     private $currentRound;
+    /** @var boolean */
     private $currentEventRejected;
     /**
      * @var ParsedCompetition $parsedCompetition
@@ -33,7 +39,7 @@ class TextParser extends Parser
     private const DNS_LINE_TYPE = 'dns';
     private const SEPARATE_GENDER_LINE_TYPE = 'separate_gender';
 
-    public static function getInstance($file): Parser
+    public static function getInstance(string $file): Parser
     {
         if (!(self::$_instance instanceof self)) {
             self::$_instance = new self($file);
@@ -50,8 +56,11 @@ class TextParser extends Parser
     private function getText(): string
     {
         $parser = new \Smalot\PdfParser\Parser();
-        /** @var PDFObject $pdf */
-        $pdf = $parser->parseFile(Storage::temporaryUrl($this->fileName, Carbon::now()->addMinutes(5)));
+        if (config('filesystems.default') === 's3') {
+            $pdf = $parser->parseFile(Storage::temporaryUrl($this->fileName, Carbon::now()->addMinutes(5)));
+        } else {
+            $pdf = $parser->parseFile(Storage::path($this->fileName));
+        }
         if ($this->config->{'pdfparser_options'}) {
             \Smalot\PdfParser\Parser::$horizontalOffset =
                 $this->translateQuoted($this->config->{'pdfparser_options.horizontal_offset'}) ?: ' ';
@@ -365,7 +374,6 @@ class TextParser extends Parser
                 return [Arr::last($times)];
             default:
                 return [$times[$timeIndex]];
-                break;
         }
     }
 
