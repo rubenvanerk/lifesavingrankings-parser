@@ -1,7 +1,7 @@
 # Competition Parser Lumen
-This is a continuation of the [competition-parser](https://github.com/rubenvanerk/competition-parser) project with a user-friendly frontend.
+![build](https://github.com/rubenvanerk/competition-parser-lumen/workflows/build/badge.svg)
 
-[![Lumen](https://github.com/rubenvanerk/competition-parser-lumen/workflows/Lumen/badge.svg)](https://github.com/rubenvanerk/competition-parser-lumen/actions?query=workflow%3ALumen)
+This is a continuation of the [competition-parser](https://github.com/rubenvanerk/competition-parser) project with a user-friendly frontend.
 
 ## Installation
 `composer install`  
