@@ -77,9 +77,9 @@ abstract class Cleaner
     public static function customReplace(string $text, array $customReplaces): string
     {
         foreach ($customReplaces as $pattern => $replace) {
-            if ($pattern) {
+            if (is_string($pattern)) {
                 $replace = self::translateQuoted($replace);
-                $text = preg_replace($pattern, $replace, $text);
+                $text = preg_replace($pattern, $replace, $text) ?? '';
             }
         }
 

@@ -21,7 +21,7 @@ class TextParser extends Parser
     public $config;
     /** @var int */
     private $currentEventId;
-    /** @var int  */
+    /** @var int */
     private $currentGender;
     /** @var int */
     private $currentRound;
@@ -73,7 +73,7 @@ class TextParser extends Parser
     {
         $text = Cleaners\Cleaner::combineLines($text, $this->config->{'cleaning_options.line_combiner'});
         $text = Cleaners\Cleaner::customReplace($text, $this->config->getTextAreaAsArray('cleaning_options.custom_replace'));
-        $text = Cleaners\Cleaner::applyClassCleaners($text, $this->config->{'cleaning_options.class_cleaners'});
+//        $text = Cleaners\Cleaner::applyClassCleaners($text, $this->config->{'cleaning_options.class_cleaners'});
         $text = Cleaners\Cleaner::moveLines($text, explode(PHP_EOL, $this->config->{'cleaning_options.line_movers'}));
 
         return htmlspecialchars_decode($text, ENT_QUOTES);
@@ -120,7 +120,7 @@ class TextParser extends Parser
         }
     }
 
-    private function getLineType(string $line):? string
+    private function getLineType(string $line): string
     {
         if ($this->config->{'events.event_rejector'}
             && preg_match($this->config->{'events.event_rejector'}, $line) === 1
@@ -162,10 +162,10 @@ class TextParser extends Parser
             return self::DNS_LINE_TYPE;
         }
 
-        return null;
+        return '';
     }
 
-    private function getEventIdFromLine(string $line): ?int
+    private function getEventIdFromLine(string $line): int
     {
         foreach ($this->config->{'events.event_names'} as $eventId => $eventRegex) {
             if (preg_match($eventRegex, $line) === 1) {
@@ -404,8 +404,8 @@ class TextParser extends Parser
 
     private function translateQuoted(string $string): string
     {
-        $search  = array("\\t", "\\n", "\\r");
-        $replace = array( "\t",  "\n",  "\r");
+        $search = array("\\t", "\\n", "\\r");
+        $replace = array("\t", "\n", "\r");
         return str_replace($search, $replace, $string);
     }
 }

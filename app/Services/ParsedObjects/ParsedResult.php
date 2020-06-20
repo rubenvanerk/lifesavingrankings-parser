@@ -92,7 +92,7 @@ class ParsedResult implements ParsedObject
     public function getTimeStringForDisplay(): string
     {
         if (!$this->time) {
-            return $this->getStatus();
+            return $this->getStatus() ?? '';
         }
         return str_replace('0000', '', $this->time->format('%I:%S.%F'));
     }
@@ -105,9 +105,9 @@ class ParsedResult implements ParsedObject
         return str_replace('0000', '', $this->reactionTime->format('%S.%F'));
     }
 
-    public function calculatePoints(): ?int
+    public function calculatePoints(): int
     {
-        if ($this->disqualified || $this->didNotStart || $this->withdrawn) {
+        if ($this->disqualified || $this->didNotStart || $this->withdrawn || is_null($this->time)) {
             return 0;
         }
 

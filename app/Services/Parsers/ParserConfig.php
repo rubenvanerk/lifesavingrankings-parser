@@ -9,7 +9,7 @@ use Illuminate\Support\Arr;
 
 class ParserConfig
 {
-    /** @var string  */
+    /** @var string */
     private $fileName;
     /** @var string */
     private $resultsFile;
@@ -28,20 +28,34 @@ class ParserConfig
         $this->resultsFile = $resultsFileName;
         $this->fileName = $resultsFileName . '.yaml';
         $this->loadConfig();
-        $this->template = Yaml::parse(file_get_contents(__DIR__ . DIRECTORY_SEPARATOR . 'parser_template.yaml')) ?: [];
+        $templateContent = file_get_contents(__DIR__ . DIRECTORY_SEPARATOR . 'parser_template.yaml');
+        if (!$templateContent) {
+            throw new \ParseError('Could not find parser_template.yaml');
+        }
+        $this->template = Yaml::parse($templateContent) ?: [];
     }
 
     private function loadConfig(): void
     {
         $fileExtension = pathinfo($this->resultsFile, PATHINFO_EXTENSION);
-        $empty = file_get_contents(__DIR__ . DIRECTORY_SEPARATOR . self::FILE_EXTENSION_TEMPLATE_MAPPINGS[$fileExtension]);
-        if (Storage::missing($this->fileName)) {
-            Storage::put($this->fileName, $empty);
+        $emptyConfig = file_get_contents(__DIR__ . DIRECTORY_SEPARATOR . self::FILE_EXTENSION_TEMPLATE_MAPPINGS[$fileExtension]);
+
+        if (!$emptyConfig) {
+            throw new \ParseError(sprintf('Could not find empty template %s', self::FILE_EXTENSION_TEMPLATE_MAPPINGS[$fileExtension]));
         }
-        $this->config = array_replace_recursive(Yaml::parse($empty), Yaml::parse(Storage::get($this->fileName)));
+
+        if (Storage::missing($this->fileName)) {
+            Storage::put($this->fileName, $emptyConfig);
+        }
+
+        $this->config = array_replace_recursive(Yaml::parse($emptyConfig), Yaml::parse(Storage::get($this->fileName)));
     }
 
-    public function __get(string $name): string
+    /**
+     * @param string $name
+     * @return mixed
+     */
+    public function __get(string $name)
     {
         if (property_exists($this, $name)) {
             return $this->{$name};
@@ -101,7 +115,11 @@ class ParserConfig
     public function valueIsCustom(string $name): bool
     {
         $value = $this->$name;
-        $options = array_keys($this->getOptions($name));
+        $options = $this->getOptions($name);
+        if (!$options) {
+            throw new \ParseError(sprintf('Could not find options for %s', $name));
+        }
+        $options = array_keys($options);
         return !empty($value) && !is_array($value) && !in_array($value, $options, false);
     }
 
@@ -115,7 +133,8 @@ class ParserConfig
     {
         $fieldValue = $this->{$name};
         $lines = explode("\n", $fieldValue);
-        $lines = preg_replace("/\r$/", '', $lines);
+        $lines = preg_replace("/\r$/", '', $lines) ?? [];
+
         $result = [];
         foreach ($lines as $line) {
             $keyValue = explode('>>', $line);

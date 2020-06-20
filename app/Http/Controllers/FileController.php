@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Services\Parsers\Parser;
 use Carbon\Carbon;
 use Illuminate\Http\File;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Http\Request;
@@ -12,7 +13,7 @@ use Illuminate\Support\Str;
 
 class FileController extends Controller
 {
-    public function browse(string $path = null): \Illuminate\View\View
+    public function browse(string $path = ''): \Illuminate\View\View
     {
         $breadcrumbs = [];
         $breadcrumbs[] = [
@@ -43,7 +44,8 @@ class FileController extends Controller
     public function upload(Request $request): \Illuminate\Http\RedirectResponse
     {
         $fileName = $request->input('filename');
-        $file = $request->file('results');
+        $postedFile = $request->file('results');
+        $file = is_array($postedFile) ? Arr::first($postedFile) : $postedFile;
         $date = new Carbon($request->input('date'));
         $path = $date->year . DIRECTORY_SEPARATOR . $date->month;
         $file->storeAs($path, $fileName);
@@ -73,7 +75,7 @@ class FileController extends Controller
         return view('config', $data);
     }
 
-    public function saveConfig(Request $request, File $file): \Illuminate\Http\RedirectResponse
+    public function saveConfig(Request $request, string $file): \Illuminate\Http\RedirectResponse
     {
         $this->saveConfigFromRequest($request, $file);
         $action = $request->input('action');
@@ -109,7 +111,7 @@ class FileController extends Controller
     }
 
 
-    private function saveConfigFromRequest(Request $request, File $file): void
+    private function saveConfigFromRequest(Request $request, string $file): void
     {
         $competitionParser = Parser::getInstance($file);
         $config = $competitionParser->config;
