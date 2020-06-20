@@ -1,4 +1,4 @@
-name: Lumen
+name: build
 
 on:
   push:
