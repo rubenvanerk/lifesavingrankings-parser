@@ -27,4 +27,4 @@ jobs:
         DB_DATABASE: database/database.sqlite
       run: vendor/bin/phpunit
     - name: Execute static analysis via Larastan (PHPStan)
-        run: vendor/bin/phpstan analyse
+      run: vendor/bin/phpstan analyse
