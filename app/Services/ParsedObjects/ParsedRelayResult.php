@@ -6,8 +6,6 @@ use Carbon\CarbonInterval;
 
 class ParsedRelayResult extends ParsedResult
 {
-    public $athletes;
-
     public function __construct(?CarbonInterval $time, array $athletes, int $round, bool $disqualified,
                                 bool $didNotStart, bool $withdrawn, ?string $originalLine, ?int $heat, ?int $lane,
                                 ?CarbonInterval $reactionTime, ?array $splits)
@@ -15,7 +13,7 @@ class ParsedRelayResult extends ParsedResult
         if (!$disqualified && !$didNotStart && !$withdrawn && is_null($time)) {
             throw new \ParseError('Time can not be null if DSQ, DNS and WDR are false');
         }
-        if ($disqualified + $didNotStart + $withdrawn > 1) {
+        if ((int)$disqualified + (int)$didNotStart + (int)$withdrawn > 1) {
             throw new \ParseError(
                 sprintf('Only one of DSQ, DNS or WDR can be true. Given values: DSQ: %b, DNS: %b, WDR: %b',
                     $disqualified, $didNotStart, $withdrawn)
@@ -34,4 +32,8 @@ class ParsedRelayResult extends ParsedResult
         $this->reactionTime = $reactionTime;
     }
 
+    public function saveToDatabase(): void
+    {
+        // TODO: Implement saveToDatabase() method.
+    }
 }

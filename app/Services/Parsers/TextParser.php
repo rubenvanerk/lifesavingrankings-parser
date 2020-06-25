@@ -195,6 +195,11 @@ class TextParser extends Parser
     private function getResultsFromLine(string $line): array
     {
         $eventModel = Event::find($this->currentEventId);
+
+        if ($eventModel === null) {
+            throw new \ParseError(sprintf('Could not find Event(%s)', $this->currentEventId));
+        }
+
         if ($eventModel->type === Event::EVENT_TYPE_RELAY) {
             return $this->getRelayResultFromLine($line);
         }
@@ -202,7 +207,7 @@ class TextParser extends Parser
         return $this->getIndividualResultsFromLine($line);
     }
 
-    private function getRelayResultFromLine($line): array
+    private function getRelayResultFromLine(string $line): array
     {
         $parsedAthletes = $this->getAthletesFromLine($line);
         $times = $this->getTimesFromLine($line);
@@ -325,6 +330,11 @@ class TextParser extends Parser
     private function getInvalidatedResultFromLine(string $line, string $type): ParsedResult
     {
         $eventModel = Event::find($this->currentEventId);
+
+        if ($eventModel === null) {
+            throw new \ParseError(sprintf('Could not find Event(%s)', $this->currentEventId));
+        }
+
         if ($eventModel->type === Event::EVENT_TYPE_RELAY) {
             return $this->getInvalidatedRelayResultFromLine($line, $type);
         }

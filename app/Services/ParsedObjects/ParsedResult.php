@@ -4,6 +4,7 @@ namespace App\Services\ParsedObjects;
 
 use App\EventRecord;
 use App\Services\Cleaners\Cleaner;
+use Carbon\CarbonInterval;
 use Illuminate\Support\Arr;
 
 abstract class ParsedResult implements ParsedObject
@@ -30,6 +31,10 @@ abstract class ParsedResult implements ParsedObject
     public $reactionTime;
     /** @var int */
     public $eventId;
+    /** @var ParsedAthlete[] */
+    public $athletes;
+    /** @var ParsedAthlete */
+    public $athlete;
 
     public function getStatus(): ?string
     {
@@ -81,4 +86,6 @@ abstract class ParsedResult implements ParsedObject
 
         return (int)(1000 * (($recordTime->totalSeconds / $this->time->totalSeconds) ** 3));
     }
+
+    abstract public function saveToDatabase(): void;
 }
