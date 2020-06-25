@@ -10,7 +10,5 @@ parameters:
 
     ignoreErrors:
         - '#Static call to instance method Carbon\\CarbonInterval::[a-zA-Z]+\(\)#'
-        - '#Call to method route\(\) on an unknown class Illuminate\\Routing\\Redirector.#'
-        - '#Method App\\Exceptions\\Handler::render\(\) should return Illuminate\\Http\\JsonResponse|Illuminate\\Http\\Response but returns Symfony\\Component\\HttpFoundation\\Response.#'
 
     checkMissingIterableValueType: false

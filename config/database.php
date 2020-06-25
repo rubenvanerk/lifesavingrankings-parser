@@ -4,36 +4,53 @@ use Illuminate\Support\Str;
 
 $connections = [];
 
-if (ENV('DB_HOST_LOCAL')) {
-    $connections['local'] = [
+$connections['local'] = [
+    'driver' => 'pgsql',
+    'host' => env('DB_HOST_LOCAL'),
+    'port' => env('DB_PORT_LOCAL'),
+    'database' => env('DB_DATABASE_LOCAL'),
+    'username' => env('DB_USERNAME_LOCAL'),
+    'password' => env('DB_PASSWORD_LOCAL'),
+];
+
+$connections['sqlite'] = [
+    'driver' => 'sqlite',
+    'url' => env('DATABASE_URL'),
+    'database' => env('DB_DATABASE', database_path('database.sqlite')),
+    'prefix' => '',
+    'foreign_key_constraints' => env('DB_FOREIGN_KEYS', true),
+];
+
+if (ENV('DB_LSR_HOST_LOCAL')) {
+    $connections['lsr_local'] = [
         'driver' => 'pgsql',
-        'host' => env('DB_HOST_LOCAL'),
-        'port' => env('DB_PORT_LOCAL', ),
-        'database' => env('DB_DATABASE_LOCAL'),
-        'username' => env('DB_USERNAME_LOCAL'),
-        'password' => env('DB_PASSWORD_LOCAL'),
+        'host' => env('DB_LSR_HOST_LOCAL'),
+        'port' => env('DB_LSR_PORT_LOCAL'),
+        'database' => env('DB_LSR_DATABASE_LOCAL'),
+        'username' => env('DB_LSR_USERNAME_LOCAL'),
+        'password' => env('DB_LSR_PASSWORD_LOCAL'),
     ];
 }
 
-if (ENV('DB_HOST_STAGING')) {
-    $connections['staging'] = [
+if (ENV('DB_LSR_HOST_STAGING')) {
+    $connections['lsr_staging'] = [
         'driver' => 'pgsql',
-        'host' => env('DB_HOST_STAGING'),
-        'port' => env('DB_PORT_STAGING', ),
-        'database' => env('DB_DATABASE_STAGING'),
-        'username' => env('DB_USERNAME_STAGING'),
-        'password' => env('DB_PASSWORD_STAGING'),
+        'host' => env('DB_LSR_HOST_STAGING'),
+        'port' => env('DB_LSR_PORT_STAGING'),
+        'database' => env('DB_LSR_DATABASE_STAGING'),
+        'username' => env('DB_LSR_USERNAME_STAGING'),
+        'password' => env('DB_LSR_PASSWORD_STAGING'),
     ];
 }
 
-if (ENV('DB_HOST_PRODUCTION')) {
-    $connections['production'] = [
+if (ENV('DB_LSR_HOST_PRODUCTION')) {
+    $connections['lsr_production'] = [
         'driver' => 'pgsql',
-        'host' => env('DB_HOST_PRODUCTION'),
-        'port' => env('DB_PORT_PRODUCTION', ),
-        'database' => env('DB_DATABASE_PRODUCTION'),
-        'username' => env('DB_USERNAME_PRODUCTION'),
-        'password' => env('DB_PASSWORD_PRODUCTION'),
+        'host' => env('DB_LSR_HOST_PRODUCTION'),
+        'port' => env('DB_LSR_PORT_PRODUCTION'),
+        'database' => env('DB_LSR_DATABASE_PRODUCTION'),
+        'username' => env('DB_LSR_USERNAME_PRODUCTION'),
+        'password' => env('DB_LSR_PASSWORD_PRODUCTION'),
     ];
 }
 
@@ -100,7 +117,7 @@ return [
 
         'options' => [
             'cluster' => env('REDIS_CLUSTER', 'redis'),
-            'prefix' => env('REDIS_PREFIX', Str::slug(env('APP_NAME', 'laravel'), '_').'_database_'),
+            'prefix' => env('REDIS_PREFIX', Str::slug(env('APP_NAME', 'laravel'), '_') . '_database_'),
         ],
 
         'default' => [
