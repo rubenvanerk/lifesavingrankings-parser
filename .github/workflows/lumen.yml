@@ -28,3 +28,5 @@ jobs:
       run: vendor/bin/phpunit
     - name: Execute static analysis via Larastan (PHPStan)
       run: vendor/bin/phpstan analyse
+    - name: Execute style analysis with PHP-CS-Fixer
+      run: vendor/bin/php-cs-fixer fix --dry-run --diff

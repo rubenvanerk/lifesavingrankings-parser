@@ -14,6 +14,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property-read \App\Athlete $athlete
  * @property-read \App\Competition $competition
  * @property-read \App\Team $team
+ *
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Participation newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Participation newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Participation query()

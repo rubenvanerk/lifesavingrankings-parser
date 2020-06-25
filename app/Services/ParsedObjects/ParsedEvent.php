@@ -15,6 +15,6 @@ class ParsedEvent implements ParsedObject
         8 => '50m free style with fins',
         12 => '25m manikin carry',
         13 => '50m free style with tube',
-        18 => '100m obstacle swim'
+        18 => '100m obstacle swim',
     ];
 }

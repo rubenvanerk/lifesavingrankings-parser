@@ -5,6 +5,7 @@ namespace App\Services\Cleaners;
 use Carbon\CarbonInterval;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
+use ParseError;
 
 abstract class Cleaner
 {
@@ -13,6 +14,7 @@ abstract class Cleaner
     /**
      * @param string $text
      * @param array $lineCombiner
+     *
      * @return string
      * For every line in $text that matches with pattern in $lineCombiner,
      * the $amount of lines int $direction wil be combined into one line, separated by the delimiter
@@ -69,6 +71,7 @@ abstract class Cleaner
     /**
      * @param string $text
      * @param array $customReplaces
+     *
      * @return string
      *
      * This function takes an array in the form of [$pattern => $replace]
@@ -89,6 +92,7 @@ abstract class Cleaner
     /**
      * @param string $text
      * @param array $classCleaners
+     *
      * @return string
      * This function takes an array in the form of [$class => $type]
      * and calls the clean function on the $class with $type as type argument
@@ -107,6 +111,7 @@ abstract class Cleaner
     /**
      * @param string $text
      * @param array $lineMovers
+     *
      * @return string
      * This function takes an array in the form of ['/pattern/>>/pattern/>>direction']
      * Then goes through the text line by line until it finds the first pattern
@@ -135,7 +140,7 @@ abstract class Cleaner
                 } elseif ($direction === 'down') {
                     $incrementer = 1;
                 } else {
-                    throw new \ParseError('Linemover direction should be \'up\' or \'down\' (' . $direction . ')');
+                    throw new ParseError('Linemover direction should be \'up\' or \'down\' (' . $direction . ')');
                 }
 
 
@@ -161,7 +166,7 @@ abstract class Cleaner
         $nameParts = explode(',', $name);
 
         if (count($nameParts) > 2) {
-            throw new \ParseError('Got more name parts then expected for ' . $name);
+            throw new ParseError('Got more name parts then expected for ' . $name);
         }
 
         $nameParts = array_map('trim', $nameParts);
@@ -206,8 +211,8 @@ abstract class Cleaner
 
     public static function translateQuoted(string $string): string
     {
-        $search  = ["\\t", "\\n", "\\r"];
-        $replace = [ "\t",  "\n",  "\r"];
+        $search  = ['\\t', '\\n', '\\r'];
+        $replace = ["\t",  "\n",  "\r"];
         return str_replace($search, $replace, $string);
     }
 }

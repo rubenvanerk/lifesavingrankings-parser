@@ -20,6 +20,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property string|null $credit
  * @property string|null $created_at
  * @property string|null $updated_at
+ *
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Competition newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Competition newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Competition query()
@@ -51,6 +52,6 @@ class Competition extends Model
         'is_concept',
         'file_name',
         'credit',
-        'status'
+        'status',
     ];
 }

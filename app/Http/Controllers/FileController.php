@@ -4,11 +4,11 @@ namespace App\Http\Controllers;
 
 use App\Services\Parsers\Parser;
 use Carbon\Carbon;
-use Illuminate\Http\File;
+use DB;
+use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Storage;
-use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 
 class FileController extends Controller
@@ -18,13 +18,13 @@ class FileController extends Controller
         $breadcrumbs = [];
         $breadcrumbs[] = [
             'path' => '',
-            'name' => 'root'
+            'name' => 'root',
         ];
         $previousBreadcrumb = '';
         foreach (explode('/', $path) as $directory) {
             $breadcrumbs[] = [
                 'path' => $previousBreadcrumb .= $directory . '/',
-                'name' => $directory
+                'name' => $directory,
             ];
         }
 
@@ -35,7 +35,7 @@ class FileController extends Controller
             'directories' => Storage::directories($path),
             'files' => $filesWithoutYaml,
             'path' => $path,
-            'breadcrumbs' => $breadcrumbs
+            'breadcrumbs' => $breadcrumbs,
         ];
 
         return view('browse', $data);
@@ -69,7 +69,7 @@ class FileController extends Controller
             'temporaryUrl' => Storage::url($file),
             'rawData' => $competitionParser->getRawData(),
             'config' => $competitionParser->config,
-            'databases' => config('database.connections')
+            'databases' => config('database.connections'),
         ];
 
         return view('config', $data);
@@ -104,7 +104,7 @@ class FileController extends Controller
         Config::set('database.default', $connection);
         $competitionParser = Parser::getInstance($file);
         $parsedCompetition = $competitionParser->getParsedCompetition();
-        \DB::transaction(function () use ($parsedCompetition) {
+        DB::transaction(function () use ($parsedCompetition) {
             $parsedCompetition->saveToDatabase();
         });
         return view('save_to_database', ['competition' => $parsedCompetition, 'file' => $file]);

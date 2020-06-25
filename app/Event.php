@@ -12,6 +12,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property int $type
  * @property bool $use_points_in_athlete_total
  * @property string $slug
+ *
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Event newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Event newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Event query()

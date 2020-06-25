@@ -13,6 +13,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property string $slug
  * @property \Illuminate\Support\Carbon $created_at
  * @property \Illuminate\Support\Carbon $updated_at
+ *
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Team findSimilarSlugs($attribute, $config, $slug)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Team newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Team newQuery()
@@ -33,8 +34,8 @@ class Team extends Model
     {
         return [
             'slug' => [
-                'source' => 'name'
-            ]
+                'source' => 'name',
+            ],
         ];
     }
 }

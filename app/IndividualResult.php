@@ -27,6 +27,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property-read \App\Event $event
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\IndividualResultSplit[] $splits
  * @property-read int|null $splits_count
+ *
  * @method static \Illuminate\Database\Eloquent\Builder|\App\IndividualResult newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\IndividualResult newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\IndividualResult query()

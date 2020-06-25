@@ -15,6 +15,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property string|null $lenex_code
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Athlete[] $athletes
  * @property-read int|null $athletes_count
+ *
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Nationality newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Nationality newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Nationality query()

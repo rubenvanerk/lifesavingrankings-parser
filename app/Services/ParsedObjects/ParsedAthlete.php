@@ -7,18 +7,20 @@ use App\Nationality;
 use App\Participation;
 use App\Team;
 use Carbon\Carbon;
+use Exception;
+use ParseError;
 
 class ParsedAthlete implements ParsedObject
 {
-    /** @var string  */
+    /** @var string */
     public $name;
-    /** @var int|null  */
+    /** @var int|null */
     public $yearOfBirth;
-    /** @var int  */
+    /** @var int */
     public $gender;
-    /** @var string|null  */
+    /** @var string|null */
     public $nationality;
-    /** @var string|null  */
+    /** @var string|null */
     public $team;
 
     public const MALE = 1;
@@ -27,7 +29,7 @@ class ParsedAthlete implements ParsedObject
     public function __construct(string $name, ?int $yearOfBirth, int $gender, ?string $nationality, ?string $team)
     {
         if (!is_null($yearOfBirth) && ($yearOfBirth < 1900 || $yearOfBirth > Carbon::now()->year)) {
-            throw new \ParseError('Invalid year of birth: ' . $yearOfBirth);
+            throw new ParseError('Invalid year of birth: ' . $yearOfBirth);
         }
         $this->name = $name;
         $this->yearOfBirth = $yearOfBirth;
@@ -47,7 +49,7 @@ class ParsedAthlete implements ParsedObject
             $athlete = Athlete::create([
                 'name' => $this->name,
                 'gender' => $this->gender,
-                'year_of_birth' => $this->yearOfBirth
+                'year_of_birth' => $this->yearOfBirth,
             ]);
         }
 
@@ -57,7 +59,7 @@ class ParsedAthlete implements ParsedObject
 
         if ($this->team) {
             $team = Team::firstOrCreate([
-                'name' => $this->team
+                'name' => $this->team,
             ]);
 
             $competition = ParsedCompetition::$model;
@@ -85,7 +87,7 @@ class ParsedAthlete implements ParsedObject
 
         $nationality = Nationality::where('lenex_code', $this->nationality)->first();
         if (!$nationality) {
-            throw new \Exception('Nationality with code ' . $this->nationality . ' not found!');
+            throw new Exception('Nationality with code ' . $this->nationality . ' not found!');
         }
 
         if (!$athlete->nationalities()->where('lenex_code', $this->nationality)->first()) {

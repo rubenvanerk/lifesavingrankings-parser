@@ -9,25 +9,25 @@ use Illuminate\Support\Arr;
 
 abstract class ParsedResult implements ParsedObject
 {
-    /** @var CarbonInterval|null  */
+    /** @var CarbonInterval|null */
     public $time;
-    /** @var int  */
+    /** @var int */
     public $round;
-    /** @var bool  */
+    /** @var bool */
     public $disqualified;
-    /** @var bool  */
+    /** @var bool */
     public $didNotStart;
-    /** @var bool  */
+    /** @var bool */
     public $withdrawn;
-    /** @var string|null  */
+    /** @var string|null */
     public $originalLine;
-    /** @var int|null  */
+    /** @var int|null */
     public $heat;
-    /** @var array|null  */
+    /** @var array|null */
     public $splits;
-    /** @var int|null  */
+    /** @var int|null */
     public $lane;
-    /** @var CarbonInterval|null  */
+    /** @var CarbonInterval|null */
     public $reactionTime;
     /** @var int */
     public $eventId;

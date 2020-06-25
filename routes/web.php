@@ -13,5 +13,3 @@ $router->get('/dry-run/{file?}', ['uses' => 'FileController@dryRun', 'as' => 'dr
 $router->get('/save-to-database/{connection}/{file:.*}', ['uses' => 'FileController@saveToDatabase', 'as' => 'save_database']);
 
 $router->get('/browse/{path?}', ['uses' => 'FileController@browse', 'as' => 'browse'])->where(['path' => '.*']);
-
-

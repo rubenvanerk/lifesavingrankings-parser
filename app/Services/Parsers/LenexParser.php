@@ -7,6 +7,7 @@ use App\Services\ParsedObjects\ParsedAthlete;
 use App\Services\ParsedObjects\ParsedIndividualResult;
 use App\Services\ParsedObjects\ParsedSplit;
 use leonverschuren\Lenex\Model\Lenex;
+use ParseError;
 
 class LenexParser extends Parser
 {
@@ -92,7 +93,7 @@ class LenexParser extends Parser
 
         foreach ($parsedLenex->getMeets() as $meet) {
             if ($meet->getCourse() !== 'LCM') {
-                throw new \ParseError(sprintf('Course type should be LCM %s', $meet->getCourse()));
+                throw new ParseError(sprintf('Course type should be LCM %s', $meet->getCourse()));
             }
             foreach ($meet->getSessions() as $session) {
                 foreach ($session->getEvents() as $event) {
@@ -122,6 +123,6 @@ class LenexParser extends Parser
                 return $eventId;
             }
         }
-        throw new \ParseError(sprintf('Could not find event in line \'%s\'', $line));
+        throw new ParseError(sprintf('Could not find event in line \'%s\'', $line));
     }
 }

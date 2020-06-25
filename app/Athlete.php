@@ -21,6 +21,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property-read \App\Athlete|null $alias_of
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Nationality[] $nationalities
  * @property-read int|null $nationalities_count
+ *
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Athlete findSimilarSlugs($attribute, $config, $slug)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Athlete newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Athlete newQuery()
@@ -59,8 +60,8 @@ class Athlete extends Model
     {
         return [
             'slug' => [
-                'source' => 'name'
-            ]
+                'source' => 'name',
+            ],
         ];
     }
 }

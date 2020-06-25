@@ -7,13 +7,14 @@ use App\Services\Cleaners;
 use App\Services\Cleaners\Cleaner;
 use App\Services\ParsedObjects\ParsedAthlete;
 use App\Services\ParsedObjects\ParsedCompetition;
-use App\Services\ParsedObjects\ParsedEvent;
 use App\Services\ParsedObjects\ParsedIndividualResult;
 use App\Services\ParsedObjects\ParsedRelayResult;
 use App\Services\ParsedObjects\ParsedResult;
 use Carbon\Carbon;
+use ErrorException;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Storage;
+use ParseError;
 
 class TextParser extends Parser
 {
@@ -176,7 +177,7 @@ class TextParser extends Parser
                 return $eventId;
             }
         }
-        throw new \ParseError(sprintf('Could not find event in line \'%s\'', $line));
+        throw new ParseError(sprintf('Could not find event in line \'%s\'', $line));
     }
 
     private function getGenderFromLine(string $line): int
@@ -189,7 +190,7 @@ class TextParser extends Parser
             return ParsedAthlete::MALE;
         }
 
-        throw new \ParseError(sprintf('Could not find gender in line \'%s\'', $line));
+        throw new ParseError(sprintf('Could not find gender in line \'%s\'', $line));
     }
 
     private function getResultsFromLine(string $line): array
@@ -197,7 +198,7 @@ class TextParser extends Parser
         $eventModel = Event::find($this->currentEventId);
 
         if ($eventModel === null) {
-            throw new \ParseError(sprintf('Could not find Event(%s)', $this->currentEventId));
+            throw new ParseError(sprintf('Could not find Event(%s)', $this->currentEventId));
         }
 
         if ($eventModel->type === Event::EVENT_TYPE_RELAY) {
@@ -238,8 +239,8 @@ class TextParser extends Parser
         if ($this->config->{'as_csv.as_csv'}) {
             try {
                 return $this->getResultsByCsv($line);
-            } catch (\ErrorException $errorException) {
-                throw new \ParseError($errorException->getMessage() . ': ' . $line);
+            } catch (ErrorException $errorException) {
+                throw new ParseError($errorException->getMessage() . ': ' . $line);
             }
         }
 
@@ -321,7 +322,7 @@ class TextParser extends Parser
         }
 
         if (count($parsedResults) === 0) {
-            throw new \ParseError(sprintf('Time(s) not found in line \'%s\'', $line));
+            throw new ParseError(sprintf('Time(s) not found in line \'%s\'', $line));
         }
 
         return $parsedResults;
@@ -332,7 +333,7 @@ class TextParser extends Parser
         $eventModel = Event::find($this->currentEventId);
 
         if ($eventModel === null) {
-            throw new \ParseError(sprintf('Could not find Event(%s)', $this->currentEventId));
+            throw new ParseError(sprintf('Could not find Event(%s)', $this->currentEventId));
         }
 
         if ($eventModel->type === Event::EVENT_TYPE_RELAY) {
@@ -430,7 +431,7 @@ class TextParser extends Parser
     private function getAthleteFromLine(string $line): ParsedAthlete
     {
         if (!isset($this->currentGender)) {
-            throw new \ParseError('Can not parse athlete without current gender');
+            throw new ParseError('Can not parse athlete without current gender');
         }
 
         $name = $this->getNameFromLine($line);
@@ -522,7 +523,7 @@ class TextParser extends Parser
 
     private function translateQuoted(string $string): string
     {
-        $search = ["\\t", "\\n", "\\r"];
+        $search = ['\\t', '\\n', '\\r'];
         $replace = ["\t", "\n", "\r"];
         return str_replace($search, $replace, $string);
     }

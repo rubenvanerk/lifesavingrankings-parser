@@ -9,15 +9,15 @@ class ParsedCompetition implements ParsedObject
 {
     /** @var Competition */
     public static $model;
-    /** @var string  */
+    /** @var string */
     public $name;
-    /** @var string  */
+    /** @var string */
     public $location;
-    /** @var string  */
+    /** @var string */
     public $date;
-    /** @var int  */
+    /** @var int */
     public $timekeeping;
-    /** @var string  */
+    /** @var string */
     public $credit;
     /** @var ParsedResult[] */
     public $results = [];
@@ -46,7 +46,7 @@ class ParsedCompetition implements ParsedObject
                 'is_concept' =>  true,
                 'file_name' => 'filename', // TODO
                 'credit' => $this->credit ?: null,
-                'status' => self::STATUS_IMPORTED
+                'status' => self::STATUS_IMPORTED,
             ]
         );
         self::$model = $competition;

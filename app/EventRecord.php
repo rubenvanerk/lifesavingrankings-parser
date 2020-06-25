@@ -12,6 +12,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property string $time
  * @property int $event_id
  * @property-read \App\Event $event
+ *
  * @method static \Illuminate\Database\Eloquent\Builder|\App\EventRecord newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\EventRecord newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\EventRecord query()

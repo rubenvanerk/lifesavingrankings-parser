@@ -2,10 +2,11 @@
 
 namespace App\Services\Parsers;
 
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
+use ParseError;
 use Symfony\Component\Yaml\Yaml;
-use Illuminate\Support\Arr;
 
 class ParserConfig
 {
@@ -30,7 +31,7 @@ class ParserConfig
         $this->loadConfig();
         $templateContent = file_get_contents(__DIR__ . DIRECTORY_SEPARATOR . 'parser_template.yaml');
         if (!$templateContent) {
-            throw new \ParseError('Could not find parser_template.yaml');
+            throw new ParseError('Could not find parser_template.yaml');
         }
         $this->template = Yaml::parse($templateContent) ?: [];
     }
@@ -41,7 +42,7 @@ class ParserConfig
         $emptyConfig = file_get_contents(__DIR__ . DIRECTORY_SEPARATOR . self::FILE_EXTENSION_TEMPLATE_MAPPINGS[$fileExtension]);
 
         if (!$emptyConfig) {
-            throw new \ParseError(sprintf('Could not find empty template %s', self::FILE_EXTENSION_TEMPLATE_MAPPINGS[$fileExtension]));
+            throw new ParseError(sprintf('Could not find empty template %s', self::FILE_EXTENSION_TEMPLATE_MAPPINGS[$fileExtension]));
         }
 
         if (Storage::missing($this->fileName)) {
@@ -53,6 +54,7 @@ class ParserConfig
 
     /**
      * @param string $name
+     *
      * @return mixed
      */
     public function __get(string $name)
@@ -117,7 +119,7 @@ class ParserConfig
         $value = $this->$name;
         $options = $this->getOptions($name);
         if (!$options) {
-            throw new \ParseError(sprintf('Could not find options for %s', $name));
+            throw new ParseError(sprintf('Could not find options for %s', $name));
         }
         $options = array_keys($options);
         return !empty($value) && !is_array($value) && !in_array($value, $options, false);

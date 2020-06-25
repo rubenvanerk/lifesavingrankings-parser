@@ -11,6 +11,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property string $time
  * @property int $distance
  * @property int $individual_result_id
+ *
  * @method static \Illuminate\Database\Eloquent\Builder|\App\IndividualResultSplit newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\IndividualResultSplit newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\IndividualResultSplit query()

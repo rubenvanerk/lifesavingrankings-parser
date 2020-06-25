@@ -3,12 +3,7 @@
 namespace App\Services\Parsers;
 
 use App\Services\ParsedObjects\ParsedCompetition;
-use App\Services\Parsers\LenexParser;
-use App\Services\Parsers\TextParser;
-use Carbon\Carbon;
-use Carbon\CarbonInterval;
-use Illuminate\Support\Arr;
-use Illuminate\Support\Str;
+use ParseError;
 
 abstract class Parser
 {
@@ -16,7 +11,7 @@ abstract class Parser
     private static $instance;
     /** @var string */
     protected $fileName;
-    /** @var ParserConfig  */
+    /** @var ParserConfig */
     public $config;
     /** @var ParsedCompetition */
     protected $parsedCompetition;
@@ -32,7 +27,7 @@ abstract class Parser
             $fileExtension = pathinfo($file, PATHINFO_EXTENSION);
 
             if (!isset(self::FILE_EXTENSION_PARSER_MAPPINGS[$fileExtension])) {
-                throw new \ParseError($fileExtension . ' is not supported');
+                throw new ParseError($fileExtension . ' is not supported');
             }
 
             $parserType = self::FILE_EXTENSION_PARSER_MAPPINGS[$fileExtension];
