@@ -32,6 +32,11 @@ athlete:
     type: select
     options:
       '': Not available
+  names:
+    type: select
+    options:
+      '': Not available
+  names_explode:
 events:
   event_signifier: # it's an event
     type: select
@@ -41,10 +46,12 @@ events:
     type: select
     options:
       /rules/i: Common designifier
+      '': Disable
   event_rejector: # it's an event we're not interested in
     type: select
     options:
       /line ?throw|relay|brick|patient/i: Common rejectors
+      '': Disable
   event_stopper: # the current event is completed and following results are not added
   event_names:
     1:
@@ -81,7 +88,7 @@ events:
       label: 50m obstacle swim
       type: select
       options:
-        '/(50[m ](.*)obs)|(obs(.*)50[m ])/i': 50<->obs
+        '/(?<!4 x )(50[m ](.*)obs)|(obs(.*)50[m ])/i': 50<->obs
     8:
       label: 50m free style
       type: select
@@ -102,6 +109,21 @@ events:
       type: select
       options:
         '/50[m ](.*)(tube|torpedo)/i': 50 (tube|torpedo)
+    15:
+      label: 4×50m obstacle relay
+      type: select
+      options:
+        '/obstacle(.*)relay/i': obstacle relay
+    16:
+      label: 4×25m manikin relay
+      type: select
+      options:
+        '/manikin(.*)relay/i': manikin relay
+    17:
+      label: 4×50m medley relay
+      type: select
+      options:
+        '/medley(.*)relay/i': medley relay
     18:
       label: 100m obstacle swim
       type: select

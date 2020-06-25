@@ -2,10 +2,14 @@
 
 namespace App\Services\Parsers;
 
+use App\Event;
 use App\Services\Cleaners;
 use App\Services\Cleaners\Cleaner;
 use App\Services\ParsedObjects\ParsedAthlete;
 use App\Services\ParsedObjects\ParsedCompetition;
+use App\Services\ParsedObjects\ParsedEvent;
+use App\Services\ParsedObjects\ParsedIndividualResult;
+use App\Services\ParsedObjects\ParsedRelayResult;
 use App\Services\ParsedObjects\ParsedResult;
 use Carbon\Carbon;
 use Illuminate\Support\Arr;
@@ -190,6 +194,47 @@ class TextParser extends Parser
 
     private function getResultsFromLine(string $line): array
     {
+        $eventModel = Event::find($this->currentEventId);
+
+        if ($eventModel === null) {
+            throw new \ParseError(sprintf('Could not find Event(%s)', $this->currentEventId));
+        }
+
+        if ($eventModel->type === Event::EVENT_TYPE_RELAY) {
+            return $this->getRelayResultFromLine($line);
+        }
+
+        return $this->getIndividualResultsFromLine($line);
+    }
+
+    private function getRelayResultFromLine(string $line): array
+    {
+        $parsedAthletes = $this->getAthletesFromLine($line);
+        $times = $this->getTimesFromLine($line);
+        $roundFromLine = $this->getRoundFromLine($line);
+        $heat = $this->getHeatFromLine($line);
+        $disqualified = false;
+        $didNotStart = false;
+        $withdrawn = false;
+
+        $parsedRelayResult = new ParsedRelayResult(
+            Cleaner::cleanTime(Arr::first($times)),
+            $parsedAthletes,
+            $roundFromLine ?? $this->currentRound ?? 0,
+            $disqualified,
+            $didNotStart,
+            $withdrawn,
+            $line,
+            $heat,
+            null,
+            null,
+            null
+        );
+        return [$parsedRelayResult];
+    }
+
+    private function getIndividualResultsFromLine(string $line): array
+    {
         if ($this->config->{'as_csv.as_csv'}) {
             try {
                 return $this->getResultsByCsv($line);
@@ -224,7 +269,7 @@ class TextParser extends Parser
             if (!$csvIndex || !$csv[$csvIndex] || empty(trim($csv[$csvIndex]))) {
                 continue;
             }
-            $parsedResult = new ParsedResult(
+            $parsedResult = new ParsedIndividualResult(
                 Cleaner::cleanTime($csv[$csvIndex]),
                 $parsedAthlete,
                 0,
@@ -257,7 +302,7 @@ class TextParser extends Parser
         $parsedResults = [];
         $loopIndex = 0;
         foreach ($times as $time) {
-            $parsedResult = new ParsedResult(
+            $parsedResult = new ParsedIndividualResult(
                 Cleaner::cleanTime($time),
                 $athlete,
                 $roundFromLine ?? $this->currentRound ?? $loopIndex,
@@ -284,6 +329,48 @@ class TextParser extends Parser
 
     private function getInvalidatedResultFromLine(string $line, string $type): ParsedResult
     {
+        $eventModel = Event::find($this->currentEventId);
+
+        if ($eventModel === null) {
+            throw new \ParseError(sprintf('Could not find Event(%s)', $this->currentEventId));
+        }
+
+        if ($eventModel->type === Event::EVENT_TYPE_RELAY) {
+            return $this->getInvalidatedRelayResultFromLine($line, $type);
+        }
+
+        return $this->getInvalidatedIndividualResultFromLine($line, $type);
+    }
+
+    private function getInvalidatedRelayResultFromLine(string $line, string $type): ParsedRelayResult
+    {
+        $athletes = $this->getAthletesFromLine($line);
+        $roundFromLine = $this->getRoundFromLine($line);
+        $heat = $this->getHeatFromLine($line);
+        $disqualified = $type === self::DSQ_LINE_TYPE;
+        $didNotStart = $type === self::DNS_LINE_TYPE;
+        $withdrawn = false;
+        $originalLine = $line;
+
+        $parsedResult = new ParsedRelayResult(
+            null,
+            $athletes,
+            $roundFromLine ?? $this->currentRound ?? 0,
+            $disqualified,
+            $didNotStart,
+            $withdrawn,
+            $originalLine,
+            $heat,
+            null,
+            null,
+            null
+        );
+        $parsedResult->eventId = $this->currentEventId;
+        return $parsedResult;
+    }
+
+    private function getInvalidatedIndividualResultFromLine(string $line, string $type): ParsedIndividualResult
+    {
         $athlete = $this->getAthleteFromLine($line);
         $roundFromLine = $this->getRoundFromLine($line);
         $heat = $this->getHeatFromLine($line);
@@ -292,7 +379,7 @@ class TextParser extends Parser
         $withdrawn = false;
         $originalLine = $line;
 
-        $parsedResult = new ParsedResult(
+        $parsedResult = new ParsedIndividualResult(
             null,
             $athlete,
             $roundFromLine ?? $this->currentRound ?? 0,
@@ -307,6 +394,37 @@ class TextParser extends Parser
         );
         $parsedResult->eventId = $this->currentEventId;
         return $parsedResult;
+    }
+
+    private function getAthletesFromLine(string $line): array
+    {
+        $names = $this->getNamesFromLine($line);
+        $team = $this->getTeamFromLine($line);
+
+        $parsedAthletes = [];
+
+        foreach ($names as $name) {
+            $name = Cleaner::cleanName($name);
+            $parsedAthletes[] = new ParsedAthlete(
+                $name,
+                null,
+                $this->currentGender,
+                null,
+                $team
+            );
+        }
+
+        return $parsedAthletes;
+    }
+
+    private function getNamesFromLine(string $line): array
+    {
+        $names = [];
+        if ($this->config->{'athlete.names_explode'}) {
+            preg_match($this->config->{'athlete.names'}, $line, $names);
+            $names = explode($this->config->{'athlete.names_explode'}, Arr::first($names));
+        }
+        return $names;
     }
 
     private function getAthleteFromLine(string $line): ParsedAthlete
