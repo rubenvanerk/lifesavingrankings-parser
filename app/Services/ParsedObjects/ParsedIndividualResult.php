@@ -21,8 +21,7 @@ class ParsedIndividualResult extends ParsedResult
         ?int $lane,
         ?CarbonInterval $reactionTime,
         ?array $splits
-    )
-    {
+    ) {
         if (!$disqualified && !$didNotStart && !$withdrawn && is_null($time)) {
             throw new ParseError('Time can not be null if DSQ, DNS and WDR are false');
         }
