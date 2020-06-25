@@ -225,11 +225,6 @@ cleaning_options:
   custom_replace:
     type: textarea
   class_cleaners:
-    HytekCleaner:
-      type: select-multiple
-      custom: false
-      options:
-        three_lines_up: Three lines up
   line_combiner:
     pattern:
     direction:

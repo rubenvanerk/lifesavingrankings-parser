@@ -37,6 +37,6 @@ pdfparser_options:
     horizontalOffset: ''
 cleaning_options:
     custom_replace: "/Yong, Hock Lin, Eddie/>>Yong Hock Lin, Eddie\r\n/WAIYAKI\t   , OBA KABUTHIA/>>WAIYAKI, OBA KABUTHIA\r\n/Tan, Wei Ling, Josephine/>>Tan Wei Ling, Josephine\r\n/Mek, Ren Fong, Austin/>>Mek Ren Fong, Austin\r\n/Geh, Pei Jun, Kymberley/>>Geh Pei Jun, Kymberley\r\n/Seow, Chen Jiat, Denis/>>Seow Chen Jiat, Denis"
-    class_cleaners: { HytekCleaner: null }
+    class_cleaners: {  }
     line_combiner: { pattern: '', direction: up, amount: '', delimiter: '' }
     line_movers: ''

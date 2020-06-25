@@ -2,6 +2,7 @@
 
 namespace App\Services\ParsedObjects;
 
-interface ParsedObject {
+interface ParsedObject
+{
 //    public function saveToDatabase();
 }

@@ -70,7 +70,6 @@ pdfparser_options:
 cleaning_options:
   custom_replace:
   class_cleaners:
-    HytekCleaner:
   line_combiner:
     pattern:
     direction:

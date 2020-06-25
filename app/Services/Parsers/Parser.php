@@ -10,10 +10,15 @@ use Carbon\CarbonInterval;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
 
-abstract class Parser {
+abstract class Parser
+{
+    /** @var Parser */
     private static $instance;
+    /** @var string */
     protected $fileName;
+    /** @var ParserConfig  */
     public $config;
+    /** @var ParsedCompetition */
     protected $parsedCompetition;
 
     private const FILE_EXTENSION_PARSER_MAPPINGS = [
@@ -21,13 +26,9 @@ abstract class Parser {
         'lxf' => LenexParser::class,
     ];
 
-    public static function getInstance($file): Parser
+    public static function getInstance(string $file): Parser
     {
         if (!(self::$instance instanceof self)) {
-            if (!file_exists($file)) {
-                $file = storage_path('app/' . $file);
-            }
-
             $fileExtension = pathinfo($file, PATHINFO_EXTENSION);
 
             if (!isset(self::FILE_EXTENSION_PARSER_MAPPINGS[$fileExtension])) {
@@ -40,7 +41,7 @@ abstract class Parser {
         return self::$instance;
     }
 
-    public function __construct($fileName)
+    public function __construct(string $fileName)
     {
         $this->fileName = $fileName;
         $this->config = new ParserConfig($this->fileName);
@@ -59,7 +60,7 @@ abstract class Parser {
         return $this->parsedCompetition;
     }
 
-    abstract public function getRawData();
+    abstract public function getRawData(): string;
 
-    abstract protected function parse();
+    abstract protected function parse(): void;
 }

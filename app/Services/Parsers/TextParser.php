@@ -13,16 +13,23 @@ use App\Services\ParsedObjects\ParsedRelayResult;
 use App\Services\ParsedObjects\ParsedResult;
 use Carbon\Carbon;
 use Illuminate\Support\Arr;
-use Smalot\PdfParser\PDFObject;
+use Illuminate\Support\Facades\Storage;
 
 class TextParser extends Parser
 {
+    /** @var Parser */
     private static $_instance;
+    /** @var string */
     protected $fileName;
+    /** @var ParserConfig */
     public $config;
+    /** @var int */
     private $currentEventId;
+    /** @var int */
     private $currentGender;
+    /** @var int */
     private $currentRound;
+    /** @var boolean */
     private $currentEventRejected;
     /**
      * @var ParsedCompetition $parsedCompetition
@@ -36,7 +43,7 @@ class TextParser extends Parser
     private const DNS_LINE_TYPE = 'dns';
     private const SEPARATE_GENDER_LINE_TYPE = 'separate_gender';
 
-    public static function getInstance($file): Parser
+    public static function getInstance(string $file): Parser
     {
         if (!(self::$_instance instanceof self)) {
             self::$_instance = new self($file);
@@ -53,8 +60,11 @@ class TextParser extends Parser
     private function getText(): string
     {
         $parser = new \Smalot\PdfParser\Parser();
-        /** @var PDFObject $pdf */
-        $pdf = $parser->parseFile($this->fileName);
+        if (config('filesystems.default') === 's3') {
+            $pdf = $parser->parseFile(Storage::temporaryUrl($this->fileName, Carbon::now()->addMinutes(5)));
+        } else {
+            $pdf = $parser->parseFile(Storage::path($this->fileName));
+        }
         if ($this->config->{'pdfparser_options'}) {
             \Smalot\PdfParser\Parser::$horizontalOffset =
                 $this->translateQuoted($this->config->{'pdfparser_options.horizontal_offset'}) ?: ' ';
@@ -67,7 +77,7 @@ class TextParser extends Parser
     {
         $text = Cleaners\Cleaner::combineLines($text, $this->config->{'cleaning_options.line_combiner'});
         $text = Cleaners\Cleaner::customReplace($text, $this->config->getTextAreaAsArray('cleaning_options.custom_replace'));
-        $text = Cleaners\Cleaner::applyClassCleaners($text, $this->config->{'cleaning_options.class_cleaners'});
+//        $text = Cleaners\Cleaner::applyClassCleaners($text, $this->config->{'cleaning_options.class_cleaners'});
         $text = Cleaners\Cleaner::moveLines($text, explode(PHP_EOL, $this->config->{'cleaning_options.line_movers'}));
 
         return htmlspecialchars_decode($text, ENT_QUOTES);
@@ -114,11 +124,12 @@ class TextParser extends Parser
         }
     }
 
-    private function getLineType(string $line):? string
+    private function getLineType(string $line): string
     {
         if ($this->config->{'events.event_rejector'}
             && preg_match($this->config->{'events.event_rejector'}, $line) === 1
-            && (!$this->config->{'events.event_designifier'}
+            && (
+                !$this->config->{'events.event_designifier'}
                 || preg_match($this->config->{'events.event_designifier'}, $line) === 0
             )
         ) {
@@ -126,7 +137,8 @@ class TextParser extends Parser
         }
 
         if (preg_match($this->config->{'events.event_signifier'}, $line) === 1
-            && (!$this->config->{'events.event_designifier'}
+            && (
+                !$this->config->{'events.event_designifier'}
                 || preg_match($this->config->{'events.event_designifier'}, $line) === 0
             )
         ) {
@@ -134,7 +146,8 @@ class TextParser extends Parser
         }
 
         if (preg_match($this->config->{'results.time'}, $line) === 1
-            && (!$this->config->{'results.result_rejector'}
+            && (
+                !$this->config->{'results.result_rejector'}
                 || preg_match($this->config->{'results.result_rejector'}, $line) === 0
             )
         ) {
@@ -153,10 +166,10 @@ class TextParser extends Parser
             return self::DNS_LINE_TYPE;
         }
 
-        return null;
+        return '';
     }
 
-    private function getEventIdFromLine(string $line): ?int
+    private function getEventIdFromLine(string $line): int
     {
         foreach ($this->config->{'events.event_names'} as $eventId => $eventRegex) {
             if (preg_match($eventRegex, $line) === 1) {
@@ -469,7 +482,6 @@ class TextParser extends Parser
                 return [Arr::last($times)];
             default:
                 return [$times[$timeIndex]];
-                break;
         }
     }
 
@@ -500,8 +512,8 @@ class TextParser extends Parser
 
     private function translateQuoted(string $string): string
     {
-        $search  = array("\\t", "\\n", "\\r");
-        $replace = array( "\t",  "\n",  "\r");
+        $search = array("\\t", "\\n", "\\r");
+        $replace = array("\t", "\n", "\r");
         return str_replace($search, $replace, $string);
     }
 }

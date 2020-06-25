@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Services\Parsers\Parser;
 use Carbon\Carbon;
+use Illuminate\Http\File;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Http\Request;
@@ -11,7 +13,7 @@ use Illuminate\Support\Str;
 
 class FileController extends Controller
 {
-    public function browse($path = null)
+    public function browse(string $path = ''): \Illuminate\View\View
     {
         $breadcrumbs = [];
         $breadcrumbs[] = [
@@ -39,10 +41,11 @@ class FileController extends Controller
         return view('browse', $data);
     }
 
-    public function upload(Request $request)
+    public function upload(Request $request): \Illuminate\Http\RedirectResponse
     {
         $fileName = $request->input('filename');
-        $file = $request->file('results');
+        $postedFile = $request->file('results');
+        $file = is_array($postedFile) ? Arr::first($postedFile) : $postedFile;
         $date = new Carbon($request->input('date'));
         $path = $date->year . DIRECTORY_SEPARATOR . $date->month;
         $file->storeAs($path, $fileName);
@@ -55,10 +58,9 @@ class FileController extends Controller
         return redirect()->route('config', ['file' => $path . '/' . $fileName]);
     }
 
-    public function config($file)
+    public function config(string $file): \Illuminate\View\View
     {
         $competitionParser = Parser::getInstance($file);
-
 
         // s3 url
         // Storage::temporaryUrl($file, Carbon::now()->addMinutes(5));
@@ -73,7 +75,7 @@ class FileController extends Controller
         return view('config', $data);
     }
 
-    public function saveConfig(Request $request, $file)
+    public function saveConfig(Request $request, string $file): \Illuminate\Http\RedirectResponse
     {
         $this->saveConfigFromRequest($request, $file);
         $action = $request->input('action');
@@ -90,14 +92,14 @@ class FileController extends Controller
         }
     }
 
-    public function dryRun($file)
+    public function dryRun(string $file): \Illuminate\View\View
     {
         $competitionParser = Parser::getInstance($file);
         $parsedCompetition = $competitionParser->getParsedCompetition();
         return view('dry_run', ['competition' => $parsedCompetition, 'file' => $file]);
     }
 
-    public function saveToDatabase($file, $connection)
+    public function saveToDatabase(string $file, string $connection): \Illuminate\View\View
     {
         Config::set('database.default', $connection);
         $competitionParser = Parser::getInstance($file);
@@ -109,7 +111,7 @@ class FileController extends Controller
     }
 
 
-    private function saveConfigFromRequest($request, $file): void
+    private function saveConfigFromRequest(Request $request, string $file): void
     {
         $competitionParser = Parser::getInstance($file);
         $config = $competitionParser->config;

@@ -3,23 +3,26 @@
 namespace App\Services\ParsedObjects;
 
 use App\Competition;
-use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
 
-class ParsedCompetition implements ParsedObject {
+class ParsedCompetition implements ParsedObject
+{
+    /** @var Competition */
     public static $model;
+    /** @var string  */
     public $name;
+    /** @var string  */
     public $location;
+    /** @var string  */
     public $date;
+    /** @var int  */
     public $timekeeping;
+    /** @var string  */
     public $credit;
-    public $resultCount = 0;
-    /**
-     * @var ParsedIndividualResult[]
-     */
+    /** @var ParsedResult[] */
     public $results = [];
 
-    private CONST STATUS_IMPORTED = 2;
+    private const STATUS_IMPORTED = 2;
 
     public function __construct(string $name, string $location, string $date, int $timekeeping, string $credit)
     {
@@ -30,7 +33,7 @@ class ParsedCompetition implements ParsedObject {
         $this->credit = $credit;
     }
 
-    public function saveToDatabase()
+    public function saveToDatabase(): void
     {
         $competitionSlug = Str::slug($this->name);
         $competition = Competition::firstOrCreate(

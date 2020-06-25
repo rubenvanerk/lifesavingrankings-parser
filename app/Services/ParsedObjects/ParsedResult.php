@@ -8,16 +8,27 @@ use Illuminate\Support\Arr;
 
 abstract class ParsedResult implements ParsedObject
 {
+    /** @var CarbonInterval|null  */
     public $time;
+    /** @var int  */
     public $round;
+    /** @var bool  */
     public $disqualified;
+    /** @var bool  */
     public $didNotStart;
+    /** @var bool  */
     public $withdrawn;
+    /** @var string|null  */
     public $originalLine;
+    /** @var int|null  */
     public $heat;
+    /** @var array|null  */
     public $splits;
+    /** @var int|null  */
     public $lane;
+    /** @var CarbonInterval|null  */
     public $reactionTime;
+    /** @var int */
     public $eventId;
 
     public function getStatus(): ?string
@@ -34,15 +45,15 @@ abstract class ParsedResult implements ParsedObject
         return null;
     }
 
-    public function getTimeStringForDisplay()
+    public function getTimeStringForDisplay(): string
     {
         if (!$this->time) {
-            return $this->getStatus();
+            return $this->getStatus() ?? '';
         }
         return str_replace('0000', '', $this->time->format('%I:%S.%F'));
     }
 
-    public function getReactionTimeStringForDisplay()
+    public function getReactionTimeStringForDisplay(): string
     {
         if (is_null($this->reactionTime)) {
             return '';
@@ -50,9 +61,9 @@ abstract class ParsedResult implements ParsedObject
         return str_replace('0000', '', $this->reactionTime->format('%S.%F'));
     }
 
-    public function calculatePoints(): ?float
+    public function calculatePoints(): int
     {
-        if ($this->disqualified || $this->didNotStart || $this->withdrawn) {
+        if ($this->disqualified || $this->didNotStart || $this->withdrawn || is_null($this->time)) {
             return 0;
         }
 
@@ -68,20 +79,6 @@ abstract class ParsedResult implements ParsedObject
 
         $recordTime = Cleaner::cleanTime($record->time);
 
-        $points = 0;
-        $quotient = $this->time->totalSeconds / $recordTime->totalSeconds;
-
-        if ($quotient <= 2) {
-            $r1 = 467 * $quotient * $quotient;
-            $r2 = 2001 * $quotient;
-            $points = round(($r1 - $r2 + 2534.0) * 100.0) / 100;
-        } elseif ($quotient <= 5) {
-            $r1 = 2000.0 / 3.0;
-            $r2 = (400.0 / 3.0) * $quotient;
-            $points = $r1 - $r2;
-            $points = round(100.0 * $points) / 100.0;
-        }
-
-        return $points;
+        return (int)(1000 * (($recordTime->totalSeconds / $this->time->totalSeconds) ** 3));
     }
 }
