@@ -206,8 +206,8 @@ abstract class Cleaner
 
     public static function translateQuoted(string $string): string
     {
-        $search  = array("\\t", "\\n", "\\r");
-        $replace = array( "\t",  "\n",  "\r");
+        $search  = ["\\t", "\\n", "\\r"];
+        $replace = [ "\t",  "\n",  "\r"];
         return str_replace($search, $replace, $string);
     }
 }

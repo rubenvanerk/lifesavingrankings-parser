@@ -123,7 +123,7 @@ class FileController extends Controller
             if ($value === 'custom') {
                 $value = $request->input('data')[$name . '_custom'];
             }
-            $config->{$name} = $value;
+            $config->{$name} = (string)$value;
         }
 
         $config->save();
