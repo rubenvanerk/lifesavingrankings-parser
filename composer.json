@@ -1,7 +1,11 @@
 {
     "name": "laravel/lumen",
     "description": "The Laravel Lumen Framework.",
-    "keywords": ["framework", "laravel", "lumen"],
+    "keywords": [
+        "framework",
+        "laravel",
+        "lumen"
+    ],
     "license": "MIT",
     "type": "project",
     "require": {
@@ -9,7 +13,8 @@
         "ext-fileinfo": "*",
         "bref/bref": "^0.5.27",
         "cviebrock/eloquent-sluggable": "^7.0",
-        "laravel/lumen-framework": "^7.0",
+        "fideloper/proxy": "^4.4",
+        "laravel/framework": "^7.0",
         "league/flysystem-aws-s3-v3": "^1.0",
         "leonverschuren/lenex": "dev-master",
         "smalot/pdfparser": "dev-feature/remove-tcpdf-lib",

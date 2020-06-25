@@ -9,6 +9,8 @@
     <hr>
 
     <form method="post">
+        @csrf
+
         @foreach($config->config as $name => $value)
             @php($parentField = '')
             @include('partials.field')
