@@ -4,7 +4,7 @@
 This is a continuation of the [competition-parser](https://github.com/rubenvanerk/competition-parser) project with a user-friendly frontend.
 
 ## Installation
-```Shell
+```bash
 composer install  
 php artisan db:seed  
 php artisan serve
