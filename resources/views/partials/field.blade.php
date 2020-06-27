@@ -6,7 +6,8 @@
     <div class="row">
         <div class="column">
             <label for="{{$fieldName}}">{{$config->getLabel($fieldName)}}:</label><br>
-            <select name="data[{{$fieldName}}]" id="{{$fieldName}}" @if($fieldType === 'select-multiple') multiple @endif>
+            <select name="data[{{$fieldName}}]" id="{{$fieldName}}"
+                    @if($fieldType === 'select-multiple') multiple @endif>
                 @foreach($config->getOptions($fieldName) as $optionValue => $optionName)
                     <option value="{{$optionValue}}" {{$config->{$fieldName} == $optionValue ? 'selected' : ''}}>
                         {{$optionName}}
@@ -34,20 +35,26 @@
 
 @elseif ($fieldType === 'textarea')
 
-    <label for="{{$fieldName}}">{{$config->getLabel($fieldName)}}:</label><br>
-    <textarea id="{{$fieldName}}" name="data[{{$fieldName}}]" cols="100">{{ $config->{$fieldName} }}</textarea><br>
+    <div class="form-group">
+        <label for="{{$fieldName}}">{{$config->getLabel($fieldName)}}:</label><br>
+        <textarea id="{{$fieldName}}" name="data[{{$fieldName}}]" cols="100">{{ $config->{$fieldName} }}</textarea><br>
+    </div>
 
 @elseif ($fieldType === 'boolean')
 
-    <label for="{{$fieldName}}">{{$config->getLabel($fieldName)}}:</label>
-    <input name="data[{{$fieldName}}]" type="checkbox" id="{{$fieldName}}"
-           @if($config->{$fieldName} === 'true') checked @endif value="true"/><br>
+    <div class="form-group">
+        <label for="{{$fieldName}}">{{$config->getLabel($fieldName)}}:</label>
+        <input name="data[{{$fieldName}}]" type="checkbox" id="{{$fieldName}}"
+               @if($config->{$fieldName} === 'true') checked @endif value="true"/><br>
+    </div>
 
 @elseif (!is_array($value) || $fieldType)
 
-    <label for="{{$fieldName}}">{{$config->getLabel($fieldName)}}:</label><br>
-    <input name="data[{{$fieldName}}]" type="{{$fieldType}}" id="{{$fieldName}}"
-           value="{{ $config->{$fieldName} }}"/><br>
+    <div class="form-group">
+        <label for="{{$fieldName}}">{{$config->getLabel($fieldName)}}:</label><br>
+        <input name="data[{{$fieldName}}]" type="{{$fieldType}}" id="{{$fieldName}}"
+               value="{{ $config->{$fieldName} }}"/><br>
+    </div>
 
 @else
 
@@ -56,11 +63,11 @@
     {{--    {{dd($values)}}--}}
     <details>
         <summary>{{$name}}</summary>
-        <p>
+        <div class="content">
             @foreach($values as $name => $value)
                 @include('partials.field')
             @endforeach
-        </p>
+        </div>
     </details>
 
 @endif

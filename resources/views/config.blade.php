@@ -1,12 +1,14 @@
-@extends('layouts.base')
+@extends('layouts.app')
 
 @section('content')
-    <h2>Parsing {{$file}}</h2>
-    <a href="{{$temporaryUrl}}" target="_blank">
-        <button>View source file</button>
-    </a>
+    <div class="flex">
+        <h2 class="inline-block">Parsing {{$file}}</h2>
+        <a class="green button inline-block ml-auto" href="{{$temporaryUrl}}" target="_blank">
+           View source file
+        </a>
+    </div>
 
-    <hr>
+    <hr class="my-5">
 
     <form method="post">
         @csrf
@@ -18,15 +20,21 @@
 
         <p>Action:</p>
 
+        <div class="form-group inline-label">
         <input type="radio" name="action" id="save_config" value="save_config" checked>
         <label for="save_config">Save config</label><br>
+        </div>
 
-        <input type="radio" name="action" id="dry_run" value="dry_run">
-        <label for="dry_run">Dry run</label><br>
+        <div class="form-group inline-label">
+            <input type="radio" name="action" id="dry_run" value="dry_run">
+            <label for="dry_run">Dry run</label>
+        </div>
 
         @foreach($databases as $name => $config)
-            <input type="radio" name="action" id="save_{{$name}}_database" value="{{$name}}">
-            <label for="save_{{$name}}_database">Save to {{$name}} database</label><br>
+            <div class="form-group inline-label">
+                <input type="radio" name="action" id="save_{{$name}}_database" value="{{$name}}">
+                <label for="save_{{$name}}_database" class="inline">Save to {{$name}} database</label>
+            </div>
         @endforeach
 
         <button type="submit">Save</button>
@@ -35,7 +43,7 @@
 
     <details open>
         <summary>Raw data</summary>
-        <pre>
+        <pre class="overflow-scroll p-3 shadow-inner">
             {{$rawData}}
         </pre>
     </details>

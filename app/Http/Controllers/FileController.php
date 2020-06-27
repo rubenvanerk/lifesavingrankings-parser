@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Services\Parsers\Parser;
 use Carbon\Carbon;
 use DB;
+use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Config;
@@ -13,6 +14,11 @@ use Illuminate\Support\Str;
 
 class FileController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
+
     public function browse(string $path = ''): \Illuminate\View\View
     {
         $breadcrumbs = [];
@@ -41,8 +47,19 @@ class FileController extends Controller
         return view('browse', $data);
     }
 
-    public function upload(Request $request): \Illuminate\Http\RedirectResponse
+    /**
+     * @param Request $request
+     *
+     * @throws Exception
+     *
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Http\RedirectResponse|\Illuminate\View\View
+     */
+    public function upload(Request $request)
     {
+        if ($request->method() === 'GET') {
+            return view('upload');
+        }
+
         $fileName = $request->input('filename');
         $postedFile = $request->file('results');
         $file = is_array($postedFile) ? Arr::first($postedFile) : $postedFile;
