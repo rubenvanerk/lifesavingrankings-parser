@@ -13,6 +13,11 @@ use Illuminate\Support\Str;
 
 class FileController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
+
     public function browse(string $path = ''): \Illuminate\View\View
     {
         $breadcrumbs = [];
@@ -41,8 +46,12 @@ class FileController extends Controller
         return view('browse', $data);
     }
 
-    public function upload(Request $request): \Illuminate\Http\RedirectResponse
+    public function upload(Request $request)
     {
+        if ($request->method() === 'GET') {
+            return view('upload');
+        }
+
         $fileName = $request->input('filename');
         $postedFile = $request->file('results');
         $file = is_array($postedFile) ? Arr::first($postedFile) : $postedFile;

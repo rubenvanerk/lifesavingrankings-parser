@@ -9,3 +9,9 @@ Homestead.yaml
 /_ide_helper_models.php
 /.serverless/
 .php_cs.cache
+/node_modules/
+
+/public/js
+/public/css
+/public/build
+/public/mix-manifest.json
