@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Services\Parsers\Parser;
 use Carbon\Carbon;
 use DB;
+use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Config;
@@ -46,6 +47,13 @@ class FileController extends Controller
         return view('browse', $data);
     }
 
+    /**
+     * @param Request $request
+     *
+     * @throws Exception
+     *
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Http\RedirectResponse|\Illuminate\View\View
+     */
     public function upload(Request $request)
     {
         if ($request->method() === 'GET') {
