@@ -9,3 +9,5 @@ composer install
 php artisan db:seed  
 php artisan serve
 ```
+
+To compile assets use `npm run dev` or use `npm run watch` to automatically rebuild assets whenever you change a file.
