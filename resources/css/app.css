@@ -3,7 +3,7 @@
 @tailwind components;
 
 body {
-    @apply text-gray-900;
+    @apply text-gray-800;
 }
 
 h1 {
@@ -30,11 +30,11 @@ input {
     @apply p-2 bg-gray-100;
 }
 
-.button {
-    @apply inline-block px-6 py-4  font-bold shadow-lg uppercase tracking-wider;
+.btn {
+    @apply inline-block px-6 py-4 font-bold shadow uppercase tracking-wider;
 }
 
-.button.green {
+.btn-green {
     @apply bg-green-600 text-gray-100;
 }
 

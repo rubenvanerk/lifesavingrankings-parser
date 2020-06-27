@@ -11,93 +11,75 @@ class EventSeeder extends Seeder
      */
     public function run()
     {
-        DB::table('rankings_event')->insert([
-            'id' => 1,
+        DB::table('events')->insert([
             'code' => '100mcf',
             'type' => 1,
         ]);
-        DB::table('rankings_event')->insert([
-            'id' => 2,
+        DB::table('events')->insert([
             'code' => '50mc',
             'type' => 1,
         ]);
-        DB::table('rankings_event')->insert([
-            'id' => 3,
+        DB::table('events')->insert([
             'code' => '200os',
             'type' => 1,
         ]);
-        DB::table('rankings_event')->insert([
-            'id' => 4,
+        DB::table('events')->insert([
             'code' => '100mtf',
             'type' => 1,
         ]);
-        DB::table('rankings_event')->insert([
-            'id' => 5,
+        DB::table('events')->insert([
             'code' => '100rm',
             'type' => 1,
         ]);
-        DB::table('rankings_event')->insert([
-            'id' => 6,
+        DB::table('events')->insert([
             'code' => '200sls',
             'type' => 1,
         ]);
-        DB::table('rankings_event')->insert([
-            'id' => 7,
+        DB::table('events')->insert([
             'code' => '50os',
             'type' => 2,
         ]);
-        DB::table('rankings_event')->insert([
-            'id' => 8,
+        DB::table('events')->insert([
             'code' => '50f',
             'type' => 2,
         ]);
-        DB::table('rankings_event')->insert([
-            'id' => 9,
+        DB::table('events')->insert([
             'code' => '50ff',
             'type' => 2,
         ]);
-        DB::table('rankings_event')->insert([
-            'id' => 10,
+        DB::table('events')->insert([
             'code' => '50mcr',
             'type' => 2,
         ]);
-        DB::table('rankings_event')->insert([
-            'id' => 11,
+        DB::table('events')->insert([
             'code' => '50mpt',
             'type' => 2,
         ]);
-        DB::table('rankings_event')->insert([
-            'id' => 12,
+        DB::table('events')->insert([
             'code' => '25mc',
             'type' => 2,
         ]);
-        DB::table('rankings_event')->insert([
-            'id' => 13,
+        DB::table('events')->insert([
             'code' => '50tt',
             'type' => 2,
         ]);
-        DB::table('rankings_event')->insert([
-            'id' => 14,
+        DB::table('events')->insert([
             'code' => '50mcf',
             'type' => 2,
         ]);
-        DB::table('rankings_event')->insert([
-            'id' => 15,
+        DB::table('events')->insert([
             'code' => '4-50or',
             'type' => 2,
         ]);
-        DB::table('rankings_event')->insert([
-            'id' => 16,
+        DB::table('events')->insert([
             'code' => '4-25mc',
             'type' => 3,
         ]);
-        DB::table('rankings_event')->insert([
-            'id' => 17,
+        DB::table('events')->insert([
             'code' => '4-50mr',
             'type' => 3,
         ]);
-        DB::table('rankings_event')->insert([
-            'id' => 18,
+        DB::table('events')->insert([
             'code' => '100os',
             'type' => 1,
         ]);

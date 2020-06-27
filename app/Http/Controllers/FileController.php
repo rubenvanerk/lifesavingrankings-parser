@@ -2,23 +2,18 @@
 
 namespace App\Http\Controllers;
 
+use App\Competition;
 use App\Services\Parsers\Parser;
 use Carbon\Carbon;
 use DB;
 use Exception;
 use Illuminate\Http\Request;
-use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
 class FileController extends Controller
 {
-    public function __construct()
-    {
-        $this->middleware('auth');
-    }
-
     public function browse(string $path = ''): \Illuminate\View\View
     {
         $breadcrumbs = [];
@@ -60,19 +55,21 @@ class FileController extends Controller
             return view('upload');
         }
 
-        $fileName = $request->input('filename');
-        $postedFile = $request->file('results');
-        $file = is_array($postedFile) ? Arr::first($postedFile) : $postedFile;
-        $date = new Carbon($request->input('date'));
-        $path = $date->year . DIRECTORY_SEPARATOR . $date->month;
-        $file->storeAs($path, $fileName);
+//        $request->validate([
+//            'name' => 'required',
+//            'city' => 'required',
+//            'country' => 'required',
+//            'start_date' => 'required',
+//            'end_date' => 'required',
+//            'timekeeping' => 'required',
+//        ]);
 
-        $competitionParser = Parser::getInstance($path . DIRECTORY_SEPARATOR . $fileName);
-        $config = $competitionParser->config;
-        $config->{'info.date'} = $request->input('date');
-        $config->save();
+        $competition = Competition::create($request->all());
 
-        return redirect()->route('config', ['file' => $path . '/' . $fileName]);
+
+        $competition->addMediaFromRequest('file')->toMediaCollection('results_file');
+
+        return redirect()->route('/');
     }
 
     public function config(string $file): \Illuminate\View\View

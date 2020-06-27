@@ -47,7 +47,7 @@
             </div>
         </nav>
 
-        <div class="bg-gray-200 p-3 mx-auto xl:max-w-6xl">
+        <div class="bg-gray-200 p-3 mx-auto xl:max-w-6xl rounded">
             @yield('content')
         </div>
 

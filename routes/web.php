@@ -2,7 +2,11 @@
 
 use Illuminate\Support\Facades\Route;
 
-Route::match(['get', 'post'], '/', ['as' => 'upload', 'uses' => 'FileController@upload']);
+Route::get('/', function () {
+    return view('home');
+});
+
+Route::match(['get', 'post'], '/upload', ['as' => 'upload', 'uses' => 'FileController@upload']);
 Route::get('/config/{file?}', ['uses' => 'FileController@config', 'as' => 'config'])->where(['file' => '.*']);
 Route::post('/config/{file?}', ['uses' => 'FileController@saveConfig', 'as' => 'save_config'])->where(['file' => '.*']);
 Route::get('/dry-run/{file?}', ['uses' => 'FileController@dryRun', 'as' => 'dry_run'])->where(['file' => '.*']);
