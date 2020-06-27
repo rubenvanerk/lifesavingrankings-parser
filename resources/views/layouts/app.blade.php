@@ -11,7 +11,7 @@
 
     <!-- Scripts -->
     <script src="{{ asset('js/app.js') }}" defer></script>
-    
+
     <!-- Styles -->
     <link href="{{ mix('css/app.css') }}" rel="stylesheet">
 </head>
@@ -47,7 +47,11 @@
             </div>
         </nav>
 
-        @yield('content')
+        <div class="bg-gray-200 p-3 mx-auto xl:max-w-6xl">
+            @yield('content')
+        </div>
+
+
     </div>
 </body>
 </html>

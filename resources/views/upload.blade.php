@@ -1,18 +1,19 @@
-@extends('layouts.base')
+@extends('layouts.app')
 
 @section('content')
     <form method="post" enctype="multipart/form-data">
-        <p>
-            <label for="filename">Filename:</label><br>
+        @csrf
+        <div class="form-group">
+            <label for="filename">Filename:</label>
             <input name="filename" type="text" id="filename" required>
-        </p>
-        <p>
+        </div>
+        <div class="form-group">
             <input name="results" type="file" required>
-        </p>
-        <p>
-            <label for="date">Date:</label><br>
+        </div>
+        <div class="form-group">
+            <label for="date">Date:</label>
             <input name="date" type="date" id="date" required>
-        </p>
-        <button type="submit">Upload</button>
+        </div>
+        <button type="submit" class="green button mt-5">Upload</button>
     </form>
 @endsection

@@ -11,3 +11,5 @@ php artisan serve
 ```
 
 To compile assets use `npm run dev` or use `npm run watch` to automatically rebuild assets whenever you change a file.
+
+`npm run watch` also spawns a browsersync that automatically refreshes after a change.

@@ -2,4 +2,40 @@
 
 @tailwind components;
 
+body {
+    @apply text-gray-900;
+}
+
+h1 {
+    @apply font-extrabold text-4xl;
+}
+
+h2 {
+    @apply font-extrabold text-2xl;
+}
+
+.form-group label {
+    @apply font-bold;
+}
+
+.form-group:not(.inline-label) {
+    @apply block mb-3;
+}
+
+.form-group {
+    @apply py-3;
+}
+
+input {
+    @apply p-2 bg-gray-100;
+}
+
+.button {
+    @apply inline-block px-6 py-4  font-bold shadow-lg uppercase tracking-wider;
+}
+
+.button.green {
+    @apply bg-green-600 text-gray-100;
+}
+
 @tailwind utilities;
