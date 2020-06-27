@@ -1,17 +1,24 @@
 @tailwind base;
 
-@tailwind components;
 
 body {
     @apply text-gray-800;
 }
 
 h1 {
-    @apply font-extrabold text-4xl;
+    @apply text-2xl;
 }
 
 h2 {
-    @apply font-extrabold text-2xl;
+    @apply text-xl;
+}
+
+h3 {
+    @apply text-lg;
+}
+
+a {
+    @apply text-blue-600 underline;
 }
 
 .form-group label {
@@ -31,11 +38,25 @@ input {
 }
 
 .btn {
-    @apply inline-block px-6 py-4 font-bold shadow uppercase tracking-wider;
+    @apply inline-block px-6 py-4 font-bold shadow uppercase tracking-wider no-underline;
 }
 
 .btn-green {
     @apply bg-green-600 text-gray-100;
 }
+
+table {
+    @apply w-full shadow-lg bg-white;
+}
+
+table th {
+    @apply bg-teal-100 border text-left px-8 py-4;
+}
+
+table td {
+    @apply border px-8 py-4;
+}
+
+@tailwind components;
 
 @tailwind utilities;

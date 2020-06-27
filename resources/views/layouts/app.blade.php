@@ -25,6 +25,7 @@
                             {{ config('app.name', 'Laravel') }}
                         </a>
                     </div>
+                    <a href="{{ route('competitions.index') }}" class="text-white no-underline">Competitions</a>
                     <div class="flex-1 text-right">
                         @guest
                             <a class="no-underline hover:underline text-gray-300 text-sm p-3" href="{{ route('login') }}">{{ __('Login') }}</a>

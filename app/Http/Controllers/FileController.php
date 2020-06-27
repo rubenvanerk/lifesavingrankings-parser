@@ -69,7 +69,7 @@ class FileController extends Controller
 
         $competition->addMediaFromRequest('file')->toMediaCollection('results_file');
 
-        return redirect()->route('/');
+        return redirect('/');
     }
 
     public function config(string $file): \Illuminate\View\View

@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
     return view('home');
-});
+}, ['as' => 'home']);
 
 Route::match(['get', 'post'], '/upload', ['as' => 'upload', 'uses' => 'FileController@upload']);
 Route::get('/config/{file?}', ['uses' => 'FileController@config', 'as' => 'config'])->where(['file' => '.*']);
@@ -14,3 +14,4 @@ Route::get('/save-to-database/{connection}/{file:.*}', ['uses' => 'FileControlle
 Route::get('/browse/{path?}', ['uses' => 'FileController@browse', 'as' => 'browse'])->where(['path' => '.*']);
 
 Auth::routes(['register' => false]);
+Route::resource('competitions', 'CompetitionController');
