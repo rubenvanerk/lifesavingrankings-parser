@@ -3,8 +3,8 @@
 
 
 @if ($fieldType === 'select' || $fieldType === 'select-multiple')
-    <div class="row">
-        <div class="column">
+    <div class="flex">
+        <div class="w-1/2 form-group">
             <label for="{{$fieldName}}">{{$config->getLabel($fieldName)}}:</label><br>
             <select name="data[{{$fieldName}}]" id="{{$fieldName}}"
                     @if($fieldType === 'select-multiple') multiple @endif>
@@ -24,7 +24,7 @@
         </div>
 
         @if ($config->allowCustom($fieldName))
-            <div class="column">
+            <div class="w-1/2 form-group">
                 <label for="{{$fieldName}}_custom">Custom:</label><br>
                 <input name="data[{{$fieldName}}_custom]" type="text" id="{{$fieldName}}_custom"
                        value="{{$config->getValueIfCustom($fieldName)}}"/><br>

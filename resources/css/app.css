@@ -57,6 +57,10 @@ table td {
     @apply border px-8 py-4;
 }
 
+summary {
+    @apply shadow px-1 py-3 my-3;
+}
+
 @tailwind components;
 
 @tailwind utilities;

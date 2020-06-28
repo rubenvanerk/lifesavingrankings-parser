@@ -450,6 +450,12 @@ class TextParser extends Parser
     private function getNameFromLine(string $line): string
     {
         preg_match($this->config->{'athlete.name'}, $line, $matches);
+        $name = Arr::first($matches);
+
+        if (is_null($name)) {
+            throw new ParseError(sprintf('Could not find name in line %s', $line));
+        }
+
         return Cleaner::cleanName(Arr::first($matches));
     }
 
