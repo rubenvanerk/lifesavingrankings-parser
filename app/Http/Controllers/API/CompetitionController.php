@@ -14,19 +14,37 @@ class CompetitionController extends Controller
      */
 
     /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
+     * @OA\Tag(
+     *     name="competitions",
+     *     description="Everything about competitions"
+     * )
+     */
+
+    /**
+     * @OA\Get(
+     *   path="/api/competitions",
+     *   summary="list competitions",
+     *   tags={"competitions"},
+     *   @OA\Response(
+     *     response=200,
+     *     description="A list with products"
+     *   ),
+     *   @OA\Response(
+     *     response="default",
+     *     description="an ""unexpected"" error"
+     *   )
+     * )
      */
     public function index()
     {
-        return response()->json(Competition::paginate(25)->values());
+        return response()->json(Competition::paginate(25)->all());
     }
 
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param \Illuminate\Http\Request $request
+     *
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
@@ -35,10 +53,39 @@ class CompetitionController extends Controller
     }
 
     /**
-     * Display the specified resource.
+     * @OA\Get(
+     *     path="/api/competitions/{competitionId}",
+     *     tags={"competitions"},
+     *     summary="Find a competition by ID",
+     *     description="Returns a single competition",
+     *     operationId="getCompetitionById",
+     *     @OA\Parameter(
+     *         name="competitionId",
+     *         in="path",
+     *         description="ID of competition to return",
+     *         required=true,
+     *         @OA\Schema(
+     *             type="integer",
+     *             format="int64"
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="successful operation",
+     *     ),
+     *     @OA\Response(
+     *         response=400,
+     *         description="Invalid ID supplied"
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Pet not found"
+     *     )
+     * )
      *
-     * @param  \App\Competition  $competition
-     * @return \Illuminate\Http\Response
+     * @param Competition $competition
+     *
+     * @return \Illuminate\Http\JsonResponse
      */
     public function show(Competition $competition)
     {

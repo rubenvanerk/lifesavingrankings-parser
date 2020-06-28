@@ -23,6 +23,10 @@ class Competition extends Model implements HasMedia
         'timekeeping',
     ];
 
+    protected $hidden = [
+        'parser_config',
+    ];
+
     public function results()
     {
         $this->hasMany('App\Result');
