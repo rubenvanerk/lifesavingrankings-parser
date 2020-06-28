@@ -22,6 +22,7 @@
                     <td>{{ $competition->created_at }}</td>
                     <td>
                         <a href="{{ route('competitions.edit', ['competition' => $competition]) }}">EDIT</a>
+                        <a href="{{ route('competitions.parse', ['competition' => $competition]) }}">PARSE</a>
                     </td>
                 </tr>
             @endforeach

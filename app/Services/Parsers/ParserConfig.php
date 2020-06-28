@@ -2,6 +2,7 @@
 
 namespace App\Services\Parsers;
 
+use App\Competition;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
@@ -10,6 +11,8 @@ use Symfony\Component\Yaml\Yaml;
 
 class ParserConfig
 {
+    /** @var Competition */
+    private $competition;
     /** @var string */
     private $fileName;
     /** @var string */
@@ -24,10 +27,10 @@ class ParserConfig
         'lxf' => 'lenex_template.yaml',
     ];
 
-    public function __construct(string $resultsFileName)
+    public function __construct(Competition $competition)
     {
-        $this->resultsFile = $resultsFileName;
-        $this->fileName = $resultsFileName . '.yaml';
+        $this->competition = $competition;
+        $this->fileName = $competition->getFirstMedia('results_file')->file_name . '.yaml';
         $this->loadConfig();
         $templateContent = file_get_contents(__DIR__ . DIRECTORY_SEPARATOR . 'parser_template.yaml');
         if (!$templateContent) {
@@ -38,18 +41,21 @@ class ParserConfig
 
     private function loadConfig(): void
     {
-        $fileExtension = pathinfo($this->resultsFile, PATHINFO_EXTENSION);
+        $fileExtension = pathinfo($this->competition->getFirstMediaPath('results_file'), PATHINFO_EXTENSION);
         $emptyConfig = file_get_contents(__DIR__ . DIRECTORY_SEPARATOR . self::FILE_EXTENSION_TEMPLATE_MAPPINGS[$fileExtension]);
 
         if (!$emptyConfig) {
             throw new ParseError(sprintf('Could not find empty template %s', self::FILE_EXTENSION_TEMPLATE_MAPPINGS[$fileExtension]));
         }
 
-        if (Storage::missing($this->fileName)) {
-            Storage::put($this->fileName, $emptyConfig);
+        if (!$this->competition->getFirstMedia('parser_config')) {
+            Storage::disk('public')->put($this->fileName, $emptyConfig);
+            $path = Storage::disk('public')->path($this->fileName);
+            $this->competition->addMedia($path)->toMediaCollection('parser_config');
         }
 
-        $this->config = array_replace_recursive(Yaml::parse($emptyConfig), Yaml::parse(Storage::get($this->fileName)));
+        $config = file_get_contents($this->competition->getFirstMediaPath('parser_config'));
+        $this->config = array_replace_recursive(Yaml::parse($emptyConfig), Yaml::parse($config));
     }
 
     /**
@@ -80,7 +86,8 @@ class ParserConfig
 
     public function save(): void
     {
-        Storage::put($this->fileName, Yaml::dump($this->config));
+        $parserConfigPath = $this->competition->getFirstMediaPath('parser_config');
+        file_put_contents($parserConfigPath, Yaml::dump($this->config));
     }
 
     public function remove(string $name): void

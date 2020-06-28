@@ -2,6 +2,7 @@
 
 namespace App\Services\Parsers;
 
+use App\Competition;
 use App\Event;
 use App\Services\Cleaners;
 use App\Services\Cleaners\Cleaner;
@@ -20,8 +21,8 @@ class TextParser extends Parser
 {
     /** @var Parser */
     private static $_instance;
-    /** @var string */
-    protected $fileName;
+    /** @var Competition */
+    protected $competition;
     /** @var ParserConfig */
     public $config;
     /** @var int */
@@ -44,10 +45,10 @@ class TextParser extends Parser
     private const DNS_LINE_TYPE = 'dns';
     private const SEPARATE_GENDER_LINE_TYPE = 'separate_gender';
 
-    public static function getInstance(string $file): Parser
+    public static function getInstance(Competition $competition): Parser
     {
         if (!(self::$_instance instanceof self)) {
-            self::$_instance = new self($file);
+            self::$_instance = new self($competition);
         }
 
         return self::$_instance;
@@ -62,9 +63,10 @@ class TextParser extends Parser
     {
         $parser = new \Smalot\PdfParser\Parser();
         if (config('filesystems.default') === 's3') {
-            $pdf = $parser->parseFile(Storage::temporaryUrl($this->fileName, Carbon::now()->addMinutes(5)));
+            $pdf = $parser->parseFile(Storage::temporaryUrl($this->competition, Carbon::now()->addMinutes(5)));
         } else {
-            $pdf = $parser->parseFile(Storage::path($this->fileName));
+            $pdfFile = $this->competition->getFirstMediaPath('results_file');
+            $pdf = $parser->parseFile($pdfFile);
         }
         if ($this->config->{'pdfparser_options'}) {
             \Smalot\PdfParser\Parser::$horizontalOffset =
@@ -103,6 +105,9 @@ class TextParser extends Parser
                     $this->currentEventRejected = false;
                     break;
                 case self::RESULT_LINE_TYPE:
+                    if (!$this->currentEventId) {
+                        throw new ParseError('Cannot parse result when no event is active. Line: ' . $line);
+                    }
                     if ($this->currentEventRejected) {
                         break;
                     }

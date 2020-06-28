@@ -8,29 +8,15 @@ use Illuminate\Support\Str;
 class ParsedCompetition implements ParsedObject
 {
     /** @var Competition */
-    public static $model;
-    /** @var string */
-    public $name;
-    /** @var string */
-    public $location;
-    /** @var string */
-    public $date;
-    /** @var int */
-    public $timekeeping;
-    /** @var string */
-    public $credit;
+    public $model;
     /** @var ParsedResult[] */
     public $results = [];
 
     private const STATUS_IMPORTED = 2;
 
-    public function __construct(string $name, string $location, string $date, int $timekeeping, string $credit)
+    public function __construct(Competition $competition)
     {
-        $this->name = $name;
-        $this->location = $location;
-        $this->date = $date;
-        $this->timekeeping = $timekeeping;
-        $this->credit = $credit;
+        $this->model = $competition;
     }
 
     public function saveToDatabase(): void

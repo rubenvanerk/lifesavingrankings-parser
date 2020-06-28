@@ -2,15 +2,14 @@
 
 @section('content')
 
-    <a href="{{route('config', ['file' => $file])}}">< back to config</a> <br>
+{{--    <a href="{{route('config', ['file' => $file])}}">< back to config</a> <br>--}}
 
     <h1>{{$competition->name}}</h1>
-    Date: {{$competition->date}}<br>
-    Location: {{$competition->location}}<br>
+    Date: {{$competition->start_date}}<br>
+    Location: {{$competition->city}}<br>
     Timekeeping: {{$competition->timekeeping}}<br>
-    Credit: {{$competition->credit}}<br><br>
 
-    Result count: {{count($competition->results)}}<br>
+    Result count: {{count($parsedCompetition->results)}}<br>
 
         <details>
             <table>
@@ -31,7 +30,7 @@
                 </tr>
                 </thead>
                 <tbody>
-                @foreach($competition->results as $result)
+                @foreach($parsedCompetition->results as $result)
                     @php($athlete = $result->athlete ?? $result->athletes)
                     <tr>
                         @if(is_array($athlete))

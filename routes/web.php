@@ -15,3 +15,5 @@ Route::get('/browse/{path?}', ['uses' => 'FileController@browse', 'as' => 'brows
 
 Auth::routes(['register' => false]);
 Route::resource('competitions', 'CompetitionController');
+Route::match(['get', 'put'], 'competitions/parse/{competition}', ['as' => 'competitions.parse', 'uses' => 'CompetitionController@parse']);
+Route::get('competitions/parse/{competition}/dry-run', ['as' => 'competitions.dry_run', 'uses' => 'CompetitionController@dryRun']);

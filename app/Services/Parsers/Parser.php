@@ -2,6 +2,7 @@
 
 namespace App\Services\Parsers;
 
+use App\Competition;
 use App\Services\ParsedObjects\ParsedCompetition;
 use ParseError;
 
@@ -10,7 +11,7 @@ abstract class Parser
     /** @var Parser */
     private static $instance;
     /** @var string */
-    protected $fileName;
+    protected $competition;
     /** @var ParserConfig */
     public $config;
     /** @var ParsedCompetition */
@@ -21,8 +22,9 @@ abstract class Parser
         'lxf' => LenexParser::class,
     ];
 
-    public static function getInstance(string $file): Parser
+    public static function getInstance(Competition $competition): Parser
     {
+        $file = $competition->getFirstMediaPath('results_file');
         if (!(self::$instance instanceof self)) {
             $fileExtension = pathinfo($file, PATHINFO_EXTENSION);
 
@@ -31,26 +33,20 @@ abstract class Parser
             }
 
             $parserType = self::FILE_EXTENSION_PARSER_MAPPINGS[$fileExtension];
-            self::$instance = $parserType::getInstance($file);
+            self::$instance = $parserType::getInstance($competition);
         }
         return self::$instance;
     }
 
-    public function __construct(string $fileName)
+    public function __construct(Competition $competition)
     {
-        $this->fileName = $fileName;
-        $this->config = new ParserConfig($this->fileName);
+        $this->competition = $competition;
+        $this->config = new ParserConfig($this->competition);
     }
 
     public function getParsedCompetition(): ParsedCompetition
     {
-        $this->parsedCompetition = new ParsedCompetition(
-            $this->config->{'info.name'},
-            $this->config->{'info.location'},
-            $this->config->{'info.date'},
-            $this->config->{'info.timekeeping'},
-            $this->config->{'info.credit'}
-        );
+        $this->parsedCompetition = new ParsedCompetition($this->competition);
         $this->parse();
         return $this->parsedCompetition;
     }
