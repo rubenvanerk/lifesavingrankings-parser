@@ -15,4 +15,9 @@ class Result extends Model
     {
         return $this->morphTo();
     }
+
+    public function competition()
+    {
+        return $this->belongsTo('App\Competition');
+    }
 }

@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Competition;
 use App\Services\Parsers\Parser;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 
 class CompetitionController extends Controller
@@ -33,7 +35,7 @@ class CompetitionController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param \Illuminate\Http\Request $request
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
@@ -44,7 +46,7 @@ class CompetitionController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\Competition  $competition
+     * @param \App\Competition $competition
      * @return \Illuminate\Http\Response
      */
     public function show(Competition $competition)
@@ -55,7 +57,7 @@ class CompetitionController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Competition  $competition
+     * @param \App\Competition $competition
      * @return \Illuminate\Http\Response
      */
     public function edit(Competition $competition)
@@ -66,8 +68,8 @@ class CompetitionController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Competition  $competition
+     * @param \Illuminate\Http\Request $request
+     * @param \App\Competition $competition
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, Competition $competition)
@@ -79,7 +81,7 @@ class CompetitionController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Competition  $competition
+     * @param \App\Competition $competition
      * @return \Illuminate\Http\Response
      */
     public function destroy(Competition $competition)
@@ -102,13 +104,10 @@ class CompetitionController extends Controller
             switch ($action) {
                 case 'dry_run':
                     return redirect()->route('competitions.dry_run', ['competition' => $competition]);
-                case 'save_config':
-                    return redirect()->route('competitions.parse', ['competition' => $competition]);
-                default:
-                    if (!array_key_exists($action, config('database.connections'))) {
-                        return redirect()->route('competitions.edit', ['competition' => $competition]);
-                    }
+                case 'save_to_database':
                     return redirect()->route('save_database', ['competition' => $competition, 'connection' => $action]);
+                default:
+                    return redirect()->route('competitions.parse', ['competition' => $competition]);
             }
         }
 
@@ -149,4 +148,16 @@ class CompetitionController extends Controller
         $parsedCompetition = $competitionParser->getParsedCompetition();
         return view('dry_run', ['parsedCompetition' => $parsedCompetition, 'competition' => $competition]);
     }
+
+
+    public function saveToDatabase(Competition $competition): \Illuminate\View\View
+    {
+        $competitionParser = Parser::getInstance($competition);
+        $parsedCompetition = $competitionParser->getParsedCompetition();
+        DB::transaction(function () use ($parsedCompetition) {
+            $parsedCompetition->saveToDatabase();
+        });
+        return view('save_to_database', ['parsedCompetition' => $parsedCompetition, 'competition' => $competition]);
+    }
+
 }

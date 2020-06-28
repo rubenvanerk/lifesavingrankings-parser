@@ -8,7 +8,7 @@ use Illuminate\Support\Str;
 class ParsedCompetition implements ParsedObject
 {
     /** @var Competition */
-    public $model;
+    public static $model;
     /** @var ParsedResult[] */
     public $results = [];
 
@@ -16,27 +16,11 @@ class ParsedCompetition implements ParsedObject
 
     public function __construct(Competition $competition)
     {
-        $this->model = $competition;
+        self::$model = $competition;
     }
 
     public function saveToDatabase(): void
     {
-        $competitionSlug = Str::slug($this->name);
-        $competition = Competition::firstOrCreate(
-            ['slug' => $competitionSlug],
-            [
-                'name' => $this->name,
-                'date' => $this->date,
-                'location' => $this->location,
-                'type_of_timekeeping' => $this->timekeeping,
-                'is_concept' =>  true,
-                'file_name' => 'filename', // TODO
-                'credit' => $this->credit ?: null,
-                'status' => self::STATUS_IMPORTED,
-            ]
-        );
-        self::$model = $competition;
-
         foreach ($this->results as $result) {
             $result->saveToDatabase();
         }
