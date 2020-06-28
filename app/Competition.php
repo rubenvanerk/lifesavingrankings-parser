@@ -19,7 +19,8 @@ class Competition extends Model implements HasMedia
         'timekeeping',
     ];
 
-    public function results() {
+    public function results()
+    {
         $this->hasMany('App\Result');
     }
 }

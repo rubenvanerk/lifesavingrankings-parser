@@ -2,6 +2,7 @@
 
 namespace App\Services\Parsers;
 
+use App\Competition;
 use App\Services\Cleaners\Cleaner;
 use App\Services\ParsedObjects\ParsedAthlete;
 use App\Services\ParsedObjects\ParsedIndividualResult;
@@ -13,7 +14,7 @@ class LenexParser extends Parser
 {
     /** @var Parser */
     private static $_instance;
-    public static function getInstance(string $competition): Parser
+    public static function getInstance(Competition $competition): Parser
     {
         if (!(self::$_instance instanceof self)) {
             self::$_instance = new self($competition);

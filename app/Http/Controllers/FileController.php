@@ -106,13 +106,6 @@ class FileController extends Controller
         }
     }
 
-    public function dryRun(string $file): \Illuminate\View\View
-    {
-        $competitionParser = Parser::getInstance($file);
-        $parsedCompetition = $competitionParser->getParsedCompetition();
-        return view('dry_run', ['competition' => $parsedCompetition, 'file' => $file]);
-    }
-
     public function saveToDatabase(string $file, string $connection): \Illuminate\View\View
     {
         Config::set('database.default', $connection);

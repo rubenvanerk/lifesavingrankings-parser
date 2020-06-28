@@ -21,6 +21,7 @@ class CreateCompetitionsTable extends Migration
             $table->date('start_date');
             $table->date('end_date');
             $table->string('timekeeping');
+            $table->json('parser_config')->nullable();
             $table->timestamps();
         });
     }

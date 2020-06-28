@@ -48,14 +48,12 @@ class ParserConfig
             throw new ParseError(sprintf('Could not find empty template %s', self::FILE_EXTENSION_TEMPLATE_MAPPINGS[$fileExtension]));
         }
 
-        if (!$this->competition->getFirstMedia('parser_config')) {
-            Storage::disk('public')->put($this->fileName, $emptyConfig);
-            $path = Storage::disk('public')->path($this->fileName);
-            $this->competition->addMedia($path)->toMediaCollection('parser_config');
+        if (!$this->competition->parser_config) {
+            $this->competition->parser_config = Yaml::parse($emptyConfig);
+            $this->competition->save();
         }
 
-        $config = file_get_contents($this->competition->getFirstMediaPath('parser_config'));
-        $this->config = array_replace_recursive(Yaml::parse($emptyConfig), Yaml::parse($config));
+        $this->config = array_replace_recursive(Yaml::parse($emptyConfig), $this->competition->parser_config);
     }
 
     /**
