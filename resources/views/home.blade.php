@@ -12,7 +12,7 @@
 
         <div class="inline-block mx-auto">
             <a href="{{ route('upload') }}" class="btn btn-green">Add a competition</a>
-            <a href="" class="btn btn-green">API docs</a>
+            <a href="/api/documentation" class="btn btn-green">API docs</a>
         </div>
     </div>
 @endsection
