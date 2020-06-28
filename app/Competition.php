@@ -10,6 +10,10 @@ class Competition extends Model implements HasMedia
 {
     use InteractsWithMedia;
 
+    protected $casts = [
+        'parser_config' => 'array',
+    ];
+
     protected $fillable = [
         'name',
         'city',

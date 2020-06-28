@@ -1,16 +1,3 @@
-info:
-  name:
-  location:
-  date:
-    type: date
-  timekeeping:
-    type: select
-    custom: false
-    options:
-      0: Unknown
-      1: Electronic
-      2: By hand
-  credit:
 athlete:
   name:
     type: select
