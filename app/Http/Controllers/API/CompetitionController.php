@@ -8,6 +8,11 @@ use Illuminate\Http\Request;
 
 class CompetitionController extends Controller
 {
+
+    /**
+     * @OA\Info(title="Vault API", version="0.1")
+     */
+
     /**
      * Display a listing of the resource.
      *
