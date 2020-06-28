@@ -2,58 +2,6 @@
 
 use Illuminate\Support\Str;
 
-$connections = [];
-
-$connections['local'] = [
-    'driver' => 'pgsql',
-    'host' => env('DB_HOST_LOCAL'),
-    'port' => env('DB_PORT_LOCAL'),
-    'database' => env('DB_DATABASE_LOCAL'),
-    'username' => env('DB_USERNAME_LOCAL'),
-    'password' => env('DB_PASSWORD_LOCAL'),
-];
-
-$connections['sqlite'] = [
-    'driver' => 'sqlite',
-    'url' => env('DATABASE_URL'),
-    'database' => env('DB_DATABASE', database_path('database.sqlite')),
-    'prefix' => '',
-    'foreign_key_constraints' => env('DB_FOREIGN_KEYS', true),
-];
-
-if (ENV('DB_LSR_HOST_LOCAL')) {
-    $connections['lsr_local'] = [
-        'driver' => 'pgsql',
-        'host' => env('DB_LSR_HOST_LOCAL'),
-        'port' => env('DB_LSR_PORT_LOCAL'),
-        'database' => env('DB_LSR_DATABASE_LOCAL'),
-        'username' => env('DB_LSR_USERNAME_LOCAL'),
-        'password' => env('DB_LSR_PASSWORD_LOCAL'),
-    ];
-}
-
-if (ENV('DB_LSR_HOST_STAGING')) {
-    $connections['lsr_staging'] = [
-        'driver' => 'pgsql',
-        'host' => env('DB_LSR_HOST_STAGING'),
-        'port' => env('DB_LSR_PORT_STAGING'),
-        'database' => env('DB_LSR_DATABASE_STAGING'),
-        'username' => env('DB_LSR_USERNAME_STAGING'),
-        'password' => env('DB_LSR_PASSWORD_STAGING'),
-    ];
-}
-
-if (ENV('DB_LSR_HOST_PRODUCTION')) {
-    $connections['lsr_production'] = [
-        'driver' => 'pgsql',
-        'host' => env('DB_LSR_HOST_PRODUCTION'),
-        'port' => env('DB_LSR_PORT_PRODUCTION'),
-        'database' => env('DB_LSR_DATABASE_PRODUCTION'),
-        'username' => env('DB_LSR_USERNAME_PRODUCTION'),
-        'password' => env('DB_LSR_PASSWORD_PRODUCTION'),
-    ];
-}
-
 return [
 
     /*
@@ -67,7 +15,7 @@ return [
     |
     */
 
-    'default' => env('DB_CONNECTION', 'local'),
+    'default' => env('DB_CONNECTION', 'default'),
 
     /*
     |--------------------------------------------------------------------------
@@ -85,7 +33,23 @@ return [
     |
     */
 
-    'connections' => $connections,
+    'connections' => [
+        'default' => [
+            'driver' => env('DB_DRIVER'),
+            'host' => env('DB_HOST'),
+            'port' => env('DB_PORT'),
+            'database' => env('DB_DATABASE'),
+            'username' => env('DB_USERNAME_'),
+            'password' => env('DB_PASSWORD'),
+        ],
+        'sqlite' => [
+            'driver' => 'sqlite',
+            'url' => env('DATABASE_URL'),
+            'database' => env('DB_DATABASE', database_path('database.sqlite')),
+            'prefix' => '',
+            'foreign_key_constraints' => env('DB_FOREIGN_KEYS', true),
+        ],
+    ],
 
     /*
     |--------------------------------------------------------------------------
