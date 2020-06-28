@@ -103,7 +103,7 @@ class CompetitionController extends Controller
                 case 'dry_run':
                     return redirect()->route('competitions.dry_run', ['competition' => $competition]);
                 case 'save_config':
-                    return redirect()->route('competitions.edit', ['competition' => $competition]);
+                    return redirect()->route('competitions.parse', ['competition' => $competition]);
                 default:
                     if (!array_key_exists($action, config('database.connections'))) {
                         return redirect()->route('competitions.edit', ['competition' => $competition]);

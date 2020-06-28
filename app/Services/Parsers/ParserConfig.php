@@ -84,8 +84,8 @@ class ParserConfig
 
     public function save(): void
     {
-        $parserConfigPath = $this->competition->getFirstMediaPath('parser_config');
-        file_put_contents($parserConfigPath, Yaml::dump($this->config));
+        $this->competition->parser_config = $this->config;
+        $this->competition->save();
     }
 
     public function remove(string $name): void
