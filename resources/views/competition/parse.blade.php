@@ -1,50 +1,49 @@
 @extends('layouts.app')
 
 @section('content')
-    <div class="flex">
-        <h2 class="inline-block">Parsing {{$file}}</h2>
-        <a class="green button inline-block ml-auto" href="{{ $competition->getFirstMediaUrl('results_file') }}" target="_blank">
-           View source file
-        </a>
-    </div>
+    <h2>Parsing {{$file}}</h2>
+    <a class="btn btn-primary" href="{{ $competition->getFirstMediaUrl('results_file') }}"
+       target="_blank">
+        View source file
+    </a>
 
-    <hr class="my-5">
+    <hr class="my-3">
 
     <form method="post">
         @csrf
         @method('PUT')
 
-        @foreach($config->config as $name => $value)
-            @php($parentField = '')
-            @include('partials.field')
-        @endforeach
-
-        <p>Action:</p>
-
-        <div class="form-group inline-label">
-        <input type="radio" name="action" id="save_config" value="save_config" checked>
-        <label for="save_config">Save config</label><br>
+        <div class="container p-0">
+            @foreach($config->config as $name => $value)
+                @php($parentField = '')
+                @include('partials.field')
+            @endforeach
         </div>
 
-        <div class="form-group inline-label">
-            <input type="radio" name="action" id="dry_run" value="dry_run">
-            <label for="dry_run">Dry run</label>
+        <label class="font-weight-bolder mt-2">Action:</label>
+
+        <div class="form-check">
+            <input type="radio" name="action" id="save_config" value="save_config" checked class="form-check-input">
+            <label for="save_config" class="form-check-label">Save config</label><br>
         </div>
 
-        <div class="form-group inline-label">
-            <input type="radio" name="action" id="save_to_database" value="save_to_database">
-            <label for="save_to_database" class="inline">Save to database</label>
+        <div class="form-check">
+            <input type="radio" name="action" id="dry_run" value="dry_run" class="form-check-input">
+            <label for="dry_run" class="form-check-label">Dry run</label>
         </div>
 
-        <button type="submit" class="btn btn-green">Save</button>
+        <div class="form-check">
+            <input type="radio" name="action" id="save_to_database" value="save_to_database" class="form-check-input">
+            <label for="save_to_database" class="form-check-label">Save to database</label>
+        </div>
+
+        <button type="submit" class="btn btn-primary my-3">Save</button>
 
     </form>
 
-    <details open class="mt-5">
-        <summary class="shadow px-1 py-3 my-3">Raw data</summary>
-        <pre class="overflow-scroll p-3 shadow-inner">
-            {{$rawData}}
-        </pre>
-    </details>
+    <h2>Raw data</h2>
+    <pre class="overflow-scroll">
+        {{$rawData}}
+    </pre>
 
 @endsection

@@ -1,8 +1,8 @@
 @extends('layouts.app')
 
 @section('content')
-    <table class="table-auto">
-        <thead>
+    <table class="table table-hover">
+        <thead class="thead-light">
             <tr>
                 <th>ID</th>
                 <th>Name</th>
@@ -21,8 +21,8 @@
                     <td>{{ $competition->start_date }}</td>
                     <td>{{ $competition->created_at }}</td>
                     <td>
-                        <a href="{{ route('competitions.edit', ['competition' => $competition]) }}">EDIT</a>
-                        <a href="{{ route('competitions.parse', ['competition' => $competition]) }}">PARSE</a>
+                        <a class="btn btn-secondary btn-sm" href="{{ route('competitions.edit', ['competition' => $competition]) }}">EDIT</a>
+                        <a class="btn btn-secondary btn-sm"href="{{ route('competitions.parse', ['competition' => $competition]) }}">PARSE</a>
                     </td>
                 </tr>
             @endforeach

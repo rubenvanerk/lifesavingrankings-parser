@@ -20,7 +20,7 @@ class CreateCompetitionsTable extends Migration
             $table->string('country');
             $table->date('start_date');
             $table->date('end_date');
-            $table->string('timekeeping');
+            $table->string('timekeeping')->nullable();
             $table->json('parser_config')->nullable();
             $table->timestamps();
         });

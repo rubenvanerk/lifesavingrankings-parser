@@ -11,10 +11,8 @@
 
     Result count: {{count($parsedCompetition->results)}}<br>
 
-    <details>
-        <summary>Results</summary>
-        <table>
-            <thead>
+    <table class="table table-hover">
+        <thead class="thead-light">
             <tr>
                 <th>Name</th>
                 <th>YoB</th>
@@ -66,6 +64,5 @@
             @endforeach
             </tbody>
         </table>
-    </details>
 
 @endsection
