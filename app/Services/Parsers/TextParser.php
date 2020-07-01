@@ -43,6 +43,7 @@ class TextParser extends Parser
     private const REJECT_EVENT_LINE_TYPE = 'reject_event';
     private const DSQ_LINE_TYPE = 'dsq';
     private const DNS_LINE_TYPE = 'dns';
+    private const WITHDRAWN_LINE_TYPE = 'withdrawn';
     private const SEPARATE_GENDER_LINE_TYPE = 'separate_gender';
 
     public static function getInstance(Competition $competition): Parser
@@ -121,6 +122,7 @@ class TextParser extends Parser
                     break;
                 case self::DSQ_LINE_TYPE:
                 case self::DNS_LINE_TYPE:
+                case self::WITHDRAWN_LINE_TYPE:
                     if ($this->currentEventRejected) {
                         break;
                     }
@@ -170,6 +172,10 @@ class TextParser extends Parser
 
         if ($this->config->{'results.dns'} && preg_match($this->config->{'results.dns'}, $line) === 1) {
             return self::DNS_LINE_TYPE;
+        }
+
+        if ($this->config->{'results.withdrawn'} && preg_match($this->config->{'results.withdrawn'}, $line) === 1) {
+            return self::WITHDRAWN_LINE_TYPE;
         }
 
         return '';
@@ -382,7 +388,7 @@ class TextParser extends Parser
         $heat = $this->getHeatFromLine($line);
         $disqualified = $type === self::DSQ_LINE_TYPE;
         $didNotStart = $type === self::DNS_LINE_TYPE;
-        $withdrawn = false;
+        $withdrawn = $type === self::WITHDRAWN_LINE_TYPE;
         $originalLine = $line;
 
         $parsedResult = new ParsedIndividualResult(

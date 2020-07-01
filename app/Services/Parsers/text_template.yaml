@@ -36,6 +36,7 @@ results:
   result_rejector:
   dsq:
   dns:
+  withdrawn:
   round:
   round_mappings:
   heat:

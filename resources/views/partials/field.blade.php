@@ -27,7 +27,7 @@
             <div class="col-sm form-group">
                 <label for="{{$fieldName}}_custom">Custom:</label>
                 <input name="data[{{$fieldName}}_custom]" type="text" id="{{$fieldName}}_custom"
-                       value="{{$config->getValueIfCustom($fieldName)}}" class="form-control"/>
+                       value="{{$config->getValueIfCustom($fieldName)}}" class="form-control text-monospace"/>
 
             </div>
         @endif
