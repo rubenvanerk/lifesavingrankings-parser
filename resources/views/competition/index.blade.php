@@ -22,7 +22,7 @@
                     <td>{{ $competition->created_at }}</td>
                     <td>
                         <a class="btn btn-secondary btn-sm" href="{{ route('competitions.edit', ['competition' => $competition]) }}">EDIT</a>
-                        <a class="btn btn-secondary btn-sm"href="{{ route('competitions.parse', ['competition' => $competition]) }}">PARSE</a>
+                        <a class="btn btn-secondary btn-sm" href="{{ route('competitions.parse', ['competition' => $competition]) }}">PARSE</a>
                     </td>
                 </tr>
             @endforeach

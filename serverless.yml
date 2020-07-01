@@ -24,3 +24,5 @@ package:
     exclude:
         - 'node_modules/**'
         - 'tests/**'
+        - 'public/storage'
+        - 'storage'

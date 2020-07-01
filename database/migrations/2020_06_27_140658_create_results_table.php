@@ -15,7 +15,7 @@ class CreateResultsTable extends Migration
     {
         Schema::create('results', function (Blueprint $table) {
             $table->id();
-            $table->integer('time')->unsigned();
+            $table->integer('time')->unsigned()->nullable();
             $table->foreignId('event_id')->constrained()->onDelete('set null');
             $table->foreignId('competition_id')->constrained()->onDelete('cascade');
             $table->integer('time_setter_id')->unsigned();

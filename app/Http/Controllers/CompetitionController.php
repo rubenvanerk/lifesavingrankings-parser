@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
+use Illuminate\View\View;
 
 class CompetitionController extends Controller
 {
@@ -58,7 +59,7 @@ class CompetitionController extends Controller
      * Show the form for editing the specified resource.
      *
      * @param \App\Competition $competition
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|View
      */
     public function edit(Competition $competition)
     {
@@ -94,7 +95,7 @@ class CompetitionController extends Controller
      *
      * @param Request $request
      * @param \App\Competition $competition
-     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Http\RedirectResponse|\Illuminate\View\View
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Http\RedirectResponse|View
      */
     public function parse(Request $request, Competition $competition)
     {
@@ -142,7 +143,7 @@ class CompetitionController extends Controller
         $config->save();
     }
 
-    public function dryRun(Competition $competition): \Illuminate\View\View
+    public function dryRun(Competition $competition): View
     {
         $competitionParser = Parser::getInstance($competition);
         $parsedCompetition = $competitionParser->getParsedCompetition();
@@ -150,7 +151,7 @@ class CompetitionController extends Controller
     }
 
 
-    public function saveToDatabase(Competition $competition): \Illuminate\View\View
+    public function saveToDatabase(Competition $competition): View
     {
         $competitionParser = Parser::getInstance($competition);
         $parsedCompetition = $competitionParser->getParsedCompetition();

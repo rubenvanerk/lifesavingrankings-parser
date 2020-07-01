@@ -62,7 +62,7 @@ class ParsedIndividualResult extends ParsedResult
         $result->time_setter()->associate($athlete);
         $result->event()->associate($event);
         $result->competition()->associate(ParsedCompetition::$model);
-        $result->time = $this->time ? $this->time->totalMicroseconds : null;
+        $result->time = $this->time ? $this->time->totalMilliseconds / 10 : null;
 //        $result->points = $this->calculatePoints();
 //        $result->original_line = $this->originalLine;
         $result->round = $this->round;
