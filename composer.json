@@ -10,7 +10,8 @@
     "require": {
         "php": "^7.4",
         "ext-fileinfo": "*",
-        "bref/bref": "^0.5.27",
+        "bref/bref": "^0.5.29",
+        "bref/laravel-bridge": "^0.2.0",
         "cviebrock/eloquent-sluggable": "^7.0",
         "darkaonline/l5-swagger": "^7.0",
         "fideloper/proxy": "^4.4",
