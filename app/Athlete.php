@@ -12,6 +12,7 @@ class Athlete extends Model
     protected $connection = 'rankings';
     protected $table = 'rankings_athlete';
     public $timestamps = false;
+    protected $fillable = ['name', 'gender', 'year_of_birth'];
 
     public function nationalities(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
     {
@@ -22,8 +23,6 @@ class Athlete extends Model
     {
         return $this->belongsTo(self::class, 'alias_of_id');
     }
-
-    protected $fillable = ['name', 'gender', 'year_of_birth'];
 
     public function sluggable(): array
     {

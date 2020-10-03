@@ -4,25 +4,6 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-/**
- * App\Participation
- *
- * @property int $id
- * @property int $athlete_id
- * @property int $competition_id
- * @property int $team_id
- * @property-read \App\Athlete $athlete
- * @property-read \App\CompetitionConfig $competition
- * @property-read \App\Team $team
- *
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Participation newModelQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Participation newQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Participation query()
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Participation whereAthleteId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\ParticipatiCon whereCompetitionId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Participation whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Participation whereTeamId($value)
- */
 class Participation extends Model
 {
     protected $connection = 'rankings';
