@@ -2,7 +2,7 @@
 
 namespace App\Services\Parsers;
 
-use App\Competition;
+use App\CompetitionConfig;
 use App\Event;
 use App\Services\Cleaners;
 use App\Services\Cleaners\Cleaner;
@@ -19,24 +19,14 @@ use ParseError;
 
 class TextParser extends Parser
 {
-    /** @var Parser */
-    private static $_instance;
-    /** @var Competition */
-    protected $competition;
-    /** @var ParserConfig */
-    public $config;
-    /** @var int */
-    private $currentEventId;
-    /** @var int */
-    private $currentGender;
-    /** @var int */
-    private $currentRound;
-    /** @var boolean */
-    private $currentEventRejected;
-    /**
-     * @var ParsedCompetition $parsedCompetition
-     */
-    protected $parsedCompetition;
+    private static ?Parser $instance = null;
+    protected CompetitionConfig $competition;
+    public ParserConfig $config;
+    private int $currentEventId;
+    private int $currentGender;
+    private int $currentRound;
+    private bool $currentEventRejected;
+    protected ParsedCompetition $parsedCompetition;
 
     private const EVENT_LINE_TYPE = 'event';
     private const RESULT_LINE_TYPE = 'result';
@@ -46,13 +36,13 @@ class TextParser extends Parser
     private const WITHDRAWN_LINE_TYPE = 'withdrawn';
     private const SEPARATE_GENDER_LINE_TYPE = 'separate_gender';
 
-    public static function getInstance(Competition $competition): Parser
+    public static function getInstance(CompetitionConfig $competition): Parser
     {
-        if (!(self::$_instance instanceof self)) {
-            self::$_instance = new self($competition);
+        if (!(self::$instance instanceof self)) {
+            self::$instance = new self($competition);
         }
 
-        return self::$_instance;
+        return self::$instance;
     }
 
     public function getRawData(): string
@@ -106,11 +96,11 @@ class TextParser extends Parser
                     $this->currentEventRejected = false;
                     break;
                 case self::RESULT_LINE_TYPE:
-                    if (!$this->currentEventId) {
-                        throw new ParseError('Cannot parse result when no event is active. Line: ' . $line);
-                    }
                     if ($this->currentEventRejected) {
                         break;
+                    }
+                    if (!$this->currentEventId) {
+                        throw new ParseError('Cannot parse result when no event is active. Line: ' . $line);
                     }
                     $results = $this->getResultsFromLine($line);
                     foreach ($results as $result) {

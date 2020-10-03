@@ -72,7 +72,7 @@
     {{--    {{dd($values)}}--}}
     <details>
         <summary class="py-2">{{$name}}</summary>
-        <div class="content">
+        <div class="content p-2 shadow-sm">
             @foreach($values as $name => $value)
                 @include('partials.field')
             @endforeach

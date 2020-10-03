@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Competition;
+use App\CompetitionConfig;
 use Exception;
 use Illuminate\Http\Request;
 
@@ -30,7 +30,7 @@ class FileController extends Controller
 //            'timekeeping' => 'required',
 //        ]);
 
-        $competition = Competition::create($request->all());
+        $competition = CompetitionConfig::create($request->all());
 
 
         $competition->addMediaFromRequest('file')->toMediaCollection('results_file');

@@ -12,16 +12,11 @@ use ParseError;
 
 class ParsedAthlete implements ParsedObject
 {
-    /** @var string */
-    public $name;
-    /** @var int|null */
-    public $yearOfBirth;
-    /** @var int */
-    public $gender;
-    /** @var string|null */
-    public $nationality;
-    /** @var string|null */
-    public $team;
+    public string $name;
+    public ?int $yearOfBirth;
+    public int $gender;
+    public ?string $nationality;
+    public ?string $team;
 
     public const MALE = 1;
     public const FEMALE = 2;
@@ -40,14 +35,14 @@ class ParsedAthlete implements ParsedObject
 
     public function saveToDatabase(): Athlete
     {
-        $athlete = Athlete::where('full_name', 'ilike', $this->name)
+        $athlete = Athlete::where('name', 'ilike', $this->name)
             ->where('gender', $this->gender)
             ->where('year_of_birth', $this->yearOfBirth)
             ->first();
 
         if (!$athlete) {
             $athlete = Athlete::create([
-                'full_name' => $this->name,
+                'name' => $this->name,
                 'gender' => $this->gender,
                 'year_of_birth' => $this->yearOfBirth,
             ]);

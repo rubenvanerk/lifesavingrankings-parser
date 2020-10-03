@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\API;
 
-use App\Competition;
+use App\CompetitionConfig;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
@@ -37,7 +37,7 @@ class CompetitionController extends Controller
      */
     public function index()
     {
-        return response()->json(Competition::paginate(25)->all());
+        return response()->json(CompetitionConfig::paginate(25)->all());
     }
 
     /**
@@ -83,11 +83,11 @@ class CompetitionController extends Controller
      *     )
      * )
      *
-     * @param Competition $competition
+     * @param CompetitionConfig $competition
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function show(Competition $competition)
+    public function show(CompetitionConfig $competition)
     {
         return response()->json($competition);
     }

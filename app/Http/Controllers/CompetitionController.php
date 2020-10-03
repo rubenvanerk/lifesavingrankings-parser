@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Competition;
+use App\CompetitionConfig;
 use App\Services\Parsers\Parser;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Config;
@@ -19,7 +19,7 @@ class CompetitionController extends Controller
      */
     public function index()
     {
-        $competitions = Competition::paginate(15);
+        $competitions = CompetitionConfig::paginate(15);
         return view('competition.index', ['competitions' => $competitions]);
     }
 
@@ -41,16 +41,16 @@ class CompetitionController extends Controller
      */
     public function store(Request $request)
     {
-        Competition::create($request->all());
+        CompetitionConfig::create($request->all());
     }
 
     /**
      * Display the specified resource.
      *
-     * @param \App\Competition $competition
+     * @param \App\CompetitionConfig $competition
      * @return \Illuminate\Http\Response
      */
-    public function show(Competition $competition)
+    public function show(CompetitionConfig $competition)
     {
         //
     }
@@ -58,10 +58,10 @@ class CompetitionController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param \App\Competition $competition
+     * @param \App\CompetitionConfig $competition
      * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|View
      */
-    public function edit(Competition $competition)
+    public function edit(CompetitionConfig $competition)
     {
         return view('competition.edit', ['competition' => $competition]);
     }
@@ -70,10 +70,10 @@ class CompetitionController extends Controller
      * Update the specified resource in storage.
      *
      * @param \Illuminate\Http\Request $request
-     * @param \App\Competition $competition
+     * @param \App\CompetitionConfig $competition
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Competition $competition)
+    public function update(Request $request, CompetitionConfig $competition)
     {
         $competition->fill($request->all());
         $competition->save();
@@ -82,10 +82,10 @@ class CompetitionController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param \App\Competition $competition
+     * @param \App\CompetitionConfig $competition
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Competition $competition)
+    public function destroy(CompetitionConfig $competition)
     {
         $competition->delete();
     }
@@ -94,10 +94,10 @@ class CompetitionController extends Controller
      * Remove the specified resource from storage.
      *
      * @param Request $request
-     * @param \App\Competition $competition
+     * @param \App\CompetitionConfig $competition
      * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Http\RedirectResponse|View
      */
-    public function parse(Request $request, Competition $competition)
+    public function parse(Request $request, CompetitionConfig $competition)
     {
         if ($request->method() === 'PUT') {
             $this->saveConfigFromRequest($request, $competition);
@@ -114,10 +114,16 @@ class CompetitionController extends Controller
 
         $competitionParser = Parser::getInstance($competition);
 
+        try {
+            $rawData = $competitionParser->getRawData();
+        } catch (\Exception $exception) {
+            $rawData = $exception->getMessage();
+        }
+
         $data = [
             'file' => '',
             'competition' => $competition,
-            'rawData' => $competitionParser->getRawData(),
+            'rawData' => $rawData,
             'config' => $competitionParser->config,
             'databases' => config('database.connections'),
         ];
@@ -125,7 +131,7 @@ class CompetitionController extends Controller
         return view('competition.parse', $data);
     }
 
-    private function saveConfigFromRequest(Request $request, Competition $competition): void
+    private function saveConfigFromRequest(Request $request, CompetitionConfig $competition): void
     {
         $competitionParser = Parser::getInstance($competition);
         $config = $competitionParser->config;
@@ -143,7 +149,7 @@ class CompetitionController extends Controller
         $config->save();
     }
 
-    public function dryRun(Competition $competition): View
+    public function dryRun(CompetitionConfig $competition): View
     {
         $competitionParser = Parser::getInstance($competition);
         $parsedCompetition = $competitionParser->getParsedCompetition();
@@ -151,7 +157,7 @@ class CompetitionController extends Controller
     }
 
 
-    public function saveToDatabase(Competition $competition): View
+    public function saveToDatabase(CompetitionConfig $competition): View
     {
         $competitionParser = Parser::getInstance($competition);
         $parsedCompetition = $competitionParser->getParsedCompetition();

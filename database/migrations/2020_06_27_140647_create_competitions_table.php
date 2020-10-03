@@ -13,7 +13,7 @@ class CreateCompetitionsTable extends Migration
      */
     public function up()
     {
-        Schema::create('competitions', function (Blueprint $table) {
+        Schema::create('competition_configs', function (Blueprint $table) {
             $table->id();
             $table->string('name');
             $table->string('city');

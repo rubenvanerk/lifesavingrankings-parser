@@ -2,7 +2,7 @@
 
 namespace App\Services\Parsers;
 
-use App\Competition;
+use App\CompetitionConfig;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
@@ -11,7 +11,7 @@ use Symfony\Component\Yaml\Yaml;
 
 class ParserConfig
 {
-    /** @var Competition */
+    /** @var CompetitionConfig */
     private $competition;
     /** @var string */
     private $fileName;
@@ -27,7 +27,7 @@ class ParserConfig
         'lxf' => 'lenex_template.yaml',
     ];
 
-    public function __construct(Competition $competition)
+    public function __construct(CompetitionConfig $competition)
     {
         $this->competition = $competition;
         $this->fileName = $competition->getFirstMedia('results_file')->file_name . '.yaml';

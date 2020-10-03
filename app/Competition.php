@@ -3,32 +3,56 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
-use Spatie\MediaLibrary\HasMedia;
-use Spatie\MediaLibrary\InteractsWithMedia;
 
-class Competition extends Model implements HasMedia
+/**
+ * App\Competition
+ *
+ * @property int $id
+ * @property string|null $name
+ * @property string $date
+ * @property string $location
+ * @property int $type_of_timekeeping
+ * @property string|null $slug
+ * @property bool $is_concept
+ * @property int $status
+ * @property string|null $file_name
+ * @property string|null $published_on
+ * @property string|null $credit
+ * @property string|null $created_at
+ * @property string|null $updated_at
+ *
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Competition newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Competition newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Competition query()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Competition whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Competition whereCredit($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Competition whereDate($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Competition whereFileName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Competition whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Competition whereIsConcept($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Competition whereLocation($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Competition whereName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Competition wherePublishedOn($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Competition whereSlug($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Competition whereStatus($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Competition whereTypeOfTimekeeping($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Competition whereUpdatedAt($value)
+ */
+class Competition extends Model
 {
-    use InteractsWithMedia;
-
-    protected $casts = [
-        'parser_config' => 'array',
-    ];
+    protected $connection = 'rankings';
+    protected $table = 'rankings_competition';
+    public $timestamps = false;
 
     protected $fillable = [
+        'slug',
         'name',
-        'city',
-        'country',
-        'start_date',
-        'end_date',
-        'timekeeping',
+        'date',
+        'location',
+        'type_of_timekeeping',
+        'is_concept',
+        'file_name',
+        'credit',
+        'status',
     ];
-
-    protected $hidden = [
-        'parser_config',
-    ];
-
-    public function results()
-    {
-        $this->hasMany('App\Result');
-    }
 }

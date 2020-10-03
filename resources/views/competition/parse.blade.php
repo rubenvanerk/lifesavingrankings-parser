@@ -13,7 +13,7 @@
         @csrf
         @method('PUT')
 
-        <div class="container p-0">
+        <div class="container">
             @foreach($config->config as $name => $value)
                 @php($parentField = '')
                 @include('partials.field')

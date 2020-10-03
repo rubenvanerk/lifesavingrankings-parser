@@ -2,19 +2,19 @@
 
 namespace App\Services\ParsedObjects;
 
-use App\Competition;
+use App\CompetitionConfig;
 use Illuminate\Support\Str;
 
 class ParsedCompetition implements ParsedObject
 {
-    /** @var Competition */
+    /** @var CompetitionConfig */
     public static $model;
     /** @var ParsedResult[] */
     public $results = [];
 
     private const STATUS_IMPORTED = 2;
 
-    public function __construct(Competition $competition)
+    public function __construct(CompetitionConfig $competition)
     {
         self::$model = $competition;
     }
