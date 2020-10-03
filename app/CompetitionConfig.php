@@ -26,9 +26,4 @@ class CompetitionConfig extends Model implements HasMedia
     protected $hidden = [
         'parser_config',
     ];
-
-    public function results()
-    {
-        $this->hasMany('App\Result');
-    }
 }
