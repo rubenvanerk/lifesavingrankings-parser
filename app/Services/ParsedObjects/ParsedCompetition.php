@@ -2,25 +2,27 @@
 
 namespace App\Services\ParsedObjects;
 
+use App\Competition;
 use App\CompetitionConfig;
-use Illuminate\Support\Str;
 
 class ParsedCompetition implements ParsedObject
 {
-    /** @var CompetitionConfig */
-    public static $model;
-    /** @var ParsedResult[] */
-    public $results = [];
+    public static CompetitionConfig $competitionConfig;
+    public static Competition $competition;
+    public array $results = [];
 
     private const STATUS_IMPORTED = 2;
 
     public function __construct(CompetitionConfig $competition)
     {
-        self::$model = $competition;
+        self::$competitionConfig = $competition;
     }
 
     public function saveToDatabase(): void
     {
+        self::$competition = self::$competitionConfig->saveCompetition();
+
+        /** @var ParsedResult $result */
         foreach ($this->results as $result) {
             $result->saveToDatabase();
         }

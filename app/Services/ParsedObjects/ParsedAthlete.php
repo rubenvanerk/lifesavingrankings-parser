@@ -57,7 +57,7 @@ class ParsedAthlete implements ParsedObject
                 'name' => $this->team,
             ]);
 
-            $competition = ParsedCompetition::$model;
+            $competition = ParsedCompetition::$competitionConfig;
 
             $participation = Participation::whereHas('team', function ($query) use ($team) {
                 $query->where('id', $team->id);

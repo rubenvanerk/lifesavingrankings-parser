@@ -3,9 +3,7 @@
 namespace App\Services\ParsedObjects;
 
 use App\Event;
-use App\Http\Controllers\Auth\ResetPasswordController;
 use App\IndividualResult;
-use App\Result;
 use Carbon\CarbonInterval;
 use ParseError;
 
@@ -58,10 +56,10 @@ class ParsedIndividualResult extends ParsedResult
 
         $event = Event::findOrFail($this->eventId);
 
-        $result = new Result();
+        $result = new IndividualResult();
         $result->time_setter()->associate($athlete);
         $result->event()->associate($event);
-        $result->competition()->associate(ParsedCompetition::$model);
+        $result->competition()->associate(ParsedCompetition::$competitionConfig);
         $result->time = $this->time ? $this->time->totalMilliseconds / 10 : null;
 //        $result->points = $this->calculatePoints();
 //        $result->original_line = $this->originalLine;
