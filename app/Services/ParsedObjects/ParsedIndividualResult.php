@@ -48,8 +48,6 @@ class ParsedIndividualResult extends ParsedResult
         $this->reactionTime = $reactionTime;
     }
 
-
-
     public function saveToDatabase(): void
     {
         $athlete = $this->athlete->saveToDatabase();
@@ -57,16 +55,16 @@ class ParsedIndividualResult extends ParsedResult
         $event = Event::findOrFail($this->eventId);
 
         $result = new IndividualResult();
-        $result->time_setter()->associate($athlete);
+        $result->athlete()->associate($athlete);
         $result->event()->associate($event);
-        $result->competition()->associate(ParsedCompetition::$competitionConfig);
-        $result->time = $this->time ? $this->time->totalMilliseconds / 10 : null;
-//        $result->points = $this->calculatePoints();
-//        $result->original_line = $this->originalLine;
+        $result->competition()->associate(ParsedCompetition::$competition);
+        $result->time = $this->time ? $this->time->totalMilliseconds / 1000 : null;
+        $result->points = $this->calculatePoints();
+        $result->original_line = $this->originalLine;
         $result->round = $this->round;
-//        $result->disqualified = $this->disqualified;
-//        $result->did_not_start = $this->didNotStart;
-//        $result->withdrawn = $this->withdrawn;
+        $result->disqualified = $this->disqualified;
+        $result->did_not_start = $this->didNotStart;
+        $result->withdrawn = $this->withdrawn;
         $result->lane = $this->lane;
         $result->heat = $this->heat;
         $result->save();

@@ -57,7 +57,7 @@ class ParsedAthlete implements ParsedObject
                 'name' => $this->team,
             ]);
 
-            $competition = ParsedCompetition::$competitionConfig;
+            $competition = ParsedCompetition::$competition;
 
             $participation = Participation::whereHas('team', function ($query) use ($team) {
                 $query->where('id', $team->id);
@@ -76,7 +76,7 @@ class ParsedAthlete implements ParsedObject
             }
         }
 
-        if (!$this->nationality || 'skip_nationality_for_now') {
+        if (!$this->nationality) {
             return $athlete;
         }
 
