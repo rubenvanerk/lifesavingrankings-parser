@@ -23,6 +23,3 @@ php artisan serve
 To compile assets use `npm run dev` or use `npm run watch` to automatically rebuild assets whenever you change a file.
 
 `npm run watch` also spawns a browsersync that automatically refreshes after a change.
-
-## API docs
-To generate the API docs, run `php artisan l5-swagger:generate`. To view them go to /api/documentation.
