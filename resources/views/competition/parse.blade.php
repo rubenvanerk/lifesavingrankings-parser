@@ -42,8 +42,13 @@
     </form>
 
     <h2>Raw data</h2>
-    <pre class="overflow-scroll">
-        {{$rawData}}
-    </pre>
+
+    @if($fileExtension === 'csv')
+        {!! $rawData !!}
+    @else
+        <pre class="overflow-scroll">
+            {{ $rawData }}
+        </pre>
+    @endif
 
 @endsection

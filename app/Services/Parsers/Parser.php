@@ -16,6 +16,7 @@ abstract class Parser
     private const FILE_EXTENSION_PARSER_MAPPINGS = [
         'pdf' => TextParser::class,
         'lxf' => LenexParser::class,
+        'csv' => CsvParser::class,
     ];
 
     public static function getInstance(CompetitionConfig $competition): Parser
@@ -45,6 +46,12 @@ abstract class Parser
         $this->parsedCompetition = new ParsedCompetition($this->competition);
         $this->parse();
         return $this->parsedCompetition;
+    }
+
+    public function getFileExtension()
+    {
+        $file = $this->competition->getFirstMediaPath('results_file');
+        return pathinfo($file, PATHINFO_EXTENSION);
     }
 
     abstract public function getRawData(): string;

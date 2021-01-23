@@ -25,6 +25,7 @@ class ParserConfig
     private const FILE_EXTENSION_TEMPLATE_MAPPINGS = [
         'pdf' => 'text_template.yaml',
         'lxf' => 'lenex_template.yaml',
+        'csv' => 'csv_template.yaml',
     ];
 
     public function __construct(CompetitionConfig $competition)

@@ -15,14 +15,15 @@
         "cviebrock/eloquent-sluggable": "^8.0",
         "fideloper/proxy": "^4.4",
         "fruitcake/laravel-cors": "^2.0",
+        "guzzlehttp/guzzle": "^7.0.1",
         "laravel/framework": "^8.0",
         "laravel/ui": "^3.0",
+        "league/csv": "^9.6",
         "league/flysystem-aws-s3-v3": "^1.0",
         "leonverschuren/lenex": "dev-master",
         "smalot/pdfparser": "dev-master",
         "spatie/laravel-medialibrary": "^8.3",
-        "symfony/yaml": "^5.0",
-        "guzzlehttp/guzzle": "^7.0.1"
+        "symfony/yaml": "^5.0"
     },
     "require-dev": {
         "barryvdh/laravel-debugbar": "^3.5",
