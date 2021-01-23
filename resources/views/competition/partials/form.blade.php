@@ -1,7 +1,7 @@
 <form method="post" action="@if(isset($competition)){{ route('competitions.update', ['competition' => $competition]) }}@else{{ route('upload') }}@endif" enctype="multipart/form-data">
     @csrf
     @if(isset($competition))
-        <a href="{{ $competition->getFirstMediaUrl('results_file') }}" class="btn btn-primary">File</a>
+        <a href="{{ $competition->getFirstMediaUrl('results_file') }}" class="btn btn-primary" target="_blank">File</a>
         @method('PUT')
     @else
         <div class="form-group">
