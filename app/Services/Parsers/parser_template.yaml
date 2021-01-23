@@ -226,3 +226,22 @@ cleaning_options:
     delimiter:
   line_movers:
     type: textarea
+
+# csv columns
+columns:
+  event:
+    type: select
+    custom: false
+    options:
+  athlete:
+    type: select
+    custom: false
+    options:
+  time:
+    type: select
+    custom: false
+    options:
+  gender:
+    type: select
+    custom: false
+    options:

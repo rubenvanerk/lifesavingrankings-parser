@@ -12,5 +12,8 @@ events:
     12:
     13:
     18:
-  event_rejector:
-
+columns:
+  event:
+  athlete:
+  time:
+  gender:

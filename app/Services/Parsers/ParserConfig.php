@@ -70,7 +70,7 @@ class ParserConfig
         return Arr::get($this->config, $name);
     }
 
-    public function __set(string $name, string $value): void
+    public function __set(string $name, $value): void
     {
         if (property_exists($this, $name)) {
             $this->{$name} = $value;
@@ -111,7 +111,11 @@ class ParserConfig
 
     public function getOptions(string $name): ?array
     {
-        return Arr::get($this->template, $name . '.options');
+        $result = Arr::get($this->config, $name . '.options');
+        if (!is_array($result)) {
+            $result = Arr::get($this->template, $name . '.options');
+        }
+        return $result;
     }
 
     public function getValueIfCustom(string $name): ?string
