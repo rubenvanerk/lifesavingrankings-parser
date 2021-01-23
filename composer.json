@@ -19,7 +19,7 @@
         "laravel/ui": "^3.0",
         "league/flysystem-aws-s3-v3": "^1.0",
         "leonverschuren/lenex": "dev-master",
-        "smalot/pdfparser": "dev-feature/remove-tcpdf-lib",
+        "smalot/pdfparser": "dev-master",
         "spatie/laravel-medialibrary": "^8.3",
         "symfony/yaml": "^5.0",
         "guzzlehttp/guzzle": "^7.0.1"
