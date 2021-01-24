@@ -222,9 +222,15 @@ abstract class Cleaner
 
         preg_match('/\d{2}(?=\.)/', $time, $seconds);
         $seconds = Arr::first($seconds);
+        if (!$seconds) {
+            preg_match('/^\d{2}$/', $time, $seconds);
+            $seconds = Arr::first($seconds);
+        }
 
-        preg_match('/(?<=\.)\d{2}/', $time, $centiSeconds);
-        $microseconds = (int)Arr::first($centiSeconds) * 10000;
+        preg_match('/(?<=\.)\d{1,2}/', $time, $centiSeconds);
+        $centiSeconds = Arr::first($centiSeconds);
+        $centiSeconds = $centiSeconds >= 10 ? $centiSeconds : $centiSeconds . 0;
+        $microseconds = (int)$centiSeconds * 10000;
 
         return CarbonInterval::minutes($minutes)->seconds($seconds)->microseconds($microseconds);
     }
