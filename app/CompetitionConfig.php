@@ -28,7 +28,7 @@ class CompetitionConfig extends Model implements HasMedia
         'parser_config',
     ];
 
-    public function saveCompetition()
+    public function saveCompetition(): Competition
     {
         $competition = new Competition();
         $competition->name = $this->name;
@@ -42,7 +42,7 @@ class CompetitionConfig extends Model implements HasMedia
         return $competition;
     }
 
-    private function getTypeOfTimekeepingInt()
+    private function getTypeOfTimekeepingInt(): int
     {
         switch ($this->timekeeping) {
             case 'electronic':

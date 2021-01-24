@@ -86,14 +86,20 @@ class CsvParser extends Parser
 
     private function parseFromRecord($record): ParsedIndividualResult
     {
-        $time = Cleaner::cleanTime($record[$this->config->{'csv_columns.time'}]);
+        $time = $record[$this->config->{'csv_columns.time'}];
+        if (preg_match($this->config->{'results.dsq'}, $time)) {
+            $disqualified = true;
+            $time = null;
+        } else {
+            $time = Cleaner::cleanTime($time);
+        }
         $parsedAthlete = $this->getParsedAthleteFromRecord($record);
 
         $parsedResult = new ParsedIndividualResult(
             $time,
             $parsedAthlete,
             0, // TODO: implement round
-            false, // TODO: implement dsq
+            $disqualified ?? false,
             false, // TODO: implement dsq
             false, // TODO: implement withdrawn
             implode(', ', $record),

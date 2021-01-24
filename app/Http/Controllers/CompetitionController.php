@@ -157,7 +157,6 @@ class CompetitionController extends Controller
         return view('dry_run', ['parsedCompetition' => $parsedCompetition, 'competition' => $competition]);
     }
 
-
     public function saveToDatabase(CompetitionConfig $competition): View
     {
         $competitionParser = Parser::getInstance($competition);
@@ -167,5 +166,4 @@ class CompetitionController extends Controller
         });
         return view('save_to_database', ['parsedCompetition' => $parsedCompetition, 'competition' => $competition]);
     }
-
 }

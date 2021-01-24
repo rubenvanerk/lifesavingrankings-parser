@@ -19,6 +19,7 @@
                 <th>Gender</th>
                 <th>Nationality</th>
                 <th>Team</th>
+                <th>Event</th>
                 <th>Time / code</th>
                 <th>Splits</th>
                 <th>Round</th>
@@ -45,6 +46,7 @@
                         <td>{{$athlete->nationality}}</td>
                         <td>{{$athlete->team}}</td>
                     @endif
+                    <td>{{$result->eventId}}</td>
                     <td>{{$result->getTimeStringForDisplay()}}</td>
                     <td>
                         @if($result->splits)

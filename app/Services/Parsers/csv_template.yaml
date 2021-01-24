@@ -1,6 +1,14 @@
 athlete:
   first_name_regex:
   last_name_regex:
+results:
+  dsq:
+csv_columns:
+  event:
+  athlete:
+  team:
+  time:
+  gender:
 events:
   event_names:
     1:
@@ -15,9 +23,3 @@ events:
     12:
     13:
     18:
-csv_columns:
-  event:
-  athlete:
-  team:
-  time:
-  gender:
