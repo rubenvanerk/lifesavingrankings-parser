@@ -3,6 +3,10 @@
 namespace App\Services\Parsers;
 
 use App\CompetitionConfig;
+use App\Services\Cleaners\Cleaner;
+use App\Services\ParsedObjects\ParsedAthlete;
+use App\Services\ParsedObjects\ParsedIndividualResult;
+use Arr;
 use League\Csv\HTMLConverter;
 use League\Csv\Reader;
 
@@ -20,7 +24,8 @@ class CsvParser extends Parser
             $instance->csvReader = Reader::createFromPath($resultsFile);
             $instance->csvReader->setHeaderOffset(0);
 
-            $instance->setColumnOptions();
+            $instance->setCsvColumnOptions();
+            $instance->setEventNameOptions();
 
             self::$instance = $instance;
         }
@@ -30,21 +35,101 @@ class CsvParser extends Parser
 
     public function getRawData(): string
     {
-        return (new HTMLConverter())->table('table')->convert($this->csvReader, $this->csvReader->getHeader());
+        return (new HTMLConverter())->table('table')
+            ->convert($this->csvReader, $this->csvReader->getHeader());
     }
 
     protected function parse(): void
     {
-        // TODO: Implement parse() method.
+        foreach ($this->csvReader as $record) {
+            $parsedResult = $this->parseFromRecord($record);
+            $this->parsedCompetition->results[] = $parsedResult;
+        }
     }
 
-    private function setColumnOptions()
+    /**
+     * Dynamically create column options from the csv header
+     */
+    private function setCsvColumnOptions(): void
     {
         $columns = array_combine($this->csvReader->getHeader(), $this->csvReader->getHeader());
         $template = $this->config->template;
-        foreach ($template['columns'] as $key => $configColumn) {
-            $template['columns'][$key]['options'] = $columns;
+        foreach ($template['csv_columns'] as $key => $configColumn) {
+            $template['csv_columns'][$key]['options'] = $columns;
         }
         $this->config->template = $template;
+    }
+
+    /**
+     * Dynamically create event name options from csv unique values
+     */
+    private function setEventNameOptions(): void
+    {
+        if (!$this->config->{'csv_columns.event'}) {
+            return;
+        }
+
+        $eventNames = [''];
+        foreach ($this->csvReader as $record) {
+            if (!in_array($record[$this->config->{'csv_columns.event'}], $eventNames)) {
+                $eventNames[] = $record[$this->config->{'csv_columns.event'}];
+            }
+        }
+        $eventNames = array_combine($eventNames, $eventNames);
+
+        $template = $this->config->template;
+        foreach ($template['events']['event_names']as $key => $configColumn) {
+            $template['events']['event_names'][$key]['options'] = $eventNames;
+        }
+        $this->config->template = $template;
+    }
+
+    private function parseFromRecord($record): ParsedIndividualResult
+    {
+        $time = Cleaner::cleanTime($record[$this->config->{'csv_columns.time'}]);
+        $parsedAthlete = $this->getParsedAthleteFromRecord($record);
+
+        $parsedResult = new ParsedIndividualResult(
+            $time,
+            $parsedAthlete,
+            0, // TODO: implement round
+            false, // TODO: implement dsq
+            false, // TODO: implement dsq
+            false, // TODO: implement withdrawn
+            implode(', ', $record),
+            null, // TODO: implement heat
+            null, // TODO: implement lane
+            null, // TODO: implement reaction time
+            null, // TODO implement splits
+        );
+
+        $parsedResult->eventId = $this->getEventIdFromRecord($record);
+
+        return $parsedResult;
+    }
+
+    private function getParsedAthleteFromRecord($record): ParsedAthlete
+    {
+        $name = Cleaner::cleanName(
+            $record[$this->config->{'csv_columns.athlete'}],
+            $this->config->{'athlete.first_name_regex'},
+            $this->config->{'athlete.last_name_regex'}
+        );
+        $gender = Cleaner::cleanGender($record[$this->config->{'csv_columns.gender'}]);
+        $team = $record[$this->config->{'csv_columns.team'}];
+
+        return new ParsedAthlete(
+            $name,
+            null, // TODO: implement yob
+            $gender,
+            null, // TODO: implement nationality
+            $team
+        );
+    }
+
+    private function getEventIdFromRecord($record)
+    {
+        $eventNames = $this->config->{'events.event_names'};
+        return array_search($record[$this->config->{'csv_columns.event'}], $eventNames);
     }
 }

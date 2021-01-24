@@ -56,5 +56,8 @@ abstract class Parser
 
     abstract public function getRawData(): string;
 
+    /**
+     *  The parse method fills $this->parsedCompetition with results
+     */
     abstract protected function parse(): void;
 }
