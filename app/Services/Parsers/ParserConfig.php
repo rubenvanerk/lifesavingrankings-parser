@@ -70,7 +70,7 @@ class ParserConfig
         return Arr::get($this->config, $name);
     }
 
-    public function __set(string $name, $value): void
+    public function __set(string $name, string $value): void
     {
         if (property_exists($this, $name)) {
             $this->{$name} = $value;
