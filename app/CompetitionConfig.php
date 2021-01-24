@@ -33,11 +33,13 @@ class CompetitionConfig extends Model implements HasMedia
         $competition = new Competition();
         $competition->name = $this->name;
         $competition->slug = Str::slug($this->name);
-        $competition->date = $this->start_date; // TODO: make lsr support start-end date
-        $competition->location = $this->city . ', ' .$this->country; // TODO: make lsr support city / country
+        $competition->date = $this->start_date;
+        $competition->end_date = $this->end_date;
+        $competition->city = $this->city;
+        $competition->country_id = $this->country;
         $competition->type_of_timekeeping = $this->getTypeOfTimekeepingInt();
         $competition->is_concept = true;
-        $competition->status = 2; // imported
+        $competition->status = 2; // = imported
         $competition->save();
         return $competition;
     }

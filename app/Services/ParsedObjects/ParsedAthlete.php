@@ -3,7 +3,7 @@
 namespace App\Services\ParsedObjects;
 
 use App\Athlete;
-use App\Nationality;
+use App\Country;
 use App\Participation;
 use App\Team;
 use Carbon\Carbon;
@@ -80,7 +80,7 @@ class ParsedAthlete implements ParsedObject
             return $athlete;
         }
 
-        $nationality = Nationality::where('lenex_code', $this->nationality)->first();
+        $nationality = Country::where('lenex_code', $this->nationality)->first();
         if (!$nationality) {
             throw new Exception('Nationality with code ' . $this->nationality . ' not found!');
         }

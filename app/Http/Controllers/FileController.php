@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\CompetitionConfig;
+use App\Country;
 use Exception;
 use Illuminate\Http\Request;
 
@@ -18,7 +19,10 @@ class FileController extends Controller
     public function upload(Request $request)
     {
         if ($request->method() === 'GET') {
-            return view('upload');
+            $data = [
+                'countries' => Country::all(),
+            ];
+            return view('upload', $data);
         }
 
 //        $request->validate([

@@ -16,7 +16,7 @@ class Athlete extends Model
 
     public function nationalities(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
     {
-        return $this->belongsToMany(Nationality::class, 'rankings_athlete_nationalities');
+        return $this->belongsToMany(Country::class, 'rankings_athlete_nationalities');
     }
 
     public function alias_of(): \Illuminate\Database\Eloquent\Relations\BelongsTo

@@ -3,9 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\CompetitionConfig;
+use App\Country;
 use App\Services\Parsers\Parser;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use Illuminate\View\View;
@@ -63,7 +63,7 @@ class CompetitionController extends Controller
      */
     public function edit(CompetitionConfig $competition)
     {
-        return view('competition.edit', ['competition' => $competition]);
+        return view('competition.edit', ['competition' => $competition, 'countries' => Country::all()]);
     }
 
     /**

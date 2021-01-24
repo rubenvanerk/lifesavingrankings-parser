@@ -21,4 +21,9 @@ class Competition extends Model
         'credit',
         'status',
     ];
+
+    public function country(): \Illuminate\Database\Eloquent\Relations\BelongsTo
+    {
+        return $this->belongsTo(Country::class);
+    }
 }
