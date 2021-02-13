@@ -26,7 +26,7 @@
             <option value="">Unknown</option>
             @foreach($countries as $country)
                 <option value="{{ $country->id }}"
-                        @if(isset($competition) && $competition->country == $country->id) selected @endif>
+                        @if(isset($competition) && $competition->country->id == $country->id) selected @endif>
                     {{ $country->name }}
                 </option>
             @endforeach
