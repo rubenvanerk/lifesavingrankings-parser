@@ -23,7 +23,7 @@
                 <tr>
                     <td>{{ $competition->id }}</td>
                     <td>{{ $competition->name }}</td>
-                    <td>{{ $competition->city }}, {{ $competition->country }}</td>
+                    <td>{{ $competition->city }}, {{ $competition->country->name }}</td>
                     <td>{{ $competition->start_date }}</td>
                     <td>{{ $competition->created_at }}</td>
                     <td>

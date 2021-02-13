@@ -18,7 +18,7 @@ class CompetitionConfig extends Model implements HasMedia
     protected $fillable = [
         'name',
         'city',
-        'country',
+        'country_id',
         'start_date',
         'end_date',
         'timekeeping',
@@ -36,7 +36,7 @@ class CompetitionConfig extends Model implements HasMedia
         $competition->date = $this->start_date;
         $competition->end_date = $this->end_date;
         $competition->city = $this->city;
-        $competition->country_id = $this->country;
+        $competition->country_id = $this->country_id;
         $competition->type_of_timekeeping = $this->getTypeOfTimekeepingInt();
         $competition->is_concept = true;
         $competition->status = 2; // = imported
@@ -53,5 +53,10 @@ class CompetitionConfig extends Model implements HasMedia
                 return 2;
         }
         return 0; // unknown
+    }
+
+    public function country()
+    {
+        return $this->belongsTo(Country::class);
     }
 }

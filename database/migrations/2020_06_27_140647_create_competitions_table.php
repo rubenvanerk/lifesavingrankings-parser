@@ -17,7 +17,7 @@ class CreateCompetitionsTable extends Migration
             $table->id();
             $table->string('name');
             $table->string('city');
-            $table->string('country');
+            $table->integer('country_id')->unsigned()->index();
             $table->date('start_date');
             $table->date('end_date');
             $table->string('timekeeping')->nullable();
