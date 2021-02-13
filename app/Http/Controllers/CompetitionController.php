@@ -30,7 +30,10 @@ class CompetitionController extends Controller
      */
     public function create()
     {
-        //
+        $data = [
+            'countries' => Country::all(),
+        ];
+        return view('competition.create', $data);
     }
 
     /**
@@ -41,7 +44,10 @@ class CompetitionController extends Controller
      */
     public function store(Request $request)
     {
-        CompetitionConfig::create($request->all());
+        $competition = CompetitionConfig::create($request->all());
+        $competition->addMediaFromRequest('file')->toMediaCollection('results_file');
+
+        return redirect('/');
     }
 
     /**

@@ -1,6 +1,12 @@
 @extends('layouts.app')
 
 @section('content')
+    <div class="mb-2">
+        <a href="{{ route('competitions.create') }}" class="btn btn-primary">
+            Create
+        </a>
+    </div>
+
     <table class="table table-hover">
         <thead class="thead-light">
             <tr>
