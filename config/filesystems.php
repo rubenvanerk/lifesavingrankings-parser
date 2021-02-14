@@ -42,7 +42,6 @@ return [
     */
 
     'disks' => [
-
         'local' => [
             'driver' => 'local',
             'root' => storage_path('app'),
@@ -63,8 +62,8 @@ return [
             'bucket' => env('S3_AWS_BUCKET'),
             'url' => env('AWS_URL'),
             'endpoint' => env('AWS_ENDPOINT'),
+            'visibility' => 'public',
         ],
-
     ],
 
     /*

@@ -40,6 +40,7 @@ class CompetitionConfig extends Model implements HasMedia
         $competition->type_of_timekeeping = $this->getTypeOfTimekeepingInt();
         $competition->is_concept = true;
         $competition->status = 2; // = imported
+        $competition->file_name = $this->getFirstMediaPath('results_file');
         $competition->save();
         return $competition;
     }

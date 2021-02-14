@@ -22,7 +22,7 @@
 
     <div class="form-group">
         <label for="country">Country:</label>
-        <select id="country" name="country" class="form-control">
+        <select id="country" name="country_id" class="form-control">
             <option value="">Unknown</option>
             @foreach($countries as $country)
                 <option value="{{ $country->id }}"
