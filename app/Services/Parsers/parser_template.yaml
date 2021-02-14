@@ -11,7 +11,7 @@ athlete:
   last_name_regex:
     type: select
     options:
-        '/^([A-Z]{2,} )+/': 'CAPS ON START'
+        "/^([A-Z']{2,} )+/": 'CAPS ON START'
   yob:
     type: select
     options:

@@ -36,9 +36,13 @@ class ParsedAthlete implements ParsedObject
     public function saveToDatabase(): Athlete
     {
         $athlete = Athlete::where('name', 'ilike', $this->name)
-            ->where('gender', $this->gender)
-            ->where('year_of_birth', $this->yearOfBirth)
-            ->first();
+            ->where('gender', $this->gender);
+
+        if ($this->yearOfBirth) {
+            $athlete->where('year_of_birth', $this->yearOfBirth);
+        }
+
+        $athlete = $athlete->first();
 
         if (!$athlete) {
             $athlete = Athlete::create([
