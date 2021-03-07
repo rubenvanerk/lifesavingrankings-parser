@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\CompetitionConfig;
 use App\Country;
 use App\Services\Parsers\Parser;
+use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
@@ -40,6 +41,10 @@ class CompetitionController extends Controller
      * Store a newly created resource in storage.
      *
      * @param \Illuminate\Http\Request $request
+     *
+     * @throws \Spatie\MediaLibrary\MediaCollections\Exceptions\FileDoesNotExist
+     * @throws \Spatie\MediaLibrary\MediaCollections\Exceptions\FileIsTooBig
+     *
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
@@ -54,6 +59,7 @@ class CompetitionController extends Controller
      * Display the specified resource.
      *
      * @param \App\CompetitionConfig $competition
+     *
      * @return \Illuminate\Http\Response
      */
     public function show(CompetitionConfig $competition)
@@ -65,6 +71,7 @@ class CompetitionController extends Controller
      * Show the form for editing the specified resource.
      *
      * @param \App\CompetitionConfig $competition
+     *
      * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|View
      */
     public function edit(CompetitionConfig $competition)
@@ -77,6 +84,7 @@ class CompetitionController extends Controller
      *
      * @param \Illuminate\Http\Request $request
      * @param \App\CompetitionConfig $competition
+     *
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, CompetitionConfig $competition)
@@ -89,7 +97,9 @@ class CompetitionController extends Controller
      * Remove the specified resource from storage.
      *
      * @param \App\CompetitionConfig $competition
+     *
      * @return \Illuminate\Http\Response
+     * @throws Exception
      */
     public function destroy(CompetitionConfig $competition)
     {
@@ -97,10 +107,9 @@ class CompetitionController extends Controller
     }
 
     /**
-     * Remove the specified resource from storage.
-     *
      * @param Request $request
      * @param \App\CompetitionConfig $competition
+     *
      * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Http\RedirectResponse|View
      */
     public function parse(Request $request, CompetitionConfig $competition)
@@ -122,7 +131,7 @@ class CompetitionController extends Controller
 
         try {
             $rawData = $competitionParser->getRawData();
-        } catch (\Exception $exception) {
+        } catch (Exception $exception) {
             $rawData = $exception->getMessage();
         }
 
