@@ -42,11 +42,11 @@ class ParserConfig
 
     private function loadConfig(): void
     {
-        $fileExtension = pathinfo($this->competition->getFirstMediaPath('results_file'), PATHINFO_EXTENSION);
-        $emptyConfig = file_get_contents(__DIR__ . DIRECTORY_SEPARATOR . self::FILE_EXTENSION_TEMPLATE_MAPPINGS[$fileExtension]);
+        $fileType = $this->competition->getFileType();
+        $emptyConfig = file_get_contents(__DIR__ . DIRECTORY_SEPARATOR . self::FILE_EXTENSION_TEMPLATE_MAPPINGS[$fileType]);
 
         if (!$emptyConfig) {
-            throw new ParseError(sprintf('Could not find empty template %s', self::FILE_EXTENSION_TEMPLATE_MAPPINGS[$fileExtension]));
+            throw new ParseError(sprintf('Could not find empty template %s', self::FILE_EXTENSION_TEMPLATE_MAPPINGS[$fileType]));
         }
 
         if (!$this->competition->parser_config) {

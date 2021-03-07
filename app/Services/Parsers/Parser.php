@@ -21,15 +21,14 @@ abstract class Parser
 
     public static function getInstance(CompetitionConfig $competition): Parser
     {
-        $file = $competition->getFirstMediaPath('results_file');
         if (!(self::$instance instanceof self)) {
-            $fileExtension = pathinfo($file, PATHINFO_EXTENSION);
+            $fileType = $competition->getFileType();
 
-            if (!isset(self::FILE_EXTENSION_PARSER_MAPPINGS[$fileExtension])) {
-                throw new ParseError($fileExtension . ' is not supported');
+            if (!isset(self::FILE_EXTENSION_PARSER_MAPPINGS[$fileType])) {
+                throw new ParseError($fileType . ' is not supported');
             }
 
-            $parserType = self::FILE_EXTENSION_PARSER_MAPPINGS[$fileExtension];
+            $parserType = self::FILE_EXTENSION_PARSER_MAPPINGS[$fileType];
             self::$instance = $parserType::getInstance($competition);
         }
         return self::$instance;
@@ -50,8 +49,7 @@ abstract class Parser
 
     public function getFileExtension()
     {
-        $file = $this->competition->getFirstMediaPath('results_file');
-        return pathinfo($file, PATHINFO_EXTENSION);
+        return $this->competition->getFileType();
     }
 
     abstract public function getRawData(): string;

@@ -60,4 +60,15 @@ class CompetitionConfig extends Model implements HasMedia
     {
         return $this->belongsTo(Country::class);
     }
+
+    public function getFileType(): ?string
+    {
+        $file = $this->getFirstMediaPath('results_file');
+
+        if (!$file) {
+            return null;
+        }
+
+        return strtolower(pathinfo($file, PATHINFO_EXTENSION));
+    }
 }
