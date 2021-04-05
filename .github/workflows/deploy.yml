@@ -1,0 +1,32 @@
+name: PHP Composer
+
+on:
+    push:
+        branches: [ main ]
+
+jobs:
+    build:
+        runs-on: ubuntu-latest
+        steps:
+            -   name: Deploy
+                uses: appleboy/ssh-action@master
+                env:
+                    SHA: ${{ github.sha }}
+                with:
+                    host: ${{ secrets.host }}
+                    username: ${{ secrets.username }}
+                    password: ${{ secrets.password }}
+                    port: ${{ secrets.port }}
+                    envs: SHA
+                    script: |
+                        cd public_html/
+                        php artisan down --env=production
+                        git fetch --all
+                        git checkout --force $SHA
+                        composer install --no-ansi --no-dev --no-interaction --no-progress --optimize-autoloader
+                        php artisan cache:clear --env=production
+                        php artisan config:cache --env=production
+                        php artisan migrate --env=production
+                        php artisan up --env=production
+                        composer clear-cache
+
