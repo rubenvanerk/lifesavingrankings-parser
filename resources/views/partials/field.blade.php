@@ -4,9 +4,9 @@
 
 @if ($fieldType === 'select' || $fieldType === 'select-multiple')
     <div class="row">
-        <div class="column">
-            <label for="{{$fieldName}}">{{$config->getLabel($fieldName)}}:</label><br>
-            <select name="data[{{$fieldName}}]" id="{{$fieldName}}"
+        <div class="col-sm">
+            <label for="{{$fieldName}}">{{$config->getLabel($fieldName)}}:</label>
+            <select name="data[{{$fieldName}}]" id="{{$fieldName}}" class="form-control"
                     @if($fieldType === 'select-multiple') multiple @endif>
                 @foreach($config->getOptions($fieldName) as $optionValue => $optionName)
                     <option value="{{$optionValue}}" {{$config->{$fieldName} == $optionValue ? 'selected' : ''}}>
@@ -20,40 +20,49 @@
                     </option>
                 @endif
 
-            </select><br>
+            </select>
         </div>
 
         @if ($config->allowCustom($fieldName))
-            <div class="column">
-                <label for="{{$fieldName}}_custom">Custom:</label><br>
+            <div class="col-sm form-group">
+                <label for="{{$fieldName}}_custom">Custom:</label>
                 <input name="data[{{$fieldName}}_custom]" type="text" id="{{$fieldName}}_custom"
-                       value="{{$config->getValueIfCustom($fieldName)}}"/><br>
+                       value="{{$config->getValueIfCustom($fieldName)}}" class="form-control text-monospace"/>
+
             </div>
         @endif
-
     </div>
 
 @elseif ($fieldType === 'textarea')
 
-    <div class="form-group">
-        <label for="{{$fieldName}}">{{$config->getLabel($fieldName)}}:</label><br>
-        <textarea id="{{$fieldName}}" name="data[{{$fieldName}}]" cols="100">{{ $config->{$fieldName} }}</textarea><br>
+    <div class="row">
+        <div class="col-sm form-group">
+            <label for="{{$fieldName}}">{{$config->getLabel($fieldName)}}:</label>
+            <textarea id="{{$fieldName}}" name="data[{{$fieldName}}]"
+                      cols="100" class="form-control">{{ $config->{$fieldName} }}</textarea>
+        </div>
     </div>
 
 @elseif ($fieldType === 'boolean')
 
-    <div class="form-group">
-        <label for="{{$fieldName}}">{{$config->getLabel($fieldName)}}:</label>
-        <input name="data[{{$fieldName}}]" type="checkbox" id="{{$fieldName}}"
-               @if($config->{$fieldName} === 'true') checked @endif value="true"/><br>
+    <div class="row">
+        <div class="col-sm">
+            <div class="form-check">
+                <input name="data[{{$fieldName}}]" class="form-check-input" type="checkbox" id="{{$fieldName}}"
+                       @if($config->{$fieldName} === 'true') checked @endif value="true"/>
+                <label for="{{$fieldName}}" class="form-check-label">{{$config->getLabel($fieldName)}}</label>
+            </div>
+        </div>
     </div>
 
 @elseif (!is_array($value) || $fieldType)
 
-    <div class="form-group">
-        <label for="{{$fieldName}}">{{$config->getLabel($fieldName)}}:</label><br>
-        <input name="data[{{$fieldName}}]" type="{{$fieldType}}" id="{{$fieldName}}"
-               value="{{ $config->{$fieldName} }}"/><br>
+    <div class="row">
+        <div class="col-sm form-group">
+            <label for="{{$fieldName}}">{{$config->getLabel($fieldName)}}:</label>
+            <input name="data[{{$fieldName}}]" type="{{$fieldType}}" id="{{$fieldName}}"
+                   value="{{ $config->{$fieldName} }}" class="form-control"/>
+        </div>
     </div>
 
 @else
@@ -62,8 +71,8 @@
     @php ($values = $value)
     {{--    {{dd($values)}}--}}
     <details>
-        <summary>{{$name}}</summary>
-        <div class="content">
+        <summary class="py-2">{{$name}}</summary>
+        <div class="content p-2 shadow-sm">
             @foreach($values as $name => $value)
                 @include('partials.field')
             @endforeach

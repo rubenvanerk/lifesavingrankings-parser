@@ -1,22 +1,17 @@
-info:
-  name:
-  location:
-  date:
-    type: date
-  timekeeping:
-    type: select
-    custom: false
-    options:
-      0: Unknown
-      1: Electronic
-      2: By hand
-  credit:
 athlete:
   name:
     type: select
     options:
       '/(?<= )[^0-9]*(?= [0-9]{2})/': '[Splash] ( )[NaN]( 96)'
       '/(?<=[0-9]{4}\t)[^\t]*(?=\t)/': '[RescueSoft] (1996\t)[^\t](\t)'
+  first_name_regex:
+    type: select
+    options:
+      '/(?<= )([A-Z][a-z]+ ?)+$/': 'Cap First End'
+  last_name_regex:
+    type: select
+    options:
+        "/^([A-Z']{2,} )+/": 'CAPS ON START'
   yob:
     type: select
     options:
@@ -159,6 +154,7 @@ results:
       /splash meet manager/i: Common rejector
   dsq:
   dns:
+  withdrawn:
   round:
     type: select
     options:
@@ -238,3 +234,26 @@ cleaning_options:
     delimiter:
   line_movers:
     type: textarea
+
+# csv columns
+csv_columns:
+  event:
+    type: select
+    custom: false
+    options:
+  athlete:
+    type: select
+    custom: false
+    options:
+  team:
+    type: select
+    custom: false
+    options:
+  time:
+    type: select
+    custom: false
+    options:
+  gender:
+    type: select
+    custom: false
+    options:

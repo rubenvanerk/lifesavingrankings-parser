@@ -1,9 +1,3 @@
-info:
-  name:
-  location:
-  date:
-  timekeeping:
-  credit:
 athlete:
   name:
   yob:
@@ -42,6 +36,7 @@ results:
   result_rejector:
   dsq:
   dns:
+  withdrawn:
   round:
   round_mappings:
   heat:

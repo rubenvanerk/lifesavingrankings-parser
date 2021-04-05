@@ -1,8 +1,8 @@
-@extends('layouts.base')
+@extends('layouts.app')
 
 @section('content')
 
-    <a href="{{route('config', ['file' => $file])}}">< back to config</a> <br>
+    <a href="{{route('competitions.parse', ['competition' => $competition])}}">< back to config</a> <br>
 
     <h1>Competition saved</h1>
 

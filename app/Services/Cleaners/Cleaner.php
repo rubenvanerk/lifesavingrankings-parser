@@ -2,6 +2,7 @@
 
 namespace App\Services\Cleaners;
 
+use App\Services\ParsedObjects\ParsedAthlete;
 use Carbon\CarbonInterval;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
@@ -161,7 +162,16 @@ abstract class Cleaner
         return implode(PHP_EOL, $lines);
     }
 
-    public static function cleanName(string $name): string
+    public static function cleanName(string $name, string $firstNameRegex = null, string $lastNameRegex = null): string
+    {
+        if (!empty($firstNameRegex) && !empty($lastNameRegex)) {
+            return self::mirrorNameByRegex($name, $firstNameRegex, $lastNameRegex);
+        }
+
+        return self::mirrorNameByComma($name);
+    }
+
+    private static function mirrorNameByComma(string $name): string
     {
         $nameParts = explode(',', $name);
 
@@ -177,6 +187,15 @@ abstract class Cleaner
         }
 
         return $name;
+    }
+
+    private static function mirrorNameByRegex(string $name, string $firstNameRegex, string $lastNameRegex): string
+    {
+        preg_match($firstNameRegex, $name, $firstNameMatches);
+        $firstName = trim(Arr::first($firstNameMatches));
+        preg_match($lastNameRegex, $name, $lastNameMatches);
+        $lastName = trim(Arr::first($lastNameMatches));
+        return $firstName . ' ' . $lastName;
     }
 
     public static function cleanYearOfBirth(int $yearOfBirth, int $competitionYear): int
@@ -195,24 +214,48 @@ abstract class Cleaner
     {
         $time = trim($time);
         $time = Str::replaceLast(',', '.', $time);
+        $time = Str::replaceFirst('\'', ':', $time);
 
         preg_match_all('/\d{1,2}(?=:)/', $time, $minutes);
         $minutes = Arr::first($minutes);
-        $minutes = (int) Arr::last($minutes) ?: 0;
+        $minutes = (int)Arr::last($minutes) ?: 0;
 
         preg_match('/\d{2}(?=\.)/', $time, $seconds);
         $seconds = Arr::first($seconds);
+        if (!$seconds) {
+            preg_match('/^\d{2}$/', $time, $seconds);
+            $seconds = Arr::first($seconds);
+        }
 
-        preg_match('/(?<=\.)\d{2}/', $time, $centiSeconds);
-        $microseconds = (int) Arr::first($centiSeconds) * 10000;
+        preg_match('/(?<=\.)\d{1,2}/', $time, $centiSeconds);
+        $centiSeconds = Arr::first($centiSeconds);
+        $centiSeconds = $centiSeconds >= 10 ? $centiSeconds : $centiSeconds . 0;
+        $microseconds = (int)$centiSeconds * 10000;
 
         return CarbonInterval::minutes($minutes)->seconds($seconds)->microseconds($microseconds);
     }
 
     public static function translateQuoted(string $string): string
     {
-        $search  = ['\\t', '\\n', '\\r'];
-        $replace = ["\t",  "\n",  "\r"];
+        $search = ['\\t', '\\n', '\\r'];
+        $replace = ["\t", "\n", "\r"];
         return str_replace($search, $replace, $string);
+    }
+
+    public static function cleanGender(string $gender): ?int
+    {
+        if ($gender == ParsedAthlete::MALE || $gender == ParsedAthlete::FEMALE) {
+            return (int)$gender;
+        }
+
+        if ($gender == 'M') {
+            return ParsedAthlete::MALE;
+        }
+
+        if ($gender == 'F') {
+            return ParsedAthlete::FEMALE;
+        }
+
+        return null;
     }
 }

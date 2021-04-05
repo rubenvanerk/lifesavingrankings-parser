@@ -2,6 +2,7 @@
 
 namespace App\Services\Parsers;
 
+use App\CompetitionConfig;
 use App\Event;
 use App\Services\Cleaners;
 use App\Services\Cleaners\Cleaner;
@@ -18,39 +19,30 @@ use ParseError;
 
 class TextParser extends Parser
 {
-    /** @var Parser */
-    private static $_instance;
-    /** @var string */
-    protected $fileName;
-    /** @var ParserConfig */
-    public $config;
-    /** @var int */
-    private $currentEventId;
-    /** @var int */
-    private $currentGender;
-    /** @var int */
-    private $currentRound;
-    /** @var boolean */
-    private $currentEventRejected;
-    /**
-     * @var ParsedCompetition $parsedCompetition
-     */
-    protected $parsedCompetition;
+    private static ?Parser $instance = null;
+    protected CompetitionConfig $competition;
+    public ParserConfig $config;
+    private int $currentEventId;
+    private int $currentGender;
+    private int $currentRound;
+    private bool $currentEventRejected;
+    protected ParsedCompetition $parsedCompetition;
 
     private const EVENT_LINE_TYPE = 'event';
     private const RESULT_LINE_TYPE = 'result';
     private const REJECT_EVENT_LINE_TYPE = 'reject_event';
     private const DSQ_LINE_TYPE = 'dsq';
     private const DNS_LINE_TYPE = 'dns';
+    private const WITHDRAWN_LINE_TYPE = 'withdrawn';
     private const SEPARATE_GENDER_LINE_TYPE = 'separate_gender';
 
-    public static function getInstance(string $file): Parser
+    public static function getInstance(CompetitionConfig $competition): Parser
     {
-        if (!(self::$_instance instanceof self)) {
-            self::$_instance = new self($file);
+        if (!(self::$instance instanceof self)) {
+            self::$instance = new self($competition);
         }
 
-        return self::$_instance;
+        return self::$instance;
     }
 
     public function getRawData(): string
@@ -62,9 +54,10 @@ class TextParser extends Parser
     {
         $parser = new \Smalot\PdfParser\Parser();
         if (config('filesystems.default') === 's3') {
-            $pdf = $parser->parseFile(Storage::temporaryUrl($this->fileName, Carbon::now()->addMinutes(5)));
+            $pdf = $parser->parseFile(Storage::temporaryUrl($this->competition, Carbon::now()->addMinutes(5)));
         } else {
-            $pdf = $parser->parseFile(Storage::path($this->fileName));
+            $pdfFile = $this->competition->getFirstMediaPath('results_file');
+            $pdf = $parser->parseFile($pdfFile);
         }
         if ($this->config->{'pdfparser_options'}) {
             \Smalot\PdfParser\Parser::$horizontalOffset =
@@ -106,6 +99,9 @@ class TextParser extends Parser
                     if ($this->currentEventRejected) {
                         break;
                     }
+                    if (!$this->currentEventId) {
+                        throw new ParseError('Cannot parse result when no event is active. Line: ' . $line);
+                    }
                     $results = $this->getResultsFromLine($line);
                     foreach ($results as $result) {
                         $this->parsedCompetition->results[] = $result;
@@ -116,6 +112,7 @@ class TextParser extends Parser
                     break;
                 case self::DSQ_LINE_TYPE:
                 case self::DNS_LINE_TYPE:
+                case self::WITHDRAWN_LINE_TYPE:
                     if ($this->currentEventRejected) {
                         break;
                     }
@@ -165,6 +162,10 @@ class TextParser extends Parser
 
         if ($this->config->{'results.dns'} && preg_match($this->config->{'results.dns'}, $line) === 1) {
             return self::DNS_LINE_TYPE;
+        }
+
+        if ($this->config->{'results.withdrawn'} && preg_match($this->config->{'results.withdrawn'}, $line) === 1) {
+            return self::WITHDRAWN_LINE_TYPE;
         }
 
         return '';
@@ -377,7 +378,7 @@ class TextParser extends Parser
         $heat = $this->getHeatFromLine($line);
         $disqualified = $type === self::DSQ_LINE_TYPE;
         $didNotStart = $type === self::DNS_LINE_TYPE;
-        $withdrawn = false;
+        $withdrawn = $type === self::WITHDRAWN_LINE_TYPE;
         $originalLine = $line;
 
         $parsedResult = new ParsedIndividualResult(
@@ -445,6 +446,12 @@ class TextParser extends Parser
     private function getNameFromLine(string $line): string
     {
         preg_match($this->config->{'athlete.name'}, $line, $matches);
+        $name = Arr::first($matches);
+
+        if (is_null($name)) {
+            throw new ParseError(sprintf('Could not find name in line %s', $line));
+        }
+
         return Cleaner::cleanName(Arr::first($matches));
     }
 

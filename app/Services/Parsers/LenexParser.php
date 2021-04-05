@@ -2,6 +2,7 @@
 
 namespace App\Services\Parsers;
 
+use App\CompetitionConfig;
 use App\Services\Cleaners\Cleaner;
 use App\Services\ParsedObjects\ParsedAthlete;
 use App\Services\ParsedObjects\ParsedIndividualResult;
@@ -13,10 +14,10 @@ class LenexParser extends Parser
 {
     /** @var Parser */
     private static $_instance;
-    public static function getInstance(string $file): Parser
+    public static function getInstance(CompetitionConfig $competition): Parser
     {
         if (!(self::$_instance instanceof self)) {
-            self::$_instance = new self($file);
+            self::$_instance = new self($competition);
         }
 
         return self::$_instance;
@@ -32,7 +33,7 @@ class LenexParser extends Parser
     {
         $reader = new \leonverschuren\Lenex\Reader();
         $parser = new \leonverschuren\Lenex\Parser();
-        $parsedLenex = $parser->parseResult($reader->read(storage_path('app' . DIRECTORY_SEPARATOR .$this->fileName)));
+        $parsedLenex = $parser->parseResult($reader->read(storage_path('app' . DIRECTORY_SEPARATOR .$this->competition)));
         $eventMappings = $this->parseEvents($parsedLenex);
 
         foreach ($parsedLenex->getMeets() as $meet) {

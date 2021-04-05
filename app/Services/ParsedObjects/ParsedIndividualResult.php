@@ -48,27 +48,25 @@ class ParsedIndividualResult extends ParsedResult
         $this->reactionTime = $reactionTime;
     }
 
-
-
     public function saveToDatabase(): void
     {
         $athlete = $this->athlete->saveToDatabase();
 
         $event = Event::findOrFail($this->eventId);
 
-        $individualResult = new IndividualResult();
-        $individualResult->athlete()->associate($athlete);
-        $individualResult->event()->associate($event);
-        $individualResult->competition()->associate(ParsedCompetition::$model);
-        $individualResult->time = $this->time ? sprintf('%s:%s.%s', $this->time->minutes, $this->time->seconds, $this->time->microseconds) : null;
-        $individualResult->points = $this->calculatePoints();
-        $individualResult->original_line = $this->originalLine;
-        $individualResult->round = $this->round;
-        $individualResult->disqualified = $this->disqualified;
-        $individualResult->did_not_start = $this->didNotStart;
-        $individualResult->withdrawn = $this->withdrawn;
-        $individualResult->lane = $this->lane;
-        $individualResult->heat = $this->heat;
-        $individualResult->save();
+        $result = new IndividualResult();
+        $result->athlete()->associate($athlete);
+        $result->event()->associate($event);
+        $result->competition()->associate(ParsedCompetition::$competition);
+        $result->time = $this->time ? $this->time->totalMilliseconds / 1000 : null;
+        $result->points = $this->calculatePoints();
+        $result->original_line = $this->originalLine;
+        $result->round = $this->round;
+        $result->disqualified = $this->disqualified;
+        $result->did_not_start = $this->didNotStart;
+        $result->withdrawn = $this->withdrawn;
+        $result->lane = $this->lane;
+        $result->heat = $this->heat;
+        $result->save();
     }
 }

@@ -3,54 +3,26 @@
 namespace App\Services\ParsedObjects;
 
 use App\Competition;
-use Illuminate\Support\Str;
+use App\CompetitionConfig;
 
 class ParsedCompetition implements ParsedObject
 {
-    /** @var Competition */
-    public static $model;
-    /** @var string */
-    public $name;
-    /** @var string */
-    public $location;
-    /** @var string */
-    public $date;
-    /** @var int */
-    public $timekeeping;
-    /** @var string */
-    public $credit;
-    /** @var ParsedResult[] */
-    public $results = [];
+    public static CompetitionConfig $competitionConfig;
+    public static Competition $competition;
+    public array $results = [];
 
     private const STATUS_IMPORTED = 2;
 
-    public function __construct(string $name, string $location, string $date, int $timekeeping, string $credit)
+    public function __construct(CompetitionConfig $competition)
     {
-        $this->name = $name;
-        $this->location = $location;
-        $this->date = $date;
-        $this->timekeeping = $timekeeping;
-        $this->credit = $credit;
+        self::$competitionConfig = $competition;
     }
 
     public function saveToDatabase(): void
     {
-        $competitionSlug = Str::slug($this->name);
-        $competition = Competition::firstOrCreate(
-            ['slug' => $competitionSlug],
-            [
-                'name' => $this->name,
-                'date' => $this->date,
-                'location' => $this->location,
-                'type_of_timekeeping' => $this->timekeeping,
-                'is_concept' =>  true,
-                'file_name' => 'filename', // TODO
-                'credit' => $this->credit ?: null,
-                'status' => self::STATUS_IMPORTED,
-            ]
-        );
-        self::$model = $competition;
+        self::$competition = self::$competitionConfig->saveCompetition();
 
+        /** @var ParsedResult $result */
         foreach ($this->results as $result) {
             $result->saveToDatabase();
         }

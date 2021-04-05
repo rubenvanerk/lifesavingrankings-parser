@@ -3,7 +3,7 @@
 namespace App\Services\ParsedObjects;
 
 use App\Athlete;
-use App\Nationality;
+use App\Country;
 use App\Participation;
 use App\Team;
 use Carbon\Carbon;
@@ -12,16 +12,11 @@ use ParseError;
 
 class ParsedAthlete implements ParsedObject
 {
-    /** @var string */
-    public $name;
-    /** @var int|null */
-    public $yearOfBirth;
-    /** @var int */
-    public $gender;
-    /** @var string|null */
-    public $nationality;
-    /** @var string|null */
-    public $team;
+    public string $name;
+    public ?int $yearOfBirth;
+    public int $gender;
+    public ?string $nationality;
+    public ?string $team;
 
     public const MALE = 1;
     public const FEMALE = 2;
@@ -41,9 +36,13 @@ class ParsedAthlete implements ParsedObject
     public function saveToDatabase(): Athlete
     {
         $athlete = Athlete::where('name', 'ilike', $this->name)
-            ->where('gender', $this->gender)
-            ->where('year_of_birth', $this->yearOfBirth)
-            ->first();
+            ->where('gender', $this->gender);
+
+        if ($this->yearOfBirth) {
+            $athlete->where('year_of_birth', $this->yearOfBirth);
+        }
+
+        $athlete = $athlete->first();
 
         if (!$athlete) {
             $athlete = Athlete::create([
@@ -62,7 +61,7 @@ class ParsedAthlete implements ParsedObject
                 'name' => $this->team,
             ]);
 
-            $competition = ParsedCompetition::$model;
+            $competition = ParsedCompetition::$competition;
 
             $participation = Participation::whereHas('team', function ($query) use ($team) {
                 $query->where('id', $team->id);
@@ -85,7 +84,7 @@ class ParsedAthlete implements ParsedObject
             return $athlete;
         }
 
-        $nationality = Nationality::where('lenex_code', $this->nationality)->first();
+        $nationality = Country::where('lenex_code', $this->nationality)->first();
         if (!$nationality) {
             throw new Exception('Nationality with code ' . $this->nationality . ' not found!');
         }

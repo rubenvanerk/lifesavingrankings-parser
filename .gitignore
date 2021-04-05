@@ -15,3 +15,4 @@ Homestead.yaml
 /public/css
 /public/build
 /public/mix-manifest.json
+/storage/api-docs

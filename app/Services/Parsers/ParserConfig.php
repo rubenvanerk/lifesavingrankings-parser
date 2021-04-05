@@ -2,6 +2,7 @@
 
 namespace App\Services\Parsers;
 
+use App\CompetitionConfig;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
@@ -10,10 +11,10 @@ use Symfony\Component\Yaml\Yaml;
 
 class ParserConfig
 {
+    /** @var CompetitionConfig */
+    private $competition;
     /** @var string */
     private $fileName;
-    /** @var string */
-    private $resultsFile;
     /** @var array */
     private $config;
     /** @var array */
@@ -22,12 +23,13 @@ class ParserConfig
     private const FILE_EXTENSION_TEMPLATE_MAPPINGS = [
         'pdf' => 'text_template.yaml',
         'lxf' => 'lenex_template.yaml',
+        'csv' => 'csv_template.yaml',
     ];
 
-    public function __construct(string $resultsFileName)
+    public function __construct(CompetitionConfig $competition)
     {
-        $this->resultsFile = $resultsFileName;
-        $this->fileName = $resultsFileName . '.yaml';
+        $this->competition = $competition;
+        $this->fileName = $competition->getFirstMedia('results_file')->file_name . '.yaml';
         $this->loadConfig();
         $templateContent = file_get_contents(__DIR__ . DIRECTORY_SEPARATOR . 'parser_template.yaml');
         if (!$templateContent) {
@@ -38,18 +40,19 @@ class ParserConfig
 
     private function loadConfig(): void
     {
-        $fileExtension = pathinfo($this->resultsFile, PATHINFO_EXTENSION);
-        $emptyConfig = file_get_contents(__DIR__ . DIRECTORY_SEPARATOR . self::FILE_EXTENSION_TEMPLATE_MAPPINGS[$fileExtension]);
+        $fileType = $this->competition->getFileType();
+        $emptyConfig = file_get_contents(__DIR__ . DIRECTORY_SEPARATOR . self::FILE_EXTENSION_TEMPLATE_MAPPINGS[$fileType]);
 
         if (!$emptyConfig) {
-            throw new ParseError(sprintf('Could not find empty template %s', self::FILE_EXTENSION_TEMPLATE_MAPPINGS[$fileExtension]));
+            throw new ParseError(sprintf('Could not find empty template %s', self::FILE_EXTENSION_TEMPLATE_MAPPINGS[$fileType]));
         }
 
-        if (Storage::missing($this->fileName)) {
-            Storage::put($this->fileName, $emptyConfig);
+        if (!$this->competition->parser_config) {
+            $this->competition->parser_config = Yaml::parse($emptyConfig);
+            $this->competition->save();
         }
 
-        $this->config = array_replace_recursive(Yaml::parse($emptyConfig), Yaml::parse(Storage::get($this->fileName)));
+        $this->config = array_replace_recursive(Yaml::parse($emptyConfig), $this->competition->parser_config);
     }
 
     /**
@@ -80,7 +83,8 @@ class ParserConfig
 
     public function save(): void
     {
-        Storage::put($this->fileName, Yaml::dump($this->config));
+        $this->competition->parser_config = $this->config;
+        $this->competition->save();
     }
 
     public function remove(string $name): void
@@ -105,7 +109,11 @@ class ParserConfig
 
     public function getOptions(string $name): ?array
     {
-        return Arr::get($this->template, $name . '.options');
+        $result = Arr::get($this->config, $name . '.options');
+        if (!is_array($result)) {
+            $result = Arr::get($this->template, $name . '.options');
+        }
+        return $result;
     }
 
     public function getValueIfCustom(string $name): ?string
