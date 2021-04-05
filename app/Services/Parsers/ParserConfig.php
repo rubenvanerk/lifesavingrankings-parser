@@ -15,8 +15,6 @@ class ParserConfig
     private $competition;
     /** @var string */
     private $fileName;
-    /** @var string */
-    private $resultsFile;
     /** @var array */
     private $config;
     /** @var array */

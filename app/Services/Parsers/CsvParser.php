@@ -6,8 +6,6 @@ use App\CompetitionConfig;
 use App\Services\Cleaners\Cleaner;
 use App\Services\ParsedObjects\ParsedAthlete;
 use App\Services\ParsedObjects\ParsedIndividualResult;
-use Arr;
-use Carbon\Carbon;
 use League\Csv\HTMLConverter;
 use League\Csv\Reader;
 
@@ -23,6 +21,7 @@ class CsvParser extends Parser
 
             $resultsFile = $instance->competition->getFirstMedia('results_file');
             $instance->csvReader = Reader::createFromStream($resultsFile->stream());
+            $instance->csvReader->setDelimiter(';');
             $instance->csvReader->setHeaderOffset(0);
 
             $instance->setCsvColumnOptions();
