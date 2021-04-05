@@ -10,8 +10,6 @@
     "require": {
         "php": "^7.4",
         "ext-fileinfo": "*",
-        "bref/bref": "^0.5.29",
-        "bref/laravel-bridge": "^0.2.0",
         "cviebrock/eloquent-sluggable": "^8.0",
         "fideloper/proxy": "^4.4",
         "fruitcake/laravel-cors": "^2.0",
@@ -52,7 +50,10 @@
     "config": {
         "preferred-install": "dist",
         "sort-packages": true,
-        "optimize-autoloader": true
+        "optimize-autoloader": true,
+        "platform": {
+            "php": "7.4"
+        }
     },
     "minimum-stability": "dev",
     "prefer-stable": true,
