@@ -53,8 +53,9 @@ class TextParser extends Parser
     private function getText(): string
     {
         $parser = new \Smalot\PdfParser\Parser();
-        if (config('filesystems.default') === 's3') {
-            $pdf = $parser->parseFile(Storage::temporaryUrl($this->competition, Carbon::now()->addMinutes(5)));
+        if (config('media-library.disk_name') === 's3') {
+            $pdfFile = $this->competition->getFirstMedia('results_file');
+            $pdf = $parser->parseFile($pdfFile->getTemporaryUrl(Carbon::now()->addMinute()));
         } else {
             $pdfFile = $this->competition->getFirstMediaPath('results_file');
             $pdf = $parser->parseFile($pdfFile);
