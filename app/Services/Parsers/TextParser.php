@@ -14,7 +14,6 @@ use App\Services\ParsedObjects\ParsedResult;
 use Carbon\Carbon;
 use ErrorException;
 use Illuminate\Support\Arr;
-use Illuminate\Support\Facades\Storage;
 use ParseError;
 
 class TextParser extends Parser
@@ -75,7 +74,9 @@ class TextParser extends Parser
 //        $text = Cleaners\Cleaner::applyClassCleaners($text, $this->config->{'cleaning_options.class_cleaners'});
         $text = Cleaners\Cleaner::moveLines($text, explode(PHP_EOL, $this->config->{'cleaning_options.line_movers'}));
 
-        return htmlspecialchars_decode($text, ENT_QUOTES);
+        $text =  htmlspecialchars_decode($text, ENT_QUOTES);
+        $text = str_replace("\xc2\xa0", ' ', $text);
+        return $text;
     }
 
     private function getLines(): array
@@ -255,7 +256,7 @@ class TextParser extends Parser
         $name = $csv[$this->config->{'as_csv.indexes.name'}];
         $name = Cleaner::cleanName($name);
         $yearOfBirth = (int)$csv[$this->config->{'as_csv.indexes.yob'}];
-        $competitionYear = (int)Carbon::create($this->config->{'info.date'})->year;
+        $competitionYear = Carbon::create($this->config->{'info.date'})->year;
         $yearOfBirth = Cleaner::cleanYearOfBirth($yearOfBirth, $competitionYear);
         $team = $this->config->{'as_csv.indexes.team'} ? $csv[$this->config->{'as_csv.indexes.team'}] : null;
 
@@ -324,6 +325,7 @@ class TextParser extends Parser
         }
 
         if (count($parsedResults) === 0) {
+            return [];
             throw new ParseError(sprintf('Time(s) not found in line \'%s\'', $line));
         }
 
@@ -463,7 +465,7 @@ class TextParser extends Parser
         }
         preg_match($this->config->{'athlete.yob'}, $line, $matches);
         $yearOfBirth = (int)Arr::first($matches);
-        $competitionYear = (int)Carbon::create($this->config->{'info.date'})->year;
+        $competitionYear = Carbon::create($this->config->{'info.date'})->year;
         return Cleaner::cleanYearOfBirth($yearOfBirth, $competitionYear);
     }
 
@@ -500,7 +502,11 @@ class TextParser extends Parser
             case 'last':
                 return [Arr::last($times)];
             default:
-                return [$times[$timeIndex]];
+                if (isset($times[$timeIndex])) {
+                    return [$times[$timeIndex]];
+                }
+                return [];
+
         }
     }
 
