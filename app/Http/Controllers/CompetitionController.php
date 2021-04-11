@@ -10,6 +10,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use Illuminate\View\View;
+use ParseError;
 
 class CompetitionController extends Controller
 {
@@ -98,8 +99,9 @@ class CompetitionController extends Controller
      *
      * @param \App\CompetitionConfig $competition
      *
-     * @return \Illuminate\Http\Response
      * @throws Exception
+     *
+     * @return \Illuminate\Http\Response
      */
     public function destroy(CompetitionConfig $competition)
     {
@@ -168,7 +170,11 @@ class CompetitionController extends Controller
     public function dryRun(CompetitionConfig $competition): View
     {
         $competitionParser = Parser::getInstance($competition);
-        $parsedCompetition = $competitionParser->getParsedCompetition();
+        try {
+            $parsedCompetition = $competitionParser->getParsedCompetition();
+        } catch (ParseError $error) {
+            return view('error', ['error' => $error->getMessage(), 'competition' => $competition]);
+        }
         return view('dry_run', ['parsedCompetition' => $parsedCompetition, 'competition' => $competition]);
     }
 
