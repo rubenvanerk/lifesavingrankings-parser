@@ -33,13 +33,13 @@
             @foreach($parsedCompetition->results as $result)
                 @php($athlete = $result->athlete ?? $result->athletes)
                 <tr>
-                    @if(is_array($athlete))
+                    @if(is_array($athlete) && count($athlete) > 0)
                         <td>@foreach($athlete as $athl) {{$athl->name}}, @endforeach</td>
                         <td></td>
                         <td>{{$athl->gender === 1 ? 'Male' : 'Female'}}</td>
                         <td>{{$athl->nationality}}</td>
                         <td>{{$athl->team}}</td>
-                    @else
+                    @elseif($athlete)
                         <td>{{$athlete->name}}</td>
                         <td>{{$athlete->yearOfBirth}}</td>
                         <td>{{$athlete->gender === 1 ? 'Male' : 'Female'}}</td>
