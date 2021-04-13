@@ -4,6 +4,8 @@ namespace App;
 
 use Cviebrock\EloquentSluggable\Sluggable;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class Athlete extends Model
 {
@@ -14,12 +16,12 @@ class Athlete extends Model
     public $timestamps = false;
     protected $fillable = ['name', 'gender', 'year_of_birth'];
 
-    public function nationalities(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
+    public function nationalities(): BelongsToMany
     {
         return $this->belongsToMany(Country::class, 'rankings_athlete_nationalities');
     }
 
-    public function alias_of(): \Illuminate\Database\Eloquent\Relations\BelongsTo
+    public function aliasOf(): BelongsTo
     {
         return $this->belongsTo(self::class, 'alias_of_id');
     }

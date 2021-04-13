@@ -3,6 +3,7 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class EventRecord extends Model
 {
@@ -11,7 +12,7 @@ class EventRecord extends Model
     public $timestamps = false;
 
 
-    public function event(): \Illuminate\Database\Eloquent\Relations\BelongsTo
+    public function event(): BelongsTo
     {
         return $this->belongsTo(Event::class, 'event_id');
     }

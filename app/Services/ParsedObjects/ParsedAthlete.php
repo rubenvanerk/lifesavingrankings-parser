@@ -52,8 +52,8 @@ class ParsedAthlete implements ParsedObject
             ]);
         }
 
-        if ($athlete->alias_of) {
-            $athlete = $athlete->alias_of;
+        if ($athlete->aliasOf) {
+            $athlete = $athlete->aliasOf;
         }
 
         if ($this->team) {

@@ -4,6 +4,7 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class Country extends Model
 {
@@ -19,12 +20,12 @@ class Country extends Model
         });
     }
 
-    public function athletes(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
+    public function athletes(): BelongsToMany
     {
         return $this->belongsToMany(Athlete::class);
     }
 
-    public function competitions(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
+    public function competitions(): BelongsToMany
     {
         return $this->belongsToMany(Competition::class);
     }

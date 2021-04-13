@@ -3,6 +3,8 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class IndividualResult extends Model
 {
@@ -10,22 +12,22 @@ class IndividualResult extends Model
     protected $table = 'rankings_individualresult';
     public $timestamps = false;
 
-    public function splits(): \Illuminate\Database\Eloquent\Relations\HasMany
+    public function splits(): HasMany
     {
         return $this->hasMany(IndividualResultSplit::class, 'individual_result_id');
     }
 
-    public function athlete(): \Illuminate\Database\Eloquent\Relations\BelongsTo
+    public function athlete(): BelongsTo
     {
         return $this->belongsTo(Athlete::class, 'athlete_id');
     }
 
-    public function competition(): \Illuminate\Database\Eloquent\Relations\BelongsTo
+    public function competition(): BelongsTo
     {
         return $this->belongsTo(Competition::class, 'competition_id');
     }
 
-    public function event(): \Illuminate\Database\Eloquent\Relations\BelongsTo
+    public function event(): BelongsTo
     {
         return $this->belongsTo(Event::class, 'event_id');
     }

@@ -3,6 +3,7 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Event extends Model
 {
@@ -14,7 +15,7 @@ class Event extends Model
     public const EVENT_TYPE_RELAY_SEGMENT = 2;
     public const EVENT_TYPE_RELAY = 3;
 
-    public function results()
+    public function results(): HasMany
     {
         $this->hasMany('App\IndividualResult');
     }
