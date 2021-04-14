@@ -4,7 +4,6 @@ namespace App\Services\Parsers;
 
 use App\CompetitionConfig;
 use Illuminate\Support\Arr;
-use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use ParseError;
 use Symfony\Component\Yaml\Yaml;

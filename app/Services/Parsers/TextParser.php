@@ -505,7 +505,7 @@ class TextParser extends Parser
                 if (isset($times[$timeIndex])) {
                     return [$times[$timeIndex]];
                 }
-                return [];
+                throw new ParseError('Could not find time in line: ' . $line);
 
         }
     }
