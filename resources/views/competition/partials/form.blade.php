@@ -16,6 +16,11 @@
     </div>
 
     <div class="form-group">
+        <label for="original-name">Original name:</label>
+        <input name="original_name" type="text" id="original-name" class="form-control" value="{{ $competition->original_name ?? '' }}">
+    </div>
+
+    <div class="form-group">
         <label for="city">City:</label>
         <input name="city" type="text" id="city" required class="form-control" value="{{ $competition->city ?? '' }}">
     </div>
@@ -50,6 +55,11 @@
             <option value="electronic">Electronic</option>
             <option value="by_hand">By hand</option>
         </select>
+    </div>
+
+    <div class="form-group">
+        <label for="comment">Comment:</label>
+        <input name="comment" type="text" id="comment" class="form-control" value="{{ $competition->comment ?? '' }}">
     </div>
 
     <button type="submit" class="btn btn-primary">{{ isset($competition) ? 'Update' : 'Upload' }}</button>

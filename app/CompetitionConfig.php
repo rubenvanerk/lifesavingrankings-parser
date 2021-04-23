@@ -32,6 +32,7 @@ class CompetitionConfig extends Model implements HasMedia
     {
         $competition = new Competition();
         $competition->name = $this->name;
+        $competition->original_name = $this->original_name;
         $competition->slug = Str::slug($this->name);
         $competition->date = $this->start_date;
         $competition->end_date = $this->end_date;
@@ -41,6 +42,7 @@ class CompetitionConfig extends Model implements HasMedia
         $competition->is_concept = true;
         $competition->status = 2; // = imported
         $competition->file_name = $this->getFirstMediaPath('results_file');
+        $competition->comment = $this->comment;
         $competition->save();
         return $competition;
     }
