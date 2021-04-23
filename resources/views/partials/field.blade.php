@@ -69,7 +69,6 @@
 
     @php ($parentField = $parentField ? $parentField .= '.' . $name : $name)
     @php ($values = $value)
-    {{--    {{dd($values)}}--}}
     <details>
         <summary class="py-2">{{$name}}</summary>
         <div class="content p-2 shadow-sm">

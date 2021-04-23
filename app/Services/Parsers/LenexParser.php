@@ -23,7 +23,7 @@ class LenexParser extends Parser
         return self::$_instance;
     }
 
-    public function getRawData(): string
+    public function getRawData(bool $returnText = false): string
     {
         // TODO: Implement getRawData() method.
         return '';

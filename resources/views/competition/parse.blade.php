@@ -44,7 +44,20 @@
     <h2>Raw data</h2>
 
     @if($fileExtension === 'csv' || $config->{'as_csv.as_csv'})
-        {!! $rawData !!}
+        <details>
+            <summary class="py-2">Table</summary>
+            <div class="content p-2 shadow-sm">
+                {!! $rawData !!}
+            </div>
+        </details>
+        <details>
+            <summary class="py-2">Text</summary>
+            <div class="content p-2 shadow-sm">
+                <pre class="overflow-scroll">
+                    {{ $rawDataText }}
+                </pre>
+            </div>
+        </details>
     @else
         <pre class="overflow-scroll">
             {{ $rawData }}

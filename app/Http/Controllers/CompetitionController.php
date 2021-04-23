@@ -141,6 +141,7 @@ class CompetitionController extends Controller
             'file' => '',
             'competition' => $competition,
             'rawData' => $rawData,
+            'rawDataText' => $competitionParser->getRawData(true),
             'fileExtension' => $competitionParser->getFileExtension(),
             'config' => $competitionParser->config,
             'databases' => config('database.connections'),

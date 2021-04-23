@@ -46,10 +46,10 @@ class TextParser extends Parser
         return self::$instance;
     }
 
-    public function getRawData(): string
+    public function getRawData(bool $returnText = false): string
     {
         $text = $this->getText();
-        if (!$this->config->{'as_csv.as_csv'}) {
+        if (!$this->config->{'as_csv.as_csv'} || $returnText) {
             return $text;
         }
 
@@ -93,7 +93,7 @@ class TextParser extends Parser
 //        $text = Cleaners\Cleaner::applyClassCleaners($text, $this->config->{'cleaning_options.class_cleaners'});
         $text = Cleaners\Cleaner::moveLines($text, explode(PHP_EOL, $this->config->{'cleaning_options.line_movers'}));
 
-        $text =  htmlspecialchars_decode($text, ENT_QUOTES);
+        $text = htmlspecialchars_decode($text, ENT_QUOTES);
         $text = str_replace("\xc2\xa0", ' ', $text);
         return $text;
     }

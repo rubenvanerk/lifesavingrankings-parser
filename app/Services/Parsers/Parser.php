@@ -52,7 +52,7 @@ abstract class Parser
         return $this->competition->getFileType();
     }
 
-    abstract public function getRawData(): string;
+    abstract public function getRawData(bool $returnText = false): string;
 
     /**
      *  The parse method fills $this->parsedCompetition with results

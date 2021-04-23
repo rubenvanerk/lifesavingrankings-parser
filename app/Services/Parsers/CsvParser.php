@@ -33,7 +33,7 @@ class CsvParser extends Parser
         return self::$instance;
     }
 
-    public function getRawData(): string
+    public function getRawData(bool $returnText = false): string
     {
         return (new HTMLConverter())->table('table table-bordered table-fixed')
             ->convert($this->csvReader, $this->csvReader->getHeader());
