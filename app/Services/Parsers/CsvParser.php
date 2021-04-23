@@ -35,7 +35,7 @@ class CsvParser extends Parser
 
     public function getRawData(): string
     {
-        return (new HTMLConverter())->table('table table-bordered')
+        return (new HTMLConverter())->table('table table-bordered table-fixed')
             ->convert($this->csvReader, $this->csvReader->getHeader());
     }
 
