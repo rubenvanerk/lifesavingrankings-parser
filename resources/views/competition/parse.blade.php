@@ -43,7 +43,7 @@
 
     <h2>Raw data</h2>
 
-    @if($fileExtension === 'csv')
+    @if($fileExtension === 'csv' || $config->{'as_csv.as_csv'})
         {!! $rawData !!}
     @else
         <pre class="overflow-scroll">

@@ -14,6 +14,8 @@ use App\Services\ParsedObjects\ParsedResult;
 use Carbon\Carbon;
 use ErrorException;
 use Illuminate\Support\Arr;
+use League\Csv\HTMLConverter;
+use League\Csv\Reader;
 use ParseError;
 
 class TextParser extends Parser
@@ -46,7 +48,24 @@ class TextParser extends Parser
 
     public function getRawData(): string
     {
-        return $this->getText();
+        $text = $this->getText();
+        if (!$this->config->{'as_csv.as_csv'}) {
+            return $text;
+        }
+
+        $text = preg_replace('/' . $this->config->{'as_csv.delimiter'} . '/', ';', $text);
+        $csvReader = Reader::createFromString($text);
+        $csvReader->setDelimiter(';');
+
+        $longestRow = 0;
+        foreach ($csvReader as $item) {
+            if (sizeof($item) > $longestRow) {
+                $longestRow = sizeof($item);
+            }
+        }
+
+        return (new HTMLConverter())->table('table table-bordered table-fixed')
+            ->convert($csvReader, range(0, $longestRow - 1));
     }
 
     private function getText(): string
