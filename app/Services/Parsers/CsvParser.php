@@ -119,8 +119,15 @@ class CsvParser extends Parser
 
     private function getParsedAthleteFromRecord($record): ParsedAthlete
     {
+        if ($this->config->{'csv_columns.first_name'} && $this->config->{'csv_columns.last_name'}) {
+            $name = $record[$this->config->{'csv_columns.first_name'}] . ' ' . $record[$this->config->{'csv_columns.last_name'}];
+        }
+         else {
+             $name = $record[$this->config->{'csv_columns.athlete'}];
+         }
+
         $name = Cleaner::cleanName(
-            $record[$this->config->{'csv_columns.athlete'}],
+            $name,
             $this->config->{'athlete.first_name_regex'},
             $this->config->{'athlete.last_name_regex'}
         );

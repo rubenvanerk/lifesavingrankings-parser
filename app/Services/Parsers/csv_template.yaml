@@ -8,6 +8,8 @@ results:
 csv_columns:
   event:
   athlete:
+  first_name:
+  last_name:
   team:
   time:
   gender:
