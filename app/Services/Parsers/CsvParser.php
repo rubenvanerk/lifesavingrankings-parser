@@ -42,8 +42,9 @@ class CsvParser extends Parser
     protected function parse(): void
     {
         foreach ($this->csvReader as $record) {
-            $parsedResult = $this->parseFromRecord($record);
-            $this->parsedCompetition->results[] = $parsedResult;
+            if (($parsedResult = $this->parseFromRecord($record))) {
+                $this->parsedCompetition->results[] = $parsedResult;
+            }
         }
     }
 
@@ -88,7 +89,7 @@ class CsvParser extends Parser
         $this->config->template = $template;
     }
 
-    private function parseFromRecord($record): ParsedIndividualResult
+    private function parseFromRecord($record): ?ParsedIndividualResult
     {
         $time = $record[$this->config->{'csv_columns.time'}];
         if ($this->config->{'results.dsq'} && preg_match($this->config->{'results.dsq'}, $time)) {
@@ -97,6 +98,11 @@ class CsvParser extends Parser
         } else {
             $time = Cleaner::cleanTime($time);
         }
+
+        if (!($eventId = $this->getEventIdFromRecord($record))) {
+            return null;
+        }
+
         $parsedAthlete = $this->getParsedAthleteFromRecord($record);
 
         $parsedResult = new ParsedIndividualResult(
@@ -113,7 +119,7 @@ class CsvParser extends Parser
             null, // TODO implement splits
         );
 
-        $parsedResult->eventId = $this->getEventIdFromRecord($record);
+        $parsedResult->eventId = $eventId;
 
         return $parsedResult;
     }

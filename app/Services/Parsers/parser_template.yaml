@@ -7,11 +7,13 @@ athlete:
   first_name_regex:
     type: select
     options:
+      '': ''
       '/(?<= )([A-Z][a-z]+ ?)+$/': 'Cap First End'
   last_name_regex:
     type: select
     options:
-        "/^([A-Z']{2,} )+/": 'CAPS ON START'
+      '': ''
+      "/^([A-Z']{2,} )+/": 'CAPS ON START'
   yob:
     type: select
     options:
