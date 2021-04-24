@@ -245,6 +245,14 @@ csv_columns:
     type: select
     custom: false
     options:
+  first_name:
+    type: select
+    custom: false
+    options:
+  last_name:
+    type: select
+    custom: false
+    options:
   team:
     type: select
     custom: false

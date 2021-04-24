@@ -53,6 +53,7 @@ class CsvParser extends Parser
     private function setCsvColumnOptions(): void
     {
         $columns = array_combine($this->csvReader->getHeader(), $this->csvReader->getHeader());
+        array_unshift($columns, '');
         $template = $this->config->template;
         foreach ($template['csv_columns'] as $key => $configColumn) {
             $template['csv_columns'][$key]['options'] = $columns;
