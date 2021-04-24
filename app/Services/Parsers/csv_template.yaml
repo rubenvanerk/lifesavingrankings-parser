@@ -1,3 +1,5 @@
+csv_settings:
+  delimiter:
 athlete:
   first_name_regex:
   last_name_regex:

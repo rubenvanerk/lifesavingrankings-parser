@@ -21,7 +21,7 @@ class CsvParser extends Parser
 
             $resultsFile = $instance->competition->getFirstMedia('results_file');
             $instance->csvReader = Reader::createFromStream($resultsFile->stream());
-            $instance->csvReader->setDelimiter(';');
+            $instance->csvReader->setDelimiter($instance->config->{'csv_settings.delimiter'} ?: ';');
             $instance->csvReader->setHeaderOffset(0);
 
             $instance->setCsvColumnOptions();
