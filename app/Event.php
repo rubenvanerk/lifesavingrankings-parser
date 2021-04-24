@@ -16,13 +16,13 @@ class Event extends Model
     public const EVENT_TYPE_RELAY_SEGMENT = 2;
     public const EVENT_TYPE_RELAY = 3;
 
-    protected static Collection $allEvents;
+    protected static array $allEvents;
 
-    public static function exists(int $eventId): bool
+    public static function get(int $eventId): Event
     {
         if (!isset(self::$allEvents)) {
-            self::$allEvents = Event::all();
-            self::$allEvents->keyBy('id')->all();
+            $allEvents = Event::all();
+            self::$allEvents = $allEvents->keyBy('id')->all();
         }
 
         return self::$allEvents[$eventId];
