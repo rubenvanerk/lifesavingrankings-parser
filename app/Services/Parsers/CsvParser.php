@@ -71,6 +71,9 @@ class CsvParser extends Parser
 
         $eventNames = [''];
         foreach ($this->csvReader as $record) {
+            if (!isset($record[$this->config->{'csv_columns.event'}])) {
+                continue;
+            }
             if (!in_array($record[$this->config->{'csv_columns.event'}], $eventNames)) {
                 $eventNames[] = $record[$this->config->{'csv_columns.event'}];
             }
