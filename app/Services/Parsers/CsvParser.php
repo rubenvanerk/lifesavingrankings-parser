@@ -91,7 +91,7 @@ class CsvParser extends Parser
     private function parseFromRecord($record): ParsedIndividualResult
     {
         $time = $record[$this->config->{'csv_columns.time'}];
-        if (preg_match($this->config->{'results.dsq'}, $time)) {
+        if ($this->config->{'results.dsq'} && preg_match($this->config->{'results.dsq'}, $time)) {
             $disqualified = true;
             $time = null;
         } else {
@@ -132,7 +132,8 @@ class CsvParser extends Parser
             $this->config->{'athlete.last_name_regex'}
         );
         $gender = Cleaner::cleanGender($record[$this->config->{'csv_columns.gender'}]);
-        $team = $record[$this->config->{'csv_columns.team'}];
+
+        $team = $this->config->{'csv_columns.team'} ? $record[$this->config->{'csv_columns.team'}] : null;
 
         return new ParsedAthlete(
             $name,
