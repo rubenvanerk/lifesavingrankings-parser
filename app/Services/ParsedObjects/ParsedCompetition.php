@@ -4,6 +4,8 @@ namespace App\Services\ParsedObjects;
 
 use App\Competition;
 use App\CompetitionConfig;
+use App\IndividualResult;
+use Illuminate\Support\Facades\DB;
 
 class ParsedCompetition implements ParsedObject
 {
@@ -22,9 +24,13 @@ class ParsedCompetition implements ParsedObject
     {
         self::$competition = self::$competitionConfig->saveCompetition();
 
-        /** @var ParsedResult $result */
+        $insertValues = [];
+
+        /** @var ParsedIndividualResult $result */
         foreach ($this->results as $result) {
-            $result->saveToDatabase();
+            $insertValues[] = $result->getInsertValues();
         }
+
+        Db::connection('rankings')->table('rankings_individualresult')->insert($insertValues);
     }
 }

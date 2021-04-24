@@ -12,6 +12,21 @@ class IndividualResult extends Model
     protected $table = 'rankings_individualresult';
     public $timestamps = false;
 
+    protected $fillable = [
+        'athlete_id',
+        'event_id',
+        'competition_id',
+        'time',
+        'points',
+        'original_line',
+        'round',
+        'disqualified',
+        'did_not_start',
+        'withdrawn',
+        'lane',
+        'heat',
+    ];
+
     public function splits(): HasMany
     {
         return $this->hasMany(IndividualResultSplit::class, 'individual_result_id');

@@ -74,10 +74,7 @@ abstract class ParsedResult implements ParsedObject
 
         $eventId = $this->eventId;
         $athlete = $this->athlete ?? Arr::first($this->athletes);
-        $record = EventRecord::whereHas('event', function ($query) use ($eventId, $athlete) {
-            return $query->where('id', $eventId)->where('gender', $athlete->gender);
-        })->first();
-
+        $record = EventRecord::get($eventId, $athlete->gender);
         if (!$record) {
             return 0;
         }

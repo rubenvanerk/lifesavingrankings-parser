@@ -69,4 +69,25 @@ class ParsedIndividualResult extends ParsedResult
         $result->heat = $this->heat;
         $result->save();
     }
+
+    public function getInsertValues(): array
+    {
+        $athlete = $this->athlete->saveToDatabase();
+        $event = Event::get($this->eventId);
+
+        return [
+            'athlete_id' => $athlete->id,
+            'event_id' => $event->id,
+            'competition_id' => ParsedCompetition::$competition->id,
+            'time' => $this->time ? $this->time->totalMilliseconds / 1000 : null,
+            'points' => $this->calculatePoints(),
+            'original_line' => $this->originalLine,
+            'round' => $this->round,
+            'disqualified' => $this->disqualified,
+            'did_not_start' => $this->didNotStart,
+            'withdrawn' => $this->withdrawn,
+            'lane' => $this->lane,
+            'heat' => $this->heat,
+        ];
+    }
 }
