@@ -88,8 +88,8 @@ class TextParser extends Parser
 
     private function cleanText(string $text): string
     {
-        $text = Cleaners\Cleaner::combineLines($text, $this->config->{'cleaning_options.line_combiner'});
         $text = Cleaners\Cleaner::customReplace($text, $this->config->getTextAreaAsArray('cleaning_options.custom_replace'));
+        $text = Cleaners\Cleaner::combineLines($text, $this->config->{'cleaning_options.line_combiner'});
 //        $text = Cleaners\Cleaner::applyClassCleaners($text, $this->config->{'cleaning_options.class_cleaners'});
         $text = Cleaners\Cleaner::moveLines($text, explode(PHP_EOL, $this->config->{'cleaning_options.line_movers'}));
 
