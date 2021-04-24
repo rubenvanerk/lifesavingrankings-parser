@@ -11,6 +11,9 @@ return [
             'database' => env('DB_DATABASE'),
             'username' => env('DB_USERNAME'),
             'password' => env('DB_PASSWORD'),
+            'options'   => [
+                \PDO::ATTR_EMULATE_PREPARES => true,
+            ],
         ],
         'rankings' => [
             'driver' => env('RANKINGS_DB_DRIVER'),
