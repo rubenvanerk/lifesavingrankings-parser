@@ -81,7 +81,7 @@ class CsvParser extends Parser
         $eventNames = array_combine($eventNames, $eventNames);
 
         $template = $this->config->template;
-        foreach ($template['events']['event_names']as $key => $configColumn) {
+        foreach ($template['events']['event_names'] as $key => $configColumn) {
             $template['events']['event_names'][$key]['options'] = $eventNames;
         }
         $this->config->template = $template;
@@ -121,10 +121,9 @@ class CsvParser extends Parser
     {
         if ($this->config->{'csv_columns.first_name'} && $this->config->{'csv_columns.last_name'}) {
             $name = $record[$this->config->{'csv_columns.first_name'}] . ' ' . $record[$this->config->{'csv_columns.last_name'}];
+        } else {
+            $name = $record[$this->config->{'csv_columns.athlete'}];
         }
-         else {
-             $name = $record[$this->config->{'csv_columns.athlete'}];
-         }
 
         $name = Cleaner::cleanName(
             $name,
