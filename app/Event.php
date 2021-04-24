@@ -20,7 +20,7 @@ class Event extends Model
 
     public static function exists(int $eventId): bool
     {
-        if (!self::$allEvents) {
+        if (!isset(self::$allEvents)) {
             self::$allEvents = Event::all();
             self::$allEvents->keyBy('id')->all();
         }
