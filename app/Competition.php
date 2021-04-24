@@ -14,6 +14,7 @@ class Competition extends Model
     protected $fillable = [
         'slug',
         'name',
+        'original_name',
         'date',
         'location',
         'type_of_timekeeping',
@@ -21,6 +22,7 @@ class Competition extends Model
         'file_name',
         'credit',
         'status',
+        'comment',
     ];
 
     public function country(): BelongsTo
