@@ -52,7 +52,7 @@ class ParsedIndividualResult extends ParsedResult
     {
         $athlete = $this->athlete->saveToDatabase();
 
-        $event = Event::findOrFail($this->eventId);
+        $event = Event::get($this->eventId);
 
         $result = new IndividualResult();
         $result->athlete()->associate($athlete);
