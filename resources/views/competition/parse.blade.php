@@ -7,6 +7,10 @@
         View source file
     </a>
 
+    <button class="btn btn-secondary test-regex">
+        Test last regex
+    </button>
+
     <hr class="my-3">
 
     <form method="post">
@@ -43,25 +47,34 @@
 
     <h2>Raw data</h2>
 
-    @if($fileExtension === 'csv' || $config->{'as_csv.as_csv'})
-        <details>
-            <summary class="py-2">Table</summary>
-            <div class="content p-2 shadow-sm">
-                {!! $rawData !!}
-            </div>
-        </details>
-        <details>
-            <summary class="py-2">Text</summary>
-            <div class="content p-2 shadow-sm">
-                <pre class="overflow-scroll">
-                    {{ $rawDataText }}
-                </pre>
-            </div>
-        </details>
-    @else
-        <pre class="overflow-scroll">
-            {{ $rawData }}
-        </pre>
-    @endif
+    <div class="raw-data">
+        @if($fileExtension === 'csv' || $config->{'as_csv.as_csv'})
+            <details>
+                <summary class="py-2">Table</summary>
+                <div class="content p-2 shadow-sm">
+                    {!! $rawData !!}
+                </div>
+            </details>
+            <details>
+                <summary class="py-2">Text</summary>
+                <div class="content p-2 shadow-sm">
+                    <pre class="overflow-scroll">
+                        {{ $rawDataText }}
+                    </pre>
+                </div>
+            </details>
+        @else
+            <pre class="overflow-scroll">
+                {{ $rawData }}
+            </pre>
+        @endif
+    </div>
+
+    <div class="input-group mb-5 px-3 fixed-bottom" id="regexTester">
+        <input type="text" class="form-control">
+        <div class="input-group-append">
+            <button class="btn btn-outline-secondary" type="button">Test</button>
+        </div>
+    </div>
 
 @endsection
