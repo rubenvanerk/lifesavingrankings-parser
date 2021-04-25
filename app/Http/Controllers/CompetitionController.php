@@ -21,7 +21,7 @@ class CompetitionController extends Controller
      */
     public function index()
     {
-        $competitions = CompetitionConfig::paginate(15);
+        $competitions = CompetitionConfig::with('country:id,name')->paginate(15);
         return view('competition.index', ['competitions' => $competitions]);
     }
 
@@ -50,7 +50,9 @@ class CompetitionController extends Controller
      */
     public function store(Request $request)
     {
-        $competition = CompetitionConfig::create($request->all());
+        $data = $request->validate(CompetitionConfig::rules);
+
+        $competition = CompetitionConfig::create($data);
         $competition->addMediaFromRequest('file')->toMediaCollection('results_file');
 
         return redirect('/');
@@ -90,8 +92,16 @@ class CompetitionController extends Controller
      */
     public function update(Request $request, CompetitionConfig $competition)
     {
-        $competition->fill($request->all());
+        $data = $request->validate(CompetitionConfig::rules);
+        $competition->fill($data);
         $competition->save();
+
+        if ($request->hasFile('file')) {
+            $competition->getMedia('results_file')->each->delete();
+            $competition->addMediaFromRequest('file')->toMediaCollection('results_file');
+        }
+
+        return redirect()->route('competitions.edit', ['competition' => $competition]);
     }
 
     /**
@@ -106,6 +116,7 @@ class CompetitionController extends Controller
     public function destroy(CompetitionConfig $competition)
     {
         $competition->delete();
+        return redirect()->route('competitions.index');
     }
 
     /**
