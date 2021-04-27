@@ -26,7 +26,7 @@ class TextParser extends Parser
     private ?int $currentEventId = null;
     private int $currentGender;
     private int $currentRound;
-    private int $currentHeat;
+    private ?int $currentHeat = null;
     private bool $currentEventRejected = false;
     protected ParsedCompetition $parsedCompetition;
 
