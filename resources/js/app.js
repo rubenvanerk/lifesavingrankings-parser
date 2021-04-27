@@ -20,7 +20,6 @@ function getRegexFlags(regex) {
 function highlight(rawData, regex) {
     try {
         let flags = getRegexFlags(regex);
-        console.log(flags);
         let regExp = new RegExp(eval(regex), flags);
         let matches = rawData.match(regExp);
         if (Array.isArray(matches)) {
@@ -53,4 +52,19 @@ $('input, select').on('keyup change', function () {
     $('div.raw-data').html(function () {
         return highlight($(this).html(), regex);
     })
+});
+
+$('#firstMatch').on('click', function (e) {
+    e.preventDefault();
+
+    let $firstMatch = $('div.raw-data').find('mark').first();
+
+    if ($firstMatch.length === 0) {
+        showToast('No match found');
+        return;
+    }
+
+    console.log($firstMatch);
+
+    $firstMatch[0].scrollIntoView();
 });

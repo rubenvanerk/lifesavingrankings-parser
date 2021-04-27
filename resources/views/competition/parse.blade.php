@@ -47,6 +47,8 @@
         <div class="col-lg-7">
             <h2>Raw data</h2>
 
+            <a href="" id="firstMatch">Go to first match</a>
+
             <div class="raw-data">
                 @if($fileExtension === 'csv' || $config->{'as_csv.as_csv'})
                     <details>
