@@ -21,6 +21,7 @@ class ParserConfig
 
     private const FILE_EXTENSION_TEMPLATE_MAPPINGS = [
         'pdf' => 'text_template.yaml',
+        'txt' => 'text_template.yaml',
         'lxf' => 'lenex_template.yaml',
         'csv' => 'csv_template.yaml',
     ];

@@ -15,6 +15,7 @@ abstract class Parser
 
     private const FILE_EXTENSION_PARSER_MAPPINGS = [
         'pdf' => TextParser::class,
+        'txt' => TextParser::class,
         'lxf' => LenexParser::class,
         'csv' => CsvParser::class,
     ];

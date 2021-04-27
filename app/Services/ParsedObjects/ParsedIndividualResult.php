@@ -90,4 +90,9 @@ class ParsedIndividualResult extends ParsedResult
             'heat' => $this->heat,
         ];
     }
+
+    public function getEventName(): string
+    {
+        return Event::getName($this->eventId);
+    }
 }

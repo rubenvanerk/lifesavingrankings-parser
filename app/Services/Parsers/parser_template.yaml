@@ -169,6 +169,11 @@ results:
     options:
       '': None
       /^[0-9]+/: Number, start of line
+  lane:
+    type: select
+    options:
+      '': None
+      /^[0-9]+/: Number, start of line
 as_csv:
   as_csv:
     type: boolean

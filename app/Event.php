@@ -28,6 +28,16 @@ class Event extends Model
         return self::$allEvents[$eventId];
     }
 
+    public static function getName(int $eventId): string
+    {
+        if (!isset(self::$allEvents)) {
+            $allEvents = Event::all();
+            self::$allEvents = $allEvents->keyBy('id')->all();
+        }
+
+        return self::$allEvents[$eventId]->name;
+    }
+
     public function results(): HasMany
     {
         $this->hasMany('App\IndividualResult');

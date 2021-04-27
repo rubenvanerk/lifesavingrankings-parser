@@ -23,10 +23,11 @@ class TextParser extends Parser
     private static ?Parser $instance = null;
     protected CompetitionConfig $competition;
     public ParserConfig $config;
-    private int $currentEventId;
+    private ?int $currentEventId = null;
     private int $currentGender;
     private int $currentRound;
-    private bool $currentEventRejected;
+    private int $currentHeat;
+    private bool $currentEventRejected = false;
     protected ParsedCompetition $parsedCompetition;
 
     private const EVENT_LINE_TYPE = 'event';
@@ -36,6 +37,8 @@ class TextParser extends Parser
     private const DNS_LINE_TYPE = 'dns';
     private const WITHDRAWN_LINE_TYPE = 'withdrawn';
     private const SEPARATE_GENDER_LINE_TYPE = 'separate_gender';
+    private const ROUND_LINE_TYPE = 'round';
+    private const HEAT_LINE_TYPE = 'heat';
 
     public static function getInstance(CompetitionConfig $competition): Parser
     {
@@ -70,19 +73,24 @@ class TextParser extends Parser
 
     private function getText(): string
     {
-        $parser = new \Smalot\PdfParser\Parser();
         if (config('media-library.disk_name') === 's3') {
             $pdfFile = $this->competition->getFirstMedia('results_file');
-            $pdf = $parser->parseFile($pdfFile->getTemporaryUrl(Carbon::now()->addMinute()));
+            $path = $pdfFile->getTemporaryUrl(Carbon::now()->addMinute());
         } else {
-            $pdfFile = $this->competition->getFirstMediaPath('results_file');
-            $pdf = $parser->parseFile($pdfFile);
+            $path = $this->competition->getFirstMediaPath('results_file');
         }
-        if ($this->config->{'pdfparser_options'}) {
-            \Smalot\PdfParser\Parser::$horizontalOffset =
-                $this->translateQuoted($this->config->{'pdfparser_options.horizontal_offset'}) ?: ' ';
+
+        if ($this->getFileExtension() === 'pdf') {
+            $parser = new \Smalot\PdfParser\Parser();
+            if ($this->config->{'pdfparser_options'}) {
+                \Smalot\PdfParser\Parser::$horizontalOffset =
+                    $this->translateQuoted($this->config->{'pdfparser_options.horizontal_offset'}) ?: ' ';
+            }
+            $pdf = $parser->parseFile($path);
+            $text = $pdf->getText();
+        } else {
+            $text = file_get_contents($path);
         }
-        $text = $pdf->getText();
         return $this->cleanText($text);
     }
 
@@ -139,57 +147,79 @@ class TextParser extends Parser
                     }
                     $this->parsedCompetition->results[] = $this->getInvalidatedResultFromLine($line, $lineType);
                     break;
+                case self::ROUND_LINE_TYPE:
+                    $round = $this->getRoundFromLine($line);
+
+                    if (!is_int($round)) {
+                        throw new ParseError('Could not get round from line: ' . $line);
+                    }
+
+                    $this->currentRound = $round;
+                    break;
+                case self::HEAT_LINE_TYPE:
+                    $heat = $this->getHeatFromLine($line);
+
+                    if (!is_int($heat)) {
+                        throw new ParseError('Could not get heat from line: ' . $line);
+                    }
+
+                    $this->currentHeat = $heat;
+                    break;
             }
         }
     }
 
-    private function getLineType(string $line): string
+    private function getLineType(string $line): ?string
     {
-        if ($this->config->{'events.event_rejector'}
-            && preg_match($this->config->{'events.event_rejector'}, $line) === 1
-            && (
-                !$this->config->{'events.event_designifier'}
-                || preg_match($this->config->{'events.event_designifier'}, $line) === 0
-            )
-        ) {
+        $eventSignifierFound = preg_match($this->config->{'events.event_signifier'}, $line) === 1;
+        $eventDesignifierFound = $this->config->{'events.event_designifier'} && preg_match($this->config->{'events.event_designifier'}, $line) === 1;
+        $eventRejectorFound = $this->config->{'events.event_rejector'} && preg_match($this->config->{'events.event_rejector'}, $line) === 1;
+        $resultFound = preg_match($this->config->{'results.time'}, $line) === 1;
+        $resultRejectorFound = $this->config->{'events.result_rejector'} && preg_match($this->config->{'events.result_rejector'}, $line) === 1;
+        $separateGenderSignifierFound = $this->config->{'genders.separate_gender_signifier'} && preg_match($this->config->{'genders.separate_gender_signifier'}, $line) === 1;
+        $dqFound = $this->config->{'results.dsq'} && preg_match($this->config->{'results.dsq'}, $line) === 1;
+        $dnsFound = $this->config->{'results.dns'} && preg_match($this->config->{'results.dns'}, $line) === 1;
+        $withdrawnFound = $this->config->{'results.withdrawn'} && preg_match($this->config->{'results.withdrawn'}, $line) === 1;
+        $roundFound = $this->config->{'results.round'} && preg_match($this->config->{'results.round'}, $line) === 1;
+        $heatFound = $this->config->{'results.heat'} && preg_match($this->config->{'results.heat'}, $line) === 1;
+
+        if ($eventRejectorFound && !$eventDesignifierFound) {
             return self::REJECT_EVENT_LINE_TYPE;
         }
 
-        if (preg_match($this->config->{'events.event_signifier'}, $line) === 1
-            && (
-                !$this->config->{'events.event_designifier'}
-                || preg_match($this->config->{'events.event_designifier'}, $line) === 0
-            )
-        ) {
+        if ($eventSignifierFound && !$eventDesignifierFound) {
             return self::EVENT_LINE_TYPE;
         }
 
-        if (preg_match($this->config->{'results.time'}, $line) === 1
-            && (
-                !$this->config->{'results.result_rejector'}
-                || preg_match($this->config->{'results.result_rejector'}, $line) === 0
-            )
-        ) {
+        if ($resultFound && !$resultRejectorFound) {
             return self::RESULT_LINE_TYPE;
         }
 
-        if ($this->config->{'genders.separate_gender_signifier'} && preg_match($this->config->{'genders.separate_gender_signifier'}, $line) === 1) {
+        if ($separateGenderSignifierFound) {
             return self::SEPARATE_GENDER_LINE_TYPE;
         }
 
-        if ($this->config->{'results.dsq'} && preg_match($this->config->{'results.dsq'}, $line) === 1) {
+        if ($dqFound) {
             return self::DSQ_LINE_TYPE;
         }
 
-        if ($this->config->{'results.dns'} && preg_match($this->config->{'results.dns'}, $line) === 1) {
+        if ($dnsFound) {
             return self::DNS_LINE_TYPE;
         }
 
-        if ($this->config->{'results.withdrawn'} && preg_match($this->config->{'results.withdrawn'}, $line) === 1) {
+        if ($withdrawnFound) {
             return self::WITHDRAWN_LINE_TYPE;
         }
 
-        return '';
+        if ($roundFound) {
+            return self::ROUND_LINE_TYPE;
+        }
+
+        if ($heatFound) {
+            return self::HEAT_LINE_TYPE;
+        }
+
+        return null;
     }
 
     private function getEventIdFromLine(string $line): int
@@ -236,6 +266,7 @@ class TextParser extends Parser
         $times = $this->getTimesFromLine($line);
         $roundFromLine = $this->getRoundFromLine($line);
         $heat = $this->getHeatFromLine($line);
+        $lane = $this->getLaneFromLine($line);
         $disqualified = false;
         $didNotStart = false;
         $withdrawn = false;
@@ -248,8 +279,8 @@ class TextParser extends Parser
             $didNotStart,
             $withdrawn,
             $line,
-            $heat,
-            null,
+            $heat ?? $this->currentHeat,
+            $lane,
             null,
             null
         );
@@ -317,6 +348,7 @@ class TextParser extends Parser
         $times = $this->getTimesFromLine($line);
         $roundFromLine = $this->getRoundFromLine($line);
         $heat = $this->getHeatFromLine($line);
+        $lane = $this->getLaneFromLine($line);
         $disqualified = false;
         $didNotStart = false;
         $withdrawn = false;
@@ -333,8 +365,8 @@ class TextParser extends Parser
                 $didNotStart,
                 $withdrawn,
                 $originalLine,
-                $heat,
-                null,
+                $heat ?? $this->currentHeat,
+                $lane,
                 null,
                 null
             );
@@ -371,6 +403,7 @@ class TextParser extends Parser
         $athletes = $this->getAthletesFromLine($line);
         $roundFromLine = $this->getRoundFromLine($line);
         $heat = $this->getHeatFromLine($line);
+        $lane = $this->getLaneFromLine($line);
         $disqualified = $type === self::DSQ_LINE_TYPE;
         $didNotStart = $type === self::DNS_LINE_TYPE;
         $withdrawn = false;
@@ -384,8 +417,8 @@ class TextParser extends Parser
             $didNotStart,
             $withdrawn,
             $originalLine,
-            $heat,
-            null,
+            $heat ?? $this->currentHeat,
+            $lane,
             null,
             null
         );
@@ -398,6 +431,7 @@ class TextParser extends Parser
         $athlete = $this->getAthleteFromLine($line);
         $roundFromLine = $this->getRoundFromLine($line);
         $heat = $this->getHeatFromLine($line);
+        $lane = $this->getLaneFromLine($line);
         $disqualified = $type === self::DSQ_LINE_TYPE;
         $didNotStart = $type === self::DNS_LINE_TYPE;
         $withdrawn = $type === self::WITHDRAWN_LINE_TYPE;
@@ -411,8 +445,8 @@ class TextParser extends Parser
             $didNotStart,
             $withdrawn,
             $originalLine,
-            $heat,
-            null,
+            $heat ?? $this->currentHeat,
+            $lane,
             null,
             null
         );
@@ -547,6 +581,16 @@ class TextParser extends Parser
     private function getHeatFromLine(string $line): ?int
     {
         $pattern = $this->config->{'results.heat'};
+        if (!$pattern) {
+            return null;
+        }
+        preg_match($pattern, $line, $matches);
+        return Arr::first($matches);
+    }
+
+    private function getLaneFromLine(string $line): ?int
+    {
+        $pattern = $this->config->{'results.lane'};
         if (!$pattern) {
             return null;
         }

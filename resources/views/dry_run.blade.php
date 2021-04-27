@@ -26,7 +26,7 @@
                 <th>Heat</th>
                 <th>Lane</th>
                 <th>Reactiontime</th>
-                <th>Points</th>
+                <th>Line</th>
             </tr>
             </thead>
             <tbody>
@@ -46,7 +46,7 @@
                         <td>{{$athlete->nationality}}</td>
                         <td>{{$athlete->team}}</td>
                     @endif
-                    <td>{{$result->eventId}}</td>
+                    <td>{{$result->getEventName()}}</td>
                     <td>{{$result->getTimeStringForDisplay()}}</td>
                     <td>
                         @if($result->splits)
@@ -61,7 +61,7 @@
                     <td>{{$result->heat}}</td>
                     <td>{{$result->lane}}</td>
                     <td>{{$result->getReactionTimeStringForDisplay()}}</td>
-                    <td>0</td>
+                    <td>{{$result->originalLine}}</td>
                 </tr>
             @endforeach
             </tbody>
