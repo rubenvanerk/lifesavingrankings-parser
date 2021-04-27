@@ -7,6 +7,14 @@
 // Bootstrap
 @import '~bootstrap/scss/bootstrap';
 
+html, body, #app {
+    min-height: 100vh;
+}
+
+main {
+    min-height: 100%;
+}
+
 .table-fixed {
     overflow: auto;
     height: 100px;
@@ -32,5 +40,15 @@ th {
     background: #eee;
 }
 
-.highlight { background-color: yellow; }
-
+.raw-data {
+    position: absolute;
+    top: 35px;
+    bottom: 0;
+    overflow: auto;
+    width: 95%;
+    border: 1px solid lightgray;
+    border-radius: 3px;
+    padding: 3px;
+    background-color: white;
+    min-height: 75vh;
+}
