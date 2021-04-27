@@ -123,6 +123,7 @@ class TextParser extends Parser
                     $this->currentEventId = $this->getEventIdFromLine($line);
                     $this->currentGender = $this->getGenderFromLine($line);
                     $this->currentEventRejected = false;
+                    $this->currentRound = 0;
                     break;
                 case self::RESULT_LINE_TYPE:
                     if ($this->currentEventRejected) {
