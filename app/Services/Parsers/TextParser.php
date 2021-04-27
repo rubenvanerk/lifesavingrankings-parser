@@ -176,7 +176,7 @@ class TextParser extends Parser
         $eventDesignifierFound = $this->config->{'events.event_designifier'} && preg_match($this->config->{'events.event_designifier'}, $line) === 1;
         $eventRejectorFound = $this->config->{'events.event_rejector'} && preg_match($this->config->{'events.event_rejector'}, $line) === 1;
         $resultFound = preg_match($this->config->{'results.time'}, $line) === 1;
-        $resultRejectorFound = $this->config->{'events.result_rejector'} && preg_match($this->config->{'events.result_rejector'}, $line) === 1;
+        $resultRejectorFound = $this->config->{'results.result_rejector'} && preg_match($this->config->{'results.result_rejector'}, $line) === 1;
         $separateGenderSignifierFound = $this->config->{'genders.separate_gender_signifier'} && preg_match($this->config->{'genders.separate_gender_signifier'}, $line) === 1;
         $dqFound = $this->config->{'results.dsq'} && preg_match($this->config->{'results.dsq'}, $line) === 1;
         $dnsFound = $this->config->{'results.dns'} && preg_match($this->config->{'results.dns'}, $line) === 1;
