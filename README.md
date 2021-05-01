@@ -3,6 +3,11 @@
 
 This is a continuation of the [competition-parser](https://github.com/rubenvanerk/competition-parser) project with a user-friendly frontend.
 
+## Prerequisites
+
+To use this project, you need a LifesavingRankings database to export the results to. 
+Use the [setup instructions](https://github.com/rubenvanerk/lifesavingrankings#setup) from the LifesavingRankings project. 
+
 ## Installation
 
 ```bash
