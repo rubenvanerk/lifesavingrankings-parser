@@ -28,14 +28,6 @@ class CompetitionConfig extends Model implements HasMedia
         'parser_config',
     ];
 
-    public const rules = [
-        'name' => 'required',
-        'start_date' => 'required',
-        'end_date' => 'required',
-        'city' => 'required',
-        'country_id' => 'required',
-    ];
-
     public function saveCompetition(): Competition
     {
         $competition = new Competition();

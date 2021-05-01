@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\CompetitionConfig;
 use App\Country;
+use App\Http\Requests\StoreCompetitionConfigRequest;
 use App\Services\Parsers\Parser;
 use Exception;
 use Illuminate\Http\Request;
@@ -12,7 +13,7 @@ use Illuminate\Support\Str;
 use Illuminate\View\View;
 use ParseError;
 
-class CompetitionController extends Controller
+class CompetitionConfigController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -41,20 +42,14 @@ class CompetitionController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param \Illuminate\Http\Request $request
+     * @param StoreCompetitionConfigRequest $request
      *
-     * @throws \Spatie\MediaLibrary\MediaCollections\Exceptions\FileDoesNotExist
-     * @throws \Spatie\MediaLibrary\MediaCollections\Exceptions\FileIsTooBig
-     *
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
      */
-    public function store(Request $request)
+    public function store(StoreCompetitionConfigRequest $request)
     {
-        $data = $request->validate(CompetitionConfig::rules);
-
-        $competition = CompetitionConfig::create($data);
+        $competition = CompetitionConfig::create($request->validated());
         $competition->addMediaFromRequest('file')->toMediaCollection('results_file');
-
         return redirect('/');
     }
 
@@ -90,10 +85,9 @@ class CompetitionController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, CompetitionConfig $competition)
+    public function update(StoreCompetitionConfigRequest $request, CompetitionConfig $competition)
     {
-        $data = $request->validate(CompetitionConfig::rules);
-        $competition->fill($data);
+        $competition->fill($request->validated());
         $competition->save();
 
         if ($request->hasFile('file')) {
