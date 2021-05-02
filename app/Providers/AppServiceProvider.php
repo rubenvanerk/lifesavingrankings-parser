@@ -26,7 +26,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        Paginator::useTailwind();
+        Paginator::useBootstrap();
 
         if (config('app.env') === 'dev') {
             URL::forceRootUrl(config('app.url'));
