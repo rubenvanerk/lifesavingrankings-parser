@@ -14,7 +14,7 @@ use ParseError;
 
 class ParsingController extends Controller
 {
-    public function parse(Request $request, Competition $competition): RedirectResponse | View
+    public function parse(Request $request, Competition $competition): RedirectResponse|View
     {
         $competitionConfig = $competition->competition_config;
 
@@ -23,7 +23,7 @@ class ParsingController extends Controller
             $action = $request->input('action');
             return match ($action) {
                 'dry_run' => redirect()->route('competitions.dry_run', ['competition' => $competition]),
-                'save_to_database' => redirect()->route('save_database', ['competition' => $competition, 'connection' => $action]),
+                'save_to_database' => redirect()->route('save_database', ['competition' => $competition]),
                 default => redirect()->route('competitions.parse', ['competition' => $competition]),
             };
         }
