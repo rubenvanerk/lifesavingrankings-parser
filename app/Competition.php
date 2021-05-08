@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Spatie\Sluggable\HasSlug;
 use Spatie\Sluggable\SlugOptions;
+use Str;
 
 class Competition extends Model
 {
@@ -46,7 +47,7 @@ class Competition extends Model
         });
 
         self::creating(function ($model) {
-            $model->slug = \Str::slug($model->name);
+            $model->slug = Str::slug($model->name);
             $model->is_concept = true;
             $model->status = 1; // scheduled for import
         });

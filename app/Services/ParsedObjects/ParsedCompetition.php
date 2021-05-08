@@ -4,7 +4,6 @@ namespace App\Services\ParsedObjects;
 
 use App\Competition;
 use App\CompetitionConfig;
-use App\IndividualResult;
 use Illuminate\Support\Facades\DB;
 
 class ParsedCompetition implements ParsedObject

@@ -22,7 +22,7 @@ class RestructureCompetitions extends Migration
                 'end_date',
                 'timekeeping',
                 'original_name',
-                'comment'
+                'comment',
             ]);
             $table->foreignId('competition_id');
         });
