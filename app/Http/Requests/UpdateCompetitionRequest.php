@@ -3,13 +3,17 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
-class StoreCompetitionRequest extends FormRequest
+class UpdateCompetitionRequest extends FormRequest
 {
     public function rules(): array
     {
         return [
-            'name' => ['required', 'unique:rankings.rankings_competition'],
+            'name' => [
+                'required',
+                Rule::unique('rankings.rankings_competition')->ignore($this->competition),
+            ],
             'date' => 'required',
             'city' => 'required',
             'country_id' => 'required',

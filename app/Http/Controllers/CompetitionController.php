@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Competition;
 use App\Country;
 use App\Http\Requests\StoreCompetitionRequest;
+use App\Http\Requests\UpdateCompetitionRequest;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\View\View;
 
@@ -12,7 +13,7 @@ class CompetitionController extends Controller
 {
     public function index(): View
     {
-        $competitions = Competition::orderBy('id')->paginate(15);
+        $competitions = Competition::orderBy('id', 'desc')->paginate(15);
         return view('competition.index', ['competitions' => $competitions]);
     }
 
@@ -36,7 +37,7 @@ class CompetitionController extends Controller
         return view('competition.edit', ['competition' => $competition, 'countries' => Country::all()]);
     }
 
-    public function update(StoreCompetitionRequest $request, Competition $competition): RedirectResponse
+    public function update(UpdateCompetitionRequest $request, Competition $competition): RedirectResponse
     {
         $competition->fill($request->validated());
         $competition->save();
