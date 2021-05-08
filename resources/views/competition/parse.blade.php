@@ -1,8 +1,8 @@
 @extends('layouts.app')
 
 @section('content')
-    <h2>Parsing {{$file}}</h2>
-    <a class="btn btn-primary" href="{{ $competition->getFirstMediaUrl('results_file') }}"
+    <h2>Parsing {{ $competition->name }}</h2>
+    <a class="btn btn-primary" href="{{ $competitionConfig->getFirstMediaUrl('results_file') }}"
        target="_blank">
         View source file
     </a>

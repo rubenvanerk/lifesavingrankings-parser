@@ -14,7 +14,6 @@
                 <th>Name</th>
                 <th>Location</th>
                 <th>Startdate</th>
-                <th>Created at</th>
                 <th>Actions</th>
             </tr>
         </thead>
@@ -23,9 +22,8 @@
                 <tr>
                     <td>{{ $competition->id }}</td>
                     <td>{{ $competition->name }}</td>
-                    <td>{{ $competition->city }}, {{ $competition->country->name }}</td>
-                    <td>{{ $competition->start_date }}</td>
-                    <td>{{ $competition->created_at }}</td>
+                    <td>{{ $competition->city }}</td>
+                    <td>{{ $competition->date }}</td>
                     <td>
                         <a class="btn btn-secondary btn-sm" href="{{ route('competitions.edit', ['competition' => $competition]) }}">EDIT</a>
                         <a class="btn btn-secondary btn-sm" href="{{ route('competitions.parse', ['competition' => $competition]) }}">PARSE</a>
@@ -35,7 +33,7 @@
         </tbody>
         <tfoot>
         <tr>
-            <td colspan="6">{{ $competitions->links() }}</td>
+            <td colspan="5">{{ $competitions->links() }}</td>
         </tr>
         </tfoot>
     </table>

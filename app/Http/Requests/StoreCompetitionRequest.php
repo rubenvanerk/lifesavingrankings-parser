@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class StoreCompetitionConfigRequest extends FormRequest
+class StoreCompetitionRequest extends FormRequest
 {
     /**
      * Get the validation rules that apply to the request.
@@ -14,11 +14,13 @@ class StoreCompetitionConfigRequest extends FormRequest
     public function rules()
     {
         return [
-            'name' => 'required',
-            'start_date' => 'required',
-            'end_date' => 'required',
+            'name' => ['required', 'unique:rankings.rankings_competition'],
+            'date' => 'required',
             'city' => 'required',
             'country_id' => 'required',
+            'comment' => 'nullable',
+            'original_name' => 'nullable',
+            'type_of_timekeeping' => ['required', 'integer', 'in:0,1,2'],
         ];
     }
 }

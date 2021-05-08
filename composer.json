@@ -9,20 +9,20 @@
     "type": "project",
     "require": {
         "php": "^8.0",
+        "ext-fileinfo": "*",
+        "cviebrock/eloquent-sluggable": "^8.0",
         "fideloper/proxy": "^4.4",
         "fruitcake/laravel-cors": "^2.0",
         "guzzlehttp/guzzle": "^7.0.1",
         "laravel/framework": "^8.12",
         "laravel/tinker": "^2.5",
-
-        "ext-fileinfo": "*",
-        "cviebrock/eloquent-sluggable": "^8.0",
         "laravel/ui": "^3.2",
         "league/csv": "^9.6",
         "league/flysystem-aws-s3-v3": "^1.0",
         "leonverschuren/lenex": "dev-master",
         "smalot/pdfparser": "dev-master",
-        "spatie/laravel-medialibrary": "^8.3",
+        "spatie/laravel-medialibrary": "^9.6",
+        "spatie/laravel-sluggable": "^3.0",
         "symfony/yaml": "^5.0"
     },
     "require-dev": {
@@ -55,7 +55,7 @@
         "sort-packages": true,
         "optimize-autoloader": true,
         "platform": {
-            "php": "7.4"
+            "php": "8.0"
         }
     },
     "minimum-stability": "dev",

@@ -31,15 +31,15 @@ $excludes = [
     'bootstrap/cache',
 ];
 
-return PhpCsFixer\Config::create()
-    ->setRules($rules)
-    ->setFinder(
-        PhpCsFixer\Finder::create()
-            ->in(__DIR__)
-            ->exclude($excludes)
-            ->notName('README.md')
-            ->notName('*.xml')
-            ->notName('*.yml')
-            ->notName('_ide_helper.php')
-            ->notName('_ide_helper_models.php')
-    );
+$finder = PhpCsFixer\Finder::create()
+    ->in(__DIR__)
+    ->exclude($excludes)
+    ->notName('README.md')
+    ->notName('*.xml')
+    ->notName('*.yml')
+    ->notName('_ide_helper.php')
+    ->notName('_ide_helper_models.php');
+
+$config = new PhpCsFixer\Config();
+return $config->setRules($rules)
+    ->setFinder($finder);

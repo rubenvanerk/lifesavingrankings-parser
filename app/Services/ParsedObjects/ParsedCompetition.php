@@ -22,7 +22,9 @@ class ParsedCompetition implements ParsedObject
 
     public function saveToDatabase(): void
     {
-        self::$competition = self::$competitionConfig->saveCompetition();
+        self::$competition = self::$competitionConfig->competition;
+
+        self::$competition->individual_results()->delete();
 
         $insertValues = [];
 

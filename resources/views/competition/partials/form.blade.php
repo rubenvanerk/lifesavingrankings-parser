@@ -5,7 +5,7 @@
       enctype="multipart/form-data">
     @csrf
     @if(isset($competition))
-        <a href="{{ $competition->getFirstMediaUrl('results_file') }}" class="btn btn-primary" target="_blank">File</a>
+        <a href="{{ $competition->competition_config->getFirstMediaUrl('results_file') }}" class="btn btn-primary" target="_blank">File</a>
         @method('PUT')
     @endif
 
@@ -16,18 +16,18 @@
 
     <div class="form-group">
         <label for="name">Name:</label>
-        <input name="name" type="text" id="name" required class="form-control" value="{{ $competition->name ?? '' }}">
+        <input name="name" type="text" id="name" required class="form-control" value="{{ $competition->name ?? old('name') }}">
     </div>
 
     <div class="form-group">
         <label for="original-name">Original name:</label>
         <input name="original_name" type="text" id="original-name" class="form-control"
-               value="{{ $competition->original_name ?? '' }}">
+               value="{{ $competition->original_name ?? old('original_name') }}">
     </div>
 
     <div class="form-group">
         <label for="city">City:</label>
-        <input name="city" type="text" id="city" required class="form-control" value="{{ $competition->city ?? '' }}">
+        <input name="city" type="text" id="city" required class="form-control" value="{{ $competition->city ?? old('city') }}">
     </div>
 
     <div class="form-group">
@@ -36,7 +36,7 @@
             <option value="">Unknown</option>
             @foreach($countries as $country)
                 <option value="{{ $country->id }}"
-                        @if(isset($competition) && $competition->country->id == $country->id) selected @endif>
+                        @if((isset($competition) && optional($competition->country)->id == $country->id) || old('country_id') == $country->id) selected @endif>
                     {{ $country->name }}
                 </option>
             @endforeach
@@ -45,28 +45,28 @@
 
     <div class="form-group">
         <label for="start_date">Start date:</label>
-        <input name="start_date" type="date" id="start_date" required class="form-control"
-               value="{{ $competition->start_date ?? '' }}">
+        <input name="date" type="date" id="start_date" required class="form-control"
+               value="{{ $competition->date ?? old('date') }}">
     </div>
 
     <div class="form-group">
         <label for="end_date">End date:</label>
-        <input name="end_date" type="date" id="end_date" required class="form-control"
-               value="{{ $competition->end_date ?? '' }}">
+        <input name="end_date" type="date" id="end_date" class="form-control"
+               value="{{ $competition->end_date ?? old('end_date') }}">
     </div>
 
     <div class="form-group">
         <label for="timekeeping">Timekeeping</label>
-        <select id="timekeeping" name="timekeeping" class="form-control">
-            <option value="">Unknown</option>
-            <option value="electronic">Electronic</option>
-            <option value="by_hand">By hand</option>
+        <select id="timekeeping" name="type_of_timekeeping" class="form-control">
+            <option value="0">Unknown</option>
+            <option value="1">Electronic</option>
+            <option value="2">By hand</option>
         </select>
     </div>
 
     <div class="form-group">
         <label for="comment">Comment:</label>
-        <input name="comment" type="text" id="comment" class="form-control" value="{{ $competition->comment ?? '' }}">
+        <input name="comment" type="text" id="comment" class="form-control" value="{{ $competition->comment ?? old('comment') }}">
     </div>
 
     <button type="submit" class="btn btn-primary">{{ isset($competition) ? 'Update' : 'Upload' }}</button>
