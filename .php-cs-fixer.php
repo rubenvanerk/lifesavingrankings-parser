@@ -2,11 +2,11 @@
 $rules = [
     '@PSR2' => true,
     'array_syntax' => ['syntax' => 'short'],
-    'no_multiline_whitespace_before_semicolons' => true,
+    'multiline_whitespace_before_semicolons' => true,
     'no_unused_imports' => true,
     'no_useless_else' => true,
     'ordered_imports' => [
-        'sortAlgorithm' => 'alpha',
+        'sort_algorithm' => 'alpha',
     ],
     'global_namespace_import' => [
         'import_classes' => true,
@@ -21,7 +21,7 @@ $rules = [
     'phpdoc_trim' => true,
     'single_quote' => true,
     'ternary_operator_spaces' => true,
-    'trailing_comma_in_multiline_array' => true,
+    'trailing_comma_in_multiline' => true,
     'trim_array_spaces' => true,
 ];
 

@@ -35,8 +35,8 @@
 
         "barryvdh/laravel-debugbar": "^3.5",
         "barryvdh/laravel-ide-helper": "^2.7",
-        "friendsofphp/php-cs-fixer": "^2.16",
-        "nunomaduro/larastan": "^0.6.0"
+        "friendsofphp/php-cs-fixer": "^3.0",
+        "nunomaduro/larastan": "^0.7.0"
     },
     "autoload": {
         "psr-4": {

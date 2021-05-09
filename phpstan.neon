@@ -6,9 +6,6 @@ parameters:
     paths:
         - app
 
-    level: 8
-
-    ignoreErrors:
-        - '#Static call to instance method Carbon\\CarbonInterval::[a-zA-Z]+\(\)#'
+    level: 1
 
     checkMissingIterableValueType: false
