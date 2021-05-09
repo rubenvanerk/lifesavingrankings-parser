@@ -39,6 +39,6 @@ class Event extends Model
 
     public function results(): HasMany
     {
-        $this->hasMany('App\IndividualResult');
+        return $this->hasMany('App\IndividualResult');
     }
 }
