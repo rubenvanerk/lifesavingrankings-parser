@@ -14,7 +14,11 @@ class AddGeneratedConversionsToMediaTable extends Migration
     public function up()
     {
         Schema::table('media', function (Blueprint $table) {
-            //
+            if (!Schema::hasColumn('media', 'generated_conversions')) {
+                Schema::table('media', function (Blueprint $table) {
+                    $table->json('generated_conversions');
+                });
+            }
         });
     }
 
@@ -26,7 +30,9 @@ class AddGeneratedConversionsToMediaTable extends Migration
     public function down()
     {
         Schema::table('media', function (Blueprint $table) {
-            //
+            Schema::table('media', function (Blueprint $table) {
+                $table->dropColumn('generated_conversions');
+            });
         });
     }
 }
