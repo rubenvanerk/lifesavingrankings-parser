@@ -20,6 +20,7 @@ class UpdateCompetitionRequest extends FormRequest
             'comment' => 'nullable',
             'original_name' => 'nullable',
             'type_of_timekeeping' => ['required', 'integer', 'in:0,1,2'],
+            'file' => 'nullable',
         ];
     }
 }
