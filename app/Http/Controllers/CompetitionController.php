@@ -29,6 +29,10 @@ class CompetitionController extends Controller
     {
         $competition = Competition::create($request->validated());
         $competition->competition_config->addMediaFromRequest('file')->toMediaCollection('results_file');
+
+        $competition->file_name = $competition->competition_config->getFirstMediaPath('results_file');
+        $competition->save();
+
         return redirect('/');
     }
 
@@ -45,6 +49,8 @@ class CompetitionController extends Controller
         if ($request->hasFile('file')) {
             $competition->competition_config->getMedia('results_file')->each->delete();
             $competition->competition_config->addMediaFromRequest('file')->toMediaCollection('results_file');
+            $competition->file_name = $competition->competition_config->getFirstMediaPath('results_file');
+            $competition->save();
         }
 
         return redirect()->route('competitions.edit', ['competition' => $competition]);
