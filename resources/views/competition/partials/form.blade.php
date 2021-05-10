@@ -69,13 +69,14 @@
         <input name="comment" type="text" id="comment" class="form-control" value="{{ $competition->comment ?? old('comment') }}">
     </div>
 
-    <button type="submit" class="btn btn-primary">{{ isset($competition) ? 'Update' : 'Upload' }}</button>
     @if(isset($competition))
-        <button type="submit" class="btn btn-danger float-right" form="delete"
+        <button type="submit" class="btn btn-danger" form="delete"
                 onclick="return confirm('Are you sure you want to delete this competition config?')">
             Delete
         </button>
     @endif
+
+    <button type="submit" class="btn btn-primary float-right">{{ isset($competition) ? 'Update' : 'Upload' }}</button>
 </form>
 
 @if(isset($competition))

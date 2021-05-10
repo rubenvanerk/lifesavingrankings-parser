@@ -6,6 +6,9 @@
        target="_blank">
         View source file
     </a>
+    <a class="btn btn-secondary" href="{{ route('competitions.edit', ['competition' => $competition]) }}">
+        Edit
+    </a>
 
     <hr class="my-3">
 

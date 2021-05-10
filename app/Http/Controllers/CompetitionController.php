@@ -13,7 +13,7 @@ class CompetitionController extends Controller
 {
     public function index(): View
     {
-        $competitions = Competition::orderBy('id', 'desc')->paginate(15);
+        $competitions = Competition::orderBy('id', 'desc')->paginate();
         return view('competition.index', ['competitions' => $competitions]);
     }
 

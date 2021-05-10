@@ -11,12 +11,17 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use Illuminate\View\View;
 use ParseError;
+use Spatie\MediaLibrary\MediaCollections\Exceptions\FileDoesNotExist;
 
 class ParsingController extends Controller
 {
     public function parse(Request $request, Competition $competition): RedirectResponse|View
     {
-        $competitionConfig = $competition->competition_config;
+        try {
+            $competitionConfig = $competition->competition_config;
+        } catch (FileDoesNotExist $exception) {
+            return view('error', ['error' => $exception->getMessage(), 'competition' => $competition]);
+        }
 
         if ($request->method() === 'PUT') {
             $this->saveConfigFromRequest($request, $competition);

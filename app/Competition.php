@@ -38,7 +38,7 @@ class Competition extends Model
     protected static function booted()
     {
         static::addGlobalScope('not_added_by_user', function (Builder $builder) {
-            $builder->where('status', '<>', 5);
+            $builder->where('slug', '!=', '');
         });
 
         static::retrieved(function ($competition) {
