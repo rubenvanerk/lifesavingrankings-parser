@@ -24,6 +24,7 @@ class Competition extends Model
         'name',
         'original_name',
         'date',
+        'end_date',
         'city',
         'country_id',
         'type_of_timekeeping',
