@@ -10,14 +10,9 @@ use Symfony\Component\Yaml\Yaml;
 
 class ParserConfig
 {
-    /** @var CompetitionConfig */
-    private $competition;
-    /** @var string */
-    private $fileName;
-    /** @var array */
-    private $config;
-    /** @var array */
-    public $template;
+    private CompetitionConfig $competition;
+    private array $config;
+    public array $template;
 
     private const FILE_EXTENSION_TEMPLATE_MAPPINGS = [
         'pdf' => 'text_template.yaml',
@@ -29,7 +24,6 @@ class ParserConfig
     public function __construct(CompetitionConfig $competition)
     {
         $this->competition = $competition;
-        $this->fileName = $competition->getFirstMedia('results_file')->file_name . '.yaml';
         $this->loadConfig();
         $templateContent = file_get_contents(__DIR__ . DIRECTORY_SEPARATOR . 'parser_template.yaml');
         if (!$templateContent) {

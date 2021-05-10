@@ -3,8 +3,10 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
+use Storage;
 
 class CompetitionConfig extends Model implements HasMedia
 {
@@ -21,12 +23,33 @@ class CompetitionConfig extends Model implements HasMedia
         'parser_config',
     ];
 
-    public function competition()
+    protected static function booted()
+    {
+        // Move old results file to Media library structure
+        static::retrieved(function (CompetitionConfig $competitionConfig) {
+            $file = $competitionConfig->getFirstMediaPath('results_file');
+            if (!$file && $competitionConfig->competition->file_name) {
+                $currentFileName = $competitionConfig->competition->file_name;
+
+                $competitionConfig->addMediaFromDisk($currentFileName, config('media-library.disk_name'))
+                    ->setName($currentFileName)
+                    ->toMediaCollection('results_file');
+                Storage::disk(config('media-library.disk_name'))->delete($currentFileName);
+                $competitionConfig->refresh();
+
+                // Update competition with new path
+                $competitionConfig->competition->file_name = $competitionConfig->getFirstMediaPath('results_file');
+                $competitionConfig->competition->save();
+            }
+        });
+    }
+
+    public function competition(): BelongsTo
     {
         return $this->belongsTo(Competition::class);
     }
 
-    public function country()
+    public function country(): BelongsTo
     {
         return $this->belongsTo(Country::class);
     }
