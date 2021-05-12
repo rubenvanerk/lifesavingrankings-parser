@@ -10,6 +10,7 @@ csv_columns:
   athlete:
   first_name:
   last_name:
+  year_of_birth:
   team:
   time:
   gender:
