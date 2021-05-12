@@ -260,6 +260,10 @@ csv_columns:
     type: select
     custom: false
     options:
+  year_of_birth:
+    type: select
+    custom: false
+    options:
   team:
     type: select
     custom: false

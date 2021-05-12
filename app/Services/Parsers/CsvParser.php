@@ -140,10 +140,11 @@ class CsvParser extends Parser
         $gender = Cleaner::cleanGender($record[$this->config->{'csv_columns.gender'}]);
 
         $team = $this->config->{'csv_columns.team'} ? $record[$this->config->{'csv_columns.team'}] : null;
+        $yob = $this->config->{'csv_columns.year_of_birth'} ? $record[$this->config->{'csv_columns.year_of_birth'}] : null;
 
         return new ParsedAthlete(
             $name,
-            null, // TODO: implement yob
+            $yob,
             $gender,
             null, // TODO: implement nationality
             $team
