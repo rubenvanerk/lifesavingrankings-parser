@@ -31,6 +31,10 @@ class CompetitionConfig extends Model implements HasMedia
             if (!$file && $competitionConfig->competition->file_name) {
                 $currentFileName = $competitionConfig->competition->file_name;
 
+                if (!Storage::disk(config('media-library.disk_name'))->has($currentFileName)) {
+                    return;
+                }
+
                 $competitionConfig->addMediaFromDisk($currentFileName, config('media-library.disk_name'))
                     ->setName($currentFileName)
                     ->toMediaCollection('results_file');
