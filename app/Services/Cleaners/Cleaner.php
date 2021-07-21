@@ -56,7 +56,7 @@ abstract class Cleaner
             }
 
             if ($direction === 'down') {
-                for ($j = 1; $j < $amount; $j++) {
+                for ($j = 1; $j <= $amount; $j++) {
                     $index = $i + $j;
                     $newLine .= self::translateQuoted($delimiter) . Arr::get($lines, $index);
                 }
