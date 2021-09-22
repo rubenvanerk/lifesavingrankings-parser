@@ -364,7 +364,7 @@ class TextParser extends Parser
             $parsedResult = new ParsedIndividualResult(
                 Cleaner::cleanTime($time),
                 $athlete,
-                $roundFromLine ?? $this->currentRound ?? $loopIndex,
+                $roundFromLine ?? $this->currentRound ?: $loopIndex,
                 $disqualified,
                 $didNotStart,
                 $withdrawn,
