@@ -146,6 +146,9 @@ class TextParser extends Parser
                     if ($this->currentEventRejected) {
                         break;
                     }
+                    if (!$this->currentEventId) {
+                        throw new ParseError('Cannot parse result when no event is active. Line: ' . $line);
+                    }
                     $this->parsedCompetition->results[] = $this->getInvalidatedResultFromLine($line, $lineType);
                     break;
                 case self::ROUND_LINE_TYPE:
