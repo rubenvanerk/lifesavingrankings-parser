@@ -20,7 +20,7 @@ class EventRecord extends Model
     }
 
 
-    public static function get(int $eventId, $gender): EventRecord
+    public static function getCached(int $eventId, $gender): EventRecord
     {
         if (!isset(self::$allEventRecords)) {
             self::$allEventRecords = EventRecord::all();

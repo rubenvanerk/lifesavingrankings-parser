@@ -74,7 +74,7 @@ abstract class ParsedResult implements ParsedObject
 
         $eventId = $this->eventId;
         $athlete = $this->athlete ?? Arr::first($this->athletes);
-        $record = EventRecord::get($eventId, $athlete->gender);
+        $record = EventRecord::getCached($eventId, $athlete->gender);
         if (!$record) {
             return 0;
         }
